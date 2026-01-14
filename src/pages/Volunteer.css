@@ -1,0 +1,384 @@
+/* Apple-Inspired Volunteer Page */
+
+.volunteer-page {
+    min-height: 100vh;
+    background-color: var(--apple-gray-bg);
+}
+
+.volunteer-header {
+    background-color: black;
+    background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('/images/hero-volunteer.png');
+    background-size: cover;
+    background-position: center;
+    padding: 160px 0 120px;
+    color: white;
+    text-align: center;
+}
+
+.volunteer-header-content {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 24px;
+}
+
+.volunteer-header-content h1 {
+    font-size: 80px;
+    font-weight: 600;
+    margin-bottom: 20px;
+    letter-spacing: -0.02em;
+    color: #ffffff;
+}
+
+.volunteer-intro {
+    font-size: 24px;
+    color: white;
+    max-width: 910px;
+    margin: 0 auto;
+    font-weight: 400;
+}
+
+/* Opportunities */
+.opportunities-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+}
+
+.opportunity-card {
+    padding: 40px;
+    background: white;
+    border-radius: var(--apple-card-radius);
+    box-shadow: var(--apple-card-shadow);
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.opportunity-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+}
+
+.opportunity-icon {
+    display: flex;
+    align-items: center;
+    justify-content: left;
+    margin-bottom: 24px;
+    color: var(--apple-blue);
+}
+
+.opportunity-title {
+    font-size: 24px;
+    font-weight: 600;
+    color: var(--apple-text-black);
+    margin-bottom: 4px;
+}
+
+.opportunity-subtitle {
+    font-size: 15px;
+    color: var(--apple-text-gray);
+    margin-bottom: 12px;
+}
+
+.opportunity-description {
+    color: var(--apple-text-gray);
+    line-height: 1.5;
+    font-size: 17px;
+    flex: 1;
+}
+
+.opportunity-commitment {
+    padding: 8px 16px;
+    background-color: var(--apple-gray-bg);
+    border-radius: 980px;
+    font-size: 13px;
+    color: var(--apple-text-black);
+    align-self: flex-start;
+    font-weight: 600;
+}
+
+.opportunity-requirements {
+    background: transparent;
+    padding: 0;
+}
+
+.opportunity-requirements strong {
+    display: block;
+    margin-bottom: 8px;
+    color: var(--apple-text-black);
+    font-size: 15px;
+    font-weight: 600;
+}
+
+.opportunity-requirements ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.opportunity-requirements li {
+    padding: 4px 0;
+    color: var(--apple-text-gray);
+    font-size: 14px;
+    position: relative;
+    padding-left: 16px;
+}
+
+.opportunity-requirements li::before {
+    content: '•';
+    color: var(--apple-blue);
+    position: absolute;
+    left: 0;
+    font-weight: bold;
+}
+
+/* Benefits */
+.benefits-list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.benefit-item {
+    background-color: white;
+    padding: 24px;
+    border-radius: var(--apple-card-radius);
+    box-shadow: var(--apple-card-shadow);
+    transition: transform 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.benefit-icon {
+    color: var(--apple-blue);
+    display: flex;
+    align-items: center;
+}
+
+.benefit-item:hover {
+    transform: scale(1.02);
+}
+
+.benefit-text {
+    font-size: 19px;
+    color: var(--apple-text-black);
+    line-height: 1.5;
+}
+
+/* Form */
+.form-container {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.form-header {
+    margin-bottom: 40px;
+    text-align: center;
+}
+
+.form-title {
+    font-size: 40px;
+    font-weight: 600;
+    color: var(--apple-text-black);
+    margin-bottom: 10px;
+}
+
+.form-subtitle {
+    font-size: 21px;
+    color: var(--apple-text-gray);
+    margin-bottom: 20px;
+}
+
+.form-description {
+    font-size: 17px;
+    color: var(--apple-text-secondary);
+    line-height: 1.5;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.volunteer-form {
+    background-color: white;
+    padding: 60px;
+    border-radius: var(--apple-card-radius);
+    box-shadow: var(--apple-card-shadow);
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 30px;
+    margin-bottom: 30px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 30px;
+}
+
+.form-group label {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--apple-text-gray);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-left: 4px;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    padding: 16px;
+    font-size: 17px;
+    font-family: var(--apple-font-heading);
+    color: var(--apple-text-black);
+    background-color: var(--apple-gray-bg);
+    border: 1px solid transparent;
+    border-radius: 12px;
+    transition: all 0.2s ease;
+    width: 100%;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    outline: none;
+    background-color: white;
+    border-color: var(--apple-blue);
+    box-shadow: 0 0 0 4px rgba(0, 113, 227, 0.1);
+}
+
+.form-group textarea {
+    resize: vertical;
+    min-height: 120px;
+}
+
+.form-submit {
+    width: 100%;
+    margin-top: 20px;
+    padding: 16px;
+    border-radius: 980px;
+    font-size: 17px;
+    font-weight: 600;
+    background: var(--apple-blue);
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.form-submit:hover {
+    background: var(--apple-blue-hover);
+}
+
+/* Testimonial */
+.volunteer-testimonial {
+    max-width: 900px;
+    margin: 0 auto;
+    color: white;
+    position: relative;
+    text-align: center;
+}
+
+.testimonial-quote-large {
+    font-size: 80px;
+    font-family: serif;
+    opacity: 0.1;
+    position: absolute;
+    top: -40px;
+    left: 50%;
+    transform: translateX(-50%);
+    line-height: 1;
+}
+
+.testimonial-text {
+    font-size: 32px;
+    font-weight: 600;
+    line-height: 1.4;
+    margin-bottom: 40px;
+    position: relative;
+    z-index: 2;
+    color: white;
+}
+
+.testimonial-author-large {
+    padding-top: 40px;
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+    display: inline-block;
+}
+
+.author-name-large {
+    font-size: 21px;
+    font-weight: 600;
+    margin-bottom: 4px;
+}
+
+.author-role-large {
+    font-size: 17px;
+    color: #a1a1a6;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+    .opportunities-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .form-row {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .volunteer-header-content h1 {
+        font-size: 48px;
+    }
+
+    .volunteer-form {
+        padding: 30px;
+    }
+
+    .testimonial-text {
+        font-size: 24px;
+    }
+}
+
+@media (max-width: 480px) {
+    .volunteer-header {
+        padding: 100px 0 60px;
+    }
+
+    .volunteer-header-content h1 {
+        font-size: 42px;
+    }
+
+    .volunteer-intro {
+        font-size: 19px;
+    }
+
+    .opportunity-card {
+        padding: 30px 24px;
+    }
+
+    .benefits-list {
+        grid-template-columns: 1fr;
+    }
+
+    .volunteer-form {
+        padding: 30px 20px;
+    }
+
+    .form-title {
+        font-size: 32px;
+    }
+
+    .testimonial-text {
+        font-size: 20px;
+    }
+}

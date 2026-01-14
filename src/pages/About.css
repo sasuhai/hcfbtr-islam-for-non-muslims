@@ -1,0 +1,662 @@
+/* ============================================
+   Apple-Inspired Design System (Minimalist & Premium)
+   ============================================ */
+
+:root {
+    --apple-gray-bg: #f5f5f7;
+    --apple-text-black: #1d1d1f;
+    --apple-text-gray: #86868b;
+    --apple-blue: #0071e3;
+    --apple-blue-hover: #0077ed;
+    --apple-radius: 28px;
+    --apple-card-shadow: 0 4px 24px rgba(0, 0, 0, 0.04);
+    --apple-font-heading: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+/* Global Section Styles */
+.section {
+    padding: 120px 0;
+    /* Huge breathing room */
+    background-color: var(--bg-primary);
+}
+
+.section:nth-child(even) {
+    background-color: var(--bg-secondary);
+}
+
+.container {
+    max-width: 1080px;
+    /* Tighter container for readability */
+    margin: 0 auto;
+    padding: 0 24px;
+}
+
+/* Typography Overrides */
+h1,
+h2,
+h3,
+h4 {
+    font-family: var(--apple-font-heading);
+    letter-spacing: -0.015em;
+    color: var(--text-primary);
+}
+
+.section-title {
+    font-size: 56px;
+    font-weight: 600;
+    text-align: center;
+    margin-bottom: 20px;
+    line-height: 1.05;
+}
+
+.section-subtitle {
+    font-size: 24px;
+    font-weight: 400;
+    color: var(--text-primary);
+    text-align: center;
+    margin-bottom: 60px;
+}
+
+/* ============================================
+   Hero Section - "The Apple Header"
+   ============================================ */
+.hero-section {
+    position: relative;
+    height: 90vh;
+    min-height: 700px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: black;
+    background-image: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.5)), url('/images/hero-home.png');
+    background-size: cover;
+    background-position: center;
+    color: white;
+    text-align: center;
+    overflow: hidden;
+    padding-top: 120px;
+}
+
+.hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at center, #2c2c2e 0%, #000000 100%);
+    opacity: 0.2;
+}
+
+.hero-content {
+    z-index: 2;
+    max-width: 900px;
+    padding: 0 24px;
+    animation: fadeInUp 1s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+
+.hero-title {
+    font-size: 72px;
+    font-weight: 600;
+    margin-bottom: 16px;
+    letter-spacing: -0.02em;
+    color: white;
+}
+
+.hero-title span {
+    display: block;
+}
+
+.hero-title .text-gradient {
+    background: linear-gradient(135deg, #FF9F0A, #FF375F);
+    /* Warm Apple gradient */
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.hero-subtitle {
+    font-size: 28px;
+    font-weight: 400;
+    color: white;
+    /* Apple gray text on dark */
+    margin-bottom: 24px;
+}
+
+.hero-description {
+    font-size: 19px;
+    color: white;
+    max-width: 800px;
+    margin: 0 auto 40px;
+    line-height: 1.5;
+}
+
+.hero-cta {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+}
+
+.hero-cta .btn {
+    border-radius: 980px;
+    padding: 12px 24px;
+    font-size: 17px;
+    font-weight: 400;
+    transition: all 0.3s ease;
+}
+
+.hero-cta .btn-primary {
+    background: var(--apple-blue);
+    color: white;
+    border: none;
+}
+
+.hero-cta .btn-primary:hover {
+    background: var(--apple-blue-hover);
+    transform: scale(1.02);
+}
+
+.hero-btn-outline {
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.95);
+    color: #1d1d1f;
+    box-shadow: 0 4px 15px rgba(255, 255, 255, 0.2);
+}
+
+.hero-btn-outline:hover {
+    background: #ffffff;
+    border-color: #ffffff;
+    color: #1d1d1f;
+    transform: scale(1.02);
+    box-shadow: 0 0 30px rgba(255, 255, 255, 0.4);
+}
+
+/* Remove the old SVG wave */
+.hero-wave {
+    display: none;
+}
+
+/* ============================================
+   Impact Stats - "Bento Numbers"
+   ============================================ */
+.impact-section {
+    background-color: var(--bg-primary);
+    padding: 80px 0;
+    border-bottom: 1px solid var(--border-light);
+}
+
+.impact-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 40px;
+    text-align: center;
+}
+
+.impact-number {
+    font-size: 80px;
+    font-weight: 600;
+    background: linear-gradient(180deg, var(--text-primary) 0%, var(--text-tertiary) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    line-height: 1;
+    margin-bottom: 10px;
+    font-family: var(--apple-font-heading);
+}
+
+.impact-label {
+    font-size: 21px;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.impact-sublabel {
+    font-size: 14px;
+    color: var(--text-secondary);
+    margin-top: 5px;
+}
+
+/* ============================================
+   About Section - "Split Feature"
+   ============================================ */
+.about-section {
+    padding: 0;
+    /* Edge to edge wrapper if needed */
+    background: var(--bg-secondary);
+}
+
+.about-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    gap: 60px;
+    padding: 100px 0;
+}
+
+.about-text {
+    padding-right: 40px;
+}
+
+.about-text h2 {
+    font-size: 48px;
+    margin-bottom: 20px;
+}
+
+.about-text p {
+    font-size: 21px;
+    line-height: 1.45;
+    color: var(--text-secondary);
+    font-weight: 400;
+    margin-bottom: 30px;
+}
+
+.about-image .image-placeholder {
+    border-radius: var(--apple-radius);
+    aspect-ratio: 16/10;
+    background: var(--bg-card);
+    box-shadow: var(--apple-card-shadow);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.about-image:hover .image-placeholder {
+    transform: scale(1.02);
+}
+
+/* ============================================
+   Social Feed - "Cards Grid"
+   ============================================ */
+.social-section {
+    background-color: var(--bg-primary);
+}
+
+.social-feed-wrapper {
+    display: grid;
+    grid-template-columns: 1fr 380px;
+    gap: 30px;
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+/* The Feed Card */
+.fb-feed-container {
+    background: var(--bg-card);
+    border-radius: var(--apple-radius);
+    box-shadow: var(--apple-card-shadow);
+    border: 1px solid var(--border-light);
+    overflow: hidden;
+    transition: transform 0.3s ease;
+}
+
+.fb-feed-container:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+}
+
+/* Sidebar Cards */
+/* Sidebar Cards - Premium White Style */
+.social-connect-card,
+.social-info-card {
+    background: var(--bg-card);
+    border-radius: var(--apple-radius);
+    padding: 40px 32px;
+    text-align: center;
+    box-shadow: var(--apple-card-shadow);
+    border: 1px solid var(--border-light);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.social-connect-card:hover,
+.social-info-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+}
+
+/* Facebook Card Internals */
+.fb-logo-container {
+    color: #1877f2;
+    margin-bottom: 20px;
+    display: inline-flex;
+}
+
+.fb-logo-container svg {
+    width: 48px;
+    height: 48px;
+}
+
+.social-connect-card h3 {
+    margin-bottom: 8px;
+    font-size: 24px;
+}
+
+.connect-subtitle {
+    color: var(--text-secondary);
+    font-size: 15px;
+    margin-bottom: 24px;
+    line-height: 1.4;
+}
+
+.fb-stats {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    color: var(--text-primary);
+    margin-bottom: 32px;
+    background: var(--bg-secondary);
+    padding: 10px 16px;
+    border-radius: 20px;
+    display: inline-flex;
+}
+
+.stat-item strong {
+    font-weight: 600;
+}
+
+.stat-separator {
+    color: var(--border-light);
+}
+
+/* Info Card Internals */
+.social-info-card {
+    background: var(--bg-card);
+    /* Differentiate if needed, but white is cleanest */
+}
+
+.info-icon {
+    color: #FF9F0A;
+    /* Warm accent for notifications */
+    margin-bottom: 16px;
+    display: inline-flex;
+    padding: 12px;
+    background: rgba(255, 159, 10, 0.1);
+    border-radius: 50%;
+}
+
+.social-info-card h4 {
+    font-size: 21px;
+    margin-bottom: 12px;
+}
+
+.social-info-card p {
+    color: var(--text-secondary);
+    font-size: 15px;
+    line-height: 1.5;
+}
+
+/* ============================================
+   Features - "Bento Box Grid"
+   ============================================ */
+.features-section {
+    background: var(--bg-secondary);
+}
+
+.features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 24px;
+}
+
+.feature-card {
+    background: var(--bg-card);
+    border-radius: var(--apple-radius);
+    padding: 40px;
+    text-align: left;
+    /* Apple usually aligns left */
+    box-shadow: var(--apple-card-shadow);
+    transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.feature-card:hover {
+    transform: scale(1.03);
+}
+
+.feature-icon {
+    display: flex;
+    align-items: center;
+    justify-content: left;
+    margin-bottom: 24px;
+    color: var(--apple-blue);
+}
+
+.feature-icon svg {
+    width: 48px;
+    height: 48px;
+}
+
+.btn-icon {
+    display: inline-flex;
+    align-items: center;
+    margin-right: 8px;
+}
+
+.feature-title {
+    font-size: 24px;
+    font-weight: 600;
+    margin-bottom: 12px;
+}
+
+.feature-description {
+    font-size: 17px;
+    line-height: 1.5;
+    color: var(--apple-text-gray);
+}
+
+/* ============================================
+   CTA Section
+   ============================================ */
+.cta-section {
+    padding: 0;
+}
+
+.cta-card {
+    border-radius: 0;
+    margin: 0;
+    background: black;
+    padding: 120px 24px;
+    text-align: center;
+    color: white;
+}
+
+.cta-title {
+    font-size: 56px;
+    font-weight: 600;
+    color: #f5f5f7;
+    margin-bottom: 20px;
+}
+
+/* ============================================
+   Premium Apple-Style Buttons (High Specificity Override)
+   ============================================ */
+.cta-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 24px;
+    flex-wrap: wrap;
+    margin-top: 50px;
+}
+
+/* Base style with .home-page prefix to beat global .btn */
+.about-page .cta-buttons .btn {
+    padding: 14px 32px;
+    font-size: 17px;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    border-radius: 980px;
+    /* Perfect pill shape */
+    transition: all 0.3s cubic-bezier(0.25, 0.1, 0.25, 1) !important;
+    /* Force smooth easing */
+    line-height: 1.2;
+    min-width: 170px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    margin: 6px;
+    cursor: pointer;
+    border: none;
+    box-shadow: none;
+    /* Reset shadow first */
+}
+
+/* 1. Donate Now - Primary (Apple Blue) */
+.about-page .cta-buttons .btn-primary {
+    background-color: #0071e3 !important;
+    color: white !important;
+    border: 1px solid #0071e3;
+    box-shadow: 0 4px 15px rgba(0, 113, 227, 0.3);
+    /* Base shadow */
+}
+
+.about-page .cta-buttons .btn-primary:hover {
+    background-color: #0077ed !important;
+    /* Force override */
+    box-shadow: 0 0 30px rgba(0, 113, 227, 0.6) !important;
+    /* Stronger glow */
+    transform: scale(1.04) !important;
+    /* Slightly more pop */
+}
+
+/* 2. Volunteer - Secondary (Solid White) */
+.about-page .cta-buttons .btn-secondary {
+    background-color: #ffffff !important;
+    color: #1d1d1f !important;
+    border: 1px solid #ffffff;
+    box-shadow: 0 4px 15px rgba(255, 255, 255, 0.3);
+}
+
+.about-page .cta-buttons .btn-secondary:hover {
+    background-color: rgba(255, 255, 255, 0.95) !important;
+    transform: scale(1.04) !important;
+    box-shadow: 0 0 30px rgba(255, 255, 255, 0.5) !important;
+}
+
+/* 3. Explore Classes - Tertiary (Glass Outline) */
+.about-page .cta-buttons .btn-outline {
+    background-color: rgba(255, 255, 255, 0.05) !important;
+    /* Very subtle glass */
+    color: white !important;
+    border: 1px solid rgba(255, 255, 255, 0.4) !important;
+    backdrop-filter: blur(12px);
+}
+
+.about-page .cta-buttons .btn-outline:hover {
+    background-color: rgba(255, 255, 255, 0.2) !important;
+    border-color: white !important;
+    transform: scale(1.04) !important;
+}
+
+/* Ensure no override interferes */
+.about-page .cta-buttons .btn:active {
+    transform: scale(0.96) !important;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+    .section-title {
+        font-size: 40px;
+    }
+
+    .hero-title {
+        font-size: 48px;
+    }
+
+    .about-content,
+    .social-feed-wrapper,
+    .impact-grid {
+        grid-template-columns: 1fr;
+        gap: 40px;
+    }
+
+    .social-side-panel {
+        order: -1;
+    }
+}
+
+@media (max-width: 480px) {
+    .section {
+        padding: 60px 0;
+    }
+
+    .hero-section {
+        height: auto;
+        min-height: 100vh;
+        overflow: visible;
+        padding-bottom: 60px;
+    }
+
+    .hero-title {
+        font-size: 36px;
+        line-height: 1.1;
+    }
+
+    .hero-subtitle {
+        font-size: 19px;
+    }
+
+    .hero-content {
+        padding-top: 140px;
+        /* Increased from 100px to clear header safely */
+        padding-bottom: 40px;
+    }
+
+    .hero-description {
+        font-size: 16px;
+        padding: 0 10px;
+        /* Add breathing room */
+        display: -webkit-box;
+        -webkit-line-clamp: 6;
+        /* Limit lines if absolutely necessary, but auto height is better */
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        /* Ideally let it flow, but if we must clamp: */
+        /* For now, let's REMOVE clamping and let height grow */
+        overflow: visible;
+        display: block;
+    }
+
+    .hero-cta {
+        flex-direction: column;
+        gap: 12px;
+        margin-bottom: 20px;
+    }
+
+    .hero-cta .btn {
+        width: 100%;
+    }
+
+    .section-title {
+        font-size: 32px;
+    }
+
+    .section-subtitle {
+        font-size: 19px;
+        margin-bottom: 40px;
+    }
+
+    .impact-number {
+        font-size: 56px;
+    }
+
+    .about-text h2 {
+        font-size: 32px;
+    }
+
+    .cta-card {
+        padding: 60px 20px;
+    }
+
+    .cta-title {
+        font-size: 36px;
+    }
+
+    .about-page .cta-buttons {
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .about-page .cta-buttons .btn {
+        width: 100%;
+        margin: 0;
+    }
+}

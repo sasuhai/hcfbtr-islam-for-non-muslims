@@ -1,0 +1,625 @@
+/* Apple-Inspired Journey Page */
+
+.journey-page {
+    min-height: 100vh;
+    background-color: white;
+}
+
+.journey-header {
+    background-color: black;
+    background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('/images/hero-journey.png');
+    background-size: cover;
+    background-position: center;
+    padding: 160px 0 120px;
+    color: white;
+    text-align: center;
+}
+
+.journey-header-content {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 24px;
+}
+
+.journey-header-content h1 {
+    font-size: 80px;
+    font-weight: 600;
+    margin-bottom: 20px;
+    letter-spacing: -0.02em;
+    color: #ffffff;
+}
+
+.journey-intro {
+    font-size: 24px;
+    color: white;
+    max-width: 700px;
+    margin: 0 auto;
+    font-weight: 400;
+}
+
+/* Timeline */
+.timeline {
+    position: relative;
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 80px 0;
+}
+
+.timeline::before {
+    content: '';
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: #d2d2d7;
+    /* Apple border color */
+}
+
+.timeline-item {
+    margin-bottom: 80px;
+    position: relative;
+}
+
+.timeline-left .timeline-content {
+    margin-right: 55%;
+    text-align: right;
+}
+
+.timeline-right .timeline-content {
+    margin-left: 55%;
+    text-align: left;
+}
+
+.timeline-content {
+    position: relative;
+    padding: 40px;
+    background: white;
+    border-radius: var(--apple-card-radius);
+    box-shadow: var(--apple-card-shadow);
+    animation: fadeInUp 0.6s ease-out forwards;
+    opacity: 0;
+}
+
+/* Animation Delays */
+.timeline-item:nth-child(1) .timeline-content {
+    animation-delay: 0.1s;
+}
+
+.timeline-item:nth-child(2) .timeline-content {
+    animation-delay: 0.2s;
+}
+
+.timeline-item:nth-child(3) .timeline-content {
+    animation-delay: 0.3s;
+}
+
+.timeline-item:nth-child(4) .timeline-content {
+    animation-delay: 0.4s;
+}
+
+.timeline-item:nth-child(5) .timeline-content {
+    animation-delay: 0.5s;
+}
+
+/* Timeline Dot */
+.timeline-content::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 16px;
+    height: 16px;
+    background-color: var(--apple-blue);
+    border: 4px solid white;
+    border-radius: 50%;
+    box-shadow: 0 0 0 2px #d2d2d7;
+}
+
+.timeline-left .timeline-content::before {
+    right: -13%;
+    /* Adjusted for relative positioning */
+}
+
+.timeline-right .timeline-content::before {
+    left: -13%;
+}
+
+@media (min-width: 1000px) {
+    .timeline-left .timeline-content::before {
+        right: -67px;
+    }
+
+    .timeline-right .timeline-content::before {
+        left: -67px;
+    }
+}
+
+/* Hide Icons as requested */
+.timeline-icon,
+.milestone-icon,
+.vision-icon,
+.author-image {
+    display: none !important;
+}
+
+/* Hide Emoji icons from data */
+.timeline-content .emoji-icon {
+    display: none;
+}
+
+.timeline-year {
+    display: inline-block;
+    color: var(--apple-blue);
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.timeline-title {
+    font-size: 28px;
+    font-weight: 600;
+    color: var(--apple-text-black);
+    margin-bottom: 8px;
+}
+
+.timeline-subtitle {
+    font-size: 17px;
+    color: var(--apple-text-gray);
+    margin-bottom: 16px;
+}
+
+.timeline-description {
+    color: var(--apple-text-gray);
+    line-height: 1.5;
+    font-size: 17px;
+}
+
+/* Milestones */
+.milestones-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.milestone-card {
+    text-align: center;
+    padding: 30px 20px;
+    background: var(--apple-gray-bg);
+    border-radius: 20px;
+    transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+    box-shadow: none;
+    border: 1px solid rgba(0, 0, 0, 0.02);
+}
+
+.milestone-card:hover {
+    transform: translateY(-5px);
+    background: #ededef;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+}
+
+.milestone-number {
+    font-family: var(--apple-font-heading);
+    font-size: 40px;
+    font-weight: 700;
+    color: var(--apple-blue);
+    margin-bottom: 8px;
+    letter-spacing: -0.02em;
+}
+
+.milestone-label {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--apple-text-gray);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    line-height: 1.4;
+}
+
+/* Testimonials - Large Clean Cards */
+/* Testimonials - Aura Style Stacked Cards */
+/* Testimonials Wrapper for Arrows */
+.testimonials-wrapper {
+    position: relative;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.testimonials-grid {
+    display: flex;
+    align-items: center;
+    padding: 100px 80px;
+    /* High padding for vertical effects */
+    min-height: 600px;
+    perspective: 1000px;
+    flex-wrap: nowrap;
+    transition: all 0.3s;
+}
+
+.testimonials-grid.center-mode {
+    justify-content: center;
+    overflow-x: visible;
+    /* Prevent clipping */
+}
+
+.testimonials-grid.scroll-mode {
+    justify-content: flex-start;
+    overflow-x: auto;
+    scrollbar-width: none;
+    /* Hide scrollbar Firefox */
+    -ms-overflow-style: none;
+    /* Hide scrollbar IE */
+    padding-right: 120px;
+    /* Extra end padding for safety */
+}
+
+.testimonials-grid.scroll-mode::-webkit-scrollbar {
+    display: none;
+    /* Hide scrollbar Chrome */
+}
+
+/* Scroll Mode - Fix last item clipping */
+.testimonials-grid.scroll-mode .testimonial-card:last-child {
+    margin-right: 40px !important;
+    /* Ensure layout includes full card */
+}
+
+.scroll-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: white;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    cursor: pointer;
+    z-index: 30;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--apple-text-black);
+    transition: all 0.2s;
+}
+
+.scroll-btn:hover {
+    background: #f5f5f7;
+    transform: translateY(-50%) scale(1.1);
+}
+
+.scroll-btn-left {
+    left: 10px;
+}
+
+.scroll-btn-right {
+    right: 10px;
+}
+
+.testimonial-card {
+    width: 340px;
+    /* Slightly reduced width to fit safely */
+    height: 400px;
+    /* Fixed height for uniformity */
+    padding: 40px;
+    background: white;
+    border-radius: 20px;
+    box-shadow: -10px 10px 30px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(0, 0, 0, 0.05);
+
+    /* Important: Prevent shrinking to stop text reflow */
+    flex-shrink: 0;
+
+    /* Stacked State */
+    margin: 0 -40px;
+    /* Negative margin for overlap */
+    transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+}
+
+/* 3 Different Light Background Colors - Explicit Classes */
+.testimonial-card.color-blue {
+    background-color: #F0F6FF;
+}
+
+/* Light Blue */
+.testimonial-card.color-orange {
+    background-color: #FFF9F0;
+}
+
+/* Light Orange */
+.testimonial-card.color-pink {
+    background-color: #FDF2F5;
+}
+
+/* Light Pink */
+
+/* Repeating Rotation for slot positions */
+.testimonial-card:nth-child(1) {
+    transform: rotate(-4deg) translateY(10px);
+    z-index: 1;
+}
+
+.testimonial-card:nth-child(2) {
+    transform: rotate(0deg) translateY(-10px);
+    z-index: 2;
+}
+
+.testimonial-card:nth-child(3) {
+    transform: rotate(4deg) translateY(5px);
+    z-index: 3;
+}
+
+/* Container Hover - Align Straight */
+.testimonials-grid:hover .testimonial-card {
+    margin: 0 15px;
+    /* Spread out */
+    transform: rotate(0deg) translateY(0);
+    /* Straighten */
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+}
+
+/* Individual Hover - Highlight without scaling */
+.testimonial-card:hover {
+    /* Removed scale(1.05) to keep size same */
+    transform: translateY(-10px) !important;
+    z-index: 10 !important;
+    border-color: var(--apple-blue);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
+}
+
+.quote-icon {
+    font-size: 60px;
+    color: var(--apple-blue);
+    opacity: 0.1;
+    position: absolute;
+    top: 30px;
+    left: 30px;
+    font-family: serif;
+}
+
+.testimonial-quote {
+    font-size: 18px;
+    line-height: 1.6;
+    color: var(--apple-text-black);
+    font-weight: 500;
+    margin-bottom: auto;
+    /* Push author down */
+    position: relative;
+    z-index: 2;
+    padding-top: 20px;
+}
+
+.testimonial-author {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid #f5f5f7;
+}
+
+.author-image {
+    width: 48px;
+    height: 48px;
+    background: var(--apple-gray-bg);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--apple-text-gray);
+    flex-shrink: 0;
+}
+
+.author-image svg {
+    width: 24px;
+    height: 24px;
+}
+
+.author-name {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--apple-text-black);
+}
+
+.author-role {
+    font-size: 13px;
+    color: var(--apple-text-gray);
+}
+
+/* Mobile Responsive Implementation */
+@media (max-width: 1024px) {
+    .testimonials-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 30px;
+        padding: 20px 0;
+        min-height: auto;
+    }
+
+    .testimonial-card {
+        width: 100%;
+        height: auto;
+        margin: 0 !important;
+        transform: none !important;
+    }
+
+    .testimonials-grid:hover .testimonial-card {
+        margin: 0 !important;
+        transform: none !important;
+    }
+
+    .testimonial-card:hover {
+        transform: translateY(-5px) !important;
+    }
+}
+
+/* Forward Section */
+.forward-section {
+    background: black;
+    color: #f5f5f7;
+    margin-top: 100px;
+    padding: 120px 0;
+}
+
+.forward-content {
+    max-width: 1000px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.forward-title {
+    font-size: 64px;
+    font-weight: 600;
+    margin-bottom: 20px;
+    letter-spacing: -0.02em;
+}
+
+.forward-subtitle {
+    font-size: 24px;
+    color: #a1a1a6;
+    margin-bottom: 60px;
+}
+
+.forward-description {
+    font-size: 21px;
+    line-height: 1.6;
+    color: #86868b;
+    max-width: 800px;
+    margin: 0 auto 80px;
+}
+
+.forward-vision {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+}
+
+.vision-item {
+    padding: 40px;
+    background: #1d1d1f;
+    border-radius: var(--apple-card-radius);
+    text-align: left;
+    transition: transform 0.3s ease;
+}
+
+.vision-item:hover {
+    transform: translateY(-5px);
+    background: #2c2c2e;
+}
+
+.vision-icon {
+    display: flex;
+    margin-bottom: 20px;
+    color: var(--apple-blue);
+}
+
+.vision-item h4 {
+    font-size: 24px;
+    font-weight: 600;
+    margin-bottom: 12px;
+    color: #f5f5f7;
+}
+
+.vision-item p {
+    color: #86868b;
+    font-size: 17px;
+    line-height: 1.5;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .timeline::before {
+        left: 20px;
+    }
+
+    .timeline-left .timeline-content,
+    .timeline-right .timeline-content {
+        margin-left: 50px;
+        margin-right: 0;
+        text-align: left;
+    }
+
+    .timeline-left .timeline-content::before,
+    .timeline-right .timeline-content::before {
+        left: -40px;
+        right: auto;
+    }
+
+    .journey-header-content h1 {
+        font-size: 48px;
+    }
+
+    .forward-title {
+        font-size: 48px;
+    }
+
+    .milestones-grid,
+    .forward-vision {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 480px) {
+    .journey-header {
+        padding: 100px 0 60px;
+    }
+
+    .journey-header-content h1 {
+        font-size: 42px;
+    }
+
+    .journey-intro {
+        font-size: 19px;
+    }
+
+    .timeline {
+        padding: 40px 0;
+    }
+
+    /* Reset timeline for mobile to be straight line */
+    .timeline::before {
+        left: 20px;
+    }
+
+    .timeline-item {
+        margin-bottom: 40px;
+    }
+
+    .timeline-left .timeline-content,
+    .timeline-right .timeline-content {
+        margin-left: 50px;
+        padding: 24px;
+    }
+
+    .timeline-left .timeline-content::before,
+    .timeline-right .timeline-content::before {
+        left: -38px;
+    }
+
+    .timeline-title {
+        font-size: 24px;
+    }
+
+    .forward-title {
+        font-size: 36px;
+    }
+
+    .forward-subtitle {
+        font-size: 19px;
+    }
+
+    .testimonial-card,
+    .testimonials-grid {
+        width: 100% !important;
+        margin: 0 !important;
+    }
+}
