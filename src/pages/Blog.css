@@ -2,11 +2,11 @@
 
 .blog-page {
     min-height: 100vh;
-    background-color: var(--apple-gray-bg);
+    background-color: var(--bg-primary);
 }
 
 .blog-header {
-    background-color: black;
+    background-color: var(--bg-primary);
     background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('/images/hero-blog.png');
     background-size: cover;
     background-position: center;
@@ -34,9 +34,10 @@
     transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
     text-decoration: none;
     display: block;
-    background: white;
+    background: var(--bg-card);
     border-radius: var(--apple-card-radius);
     box-shadow: var(--apple-card-shadow);
+    border: 1px solid var(--border-light);
 }
 
 .featured-post:hover {
@@ -48,9 +49,9 @@
     position: absolute;
     top: 30px;
     right: 30px;
-    background: rgba(255, 255, 255, 0.9);
+    background: var(--bg-card);
     backdrop-filter: blur(10px);
-    color: var(--apple-blue);
+    color: var(--color-primary);
     padding: 8px 16px;
     border-radius: 980px;
     font-size: 13px;
@@ -58,7 +59,8 @@
     z-index: 10;
     text-transform: uppercase;
     letter-spacing: 0.05em;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border: 1px solid var(--border-light);
 }
 
 .featured-content {
@@ -112,14 +114,12 @@
 
 /* Tag Filter - Sticky Bar */
 .filter-section {
-    background: rgba(245, 245, 247, 0.8);
+    background: var(--nav-bg);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
     padding: 20px 0;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-    position: sticky;
-    top: 70px;
-    z-index: 100;
+    border-bottom: 1px solid var(--border-light);
+    z-index: 10;
 }
 
 .tag-filter {
@@ -131,15 +131,15 @@
 
 .tag-button {
     padding: 10px 20px;
-    border: none;
-    background: white;
+    border: 1px solid var(--border-light);
+    background: var(--bg-card);
     border-radius: 980px;
     font-size: 15px;
     font-weight: 500;
-    color: var(--apple-text-black);
+    color: var(--text-primary);
     cursor: pointer;
     transition: all 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    box-shadow: var(--shadow-sm);
 }
 
 .tag-button:hover {
@@ -148,8 +148,9 @@
 }
 
 .tag-button.active {
-    background: var(--apple-text-black);
-    color: white;
+    background: var(--text-primary);
+    color: var(--bg-primary);
+    border-color: var(--text-primary);
 }
 
 /* Posts Grid */
@@ -166,9 +167,10 @@
     flex-direction: column;
     overflow: hidden;
     padding: 0;
-    background: white;
+    background: var(--bg-card);
     border-radius: var(--apple-card-radius);
     box-shadow: var(--apple-card-shadow);
+    border: 1px solid var(--border-light);
     transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
     height: 100%;
 }
@@ -272,10 +274,6 @@
 @media (max-width: 768px) {
     .posts-grid {
         grid-template-columns: 1fr;
-    }
-
-    .filter-section {
-        top: 60px;
     }
 }
 

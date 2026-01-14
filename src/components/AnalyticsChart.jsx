@@ -109,7 +109,7 @@ const AnalyticsChart = ({ data, topPages }) => {
                         value={timeGrouping}
                         onChange={(e) => setTimeGrouping(e.target.value)}
                         className="form-select"
-                        style={{ padding: '8px', borderRadius: '4px', border: '1px solid #ddd' }}
+                        style={{ padding: '8px', borderRadius: '4px', border: '1px solid var(--border-light)', background: 'var(--bg-tertiary)', color: 'var(--text-primary)' }}
                     >
                         <option value="day">Daily</option>
                         <option value="week">Weekly</option>
@@ -126,9 +126,9 @@ const AnalyticsChart = ({ data, topPages }) => {
                             style={{
                                 padding: '6px 12px',
                                 borderRadius: '20px',
-                                border: '1px solid #ccc',
-                                background: selectedMetrics.includes(m.key) ? COLORS[idx % COLORS.length] : '#fff',
-                                color: selectedMetrics.includes(m.key) ? '#fff' : '#333',
+                                border: '1px solid var(--border-light)',
+                                background: selectedMetrics.includes(m.key) ? COLORS[idx % COLORS.length] : 'var(--bg-tertiary)',
+                                color: selectedMetrics.includes(m.key) ? '#fff' : 'var(--text-secondary)',
                                 cursor: 'pointer',
                                 fontSize: '0.9em'
                             }}
@@ -149,8 +149,9 @@ const AnalyticsChart = ({ data, topPages }) => {
                             style={{
                                 padding: '6px 12px',
                                 borderRadius: '20px',
-                                border: '1px solid #ccc',
-                                background: '#f8f8f8',
+                                border: '1px solid var(--border-light)',
+                                background: 'var(--bg-tertiary)',
+                                color: 'var(--text-primary)',
                                 maxWidth: '150px'
                             }}
                         >

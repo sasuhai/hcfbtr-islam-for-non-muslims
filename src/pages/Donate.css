@@ -6,7 +6,7 @@
 }
 
 .donate-header {
-    background-color: black;
+    background-color: var(--bg-primary);
     background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('/images/hero-donate.png');
     background-size: cover;
     background-position: center;
@@ -26,7 +26,7 @@
     font-weight: 600;
     margin-bottom: 20px;
     letter-spacing: -0.02em;
-    color: #ffffff;
+    color: white;
 }
 
 .donate-intro {
@@ -316,8 +316,8 @@
 }
 
 .donation-card-header {
-    background: #000000;
-    color: white;
+    background: var(--bg-tertiary);
+    color: var(--text-primary);
     padding: 60px;
     text-align: center;
 }
@@ -325,13 +325,13 @@
 .donation-card-header h2 {
     font-size: 48px;
     margin-bottom: 10px;
-    color: white;
+    color: var(--text-primary);
 }
 
 .header-subtitle {
     font-size: 21px;
     opacity: 0.8;
-    color: white;
+    color: var(--text-primary);
 }
 
 .donation-card-content {

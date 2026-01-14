@@ -1,5 +1,6 @@
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { useOrganization } from '../context/OrganizationContext';
+import { translations } from '../translations';
 import './Footer.css';
 
 const Icons = {
@@ -14,6 +15,11 @@ const Icons = {
 function Footer() {
     const currentYear = new Date().getFullYear();
     const { orgData } = useOrganization();
+    const location = useLocation();
+    const isBM = location.pathname.startsWith('/bm');
+    const t = translations[isBM ? 'bm' : 'en'];
+
+    const getLink = (path) => isBM ? `/bm${path}` : path;
 
     return (
         <footer className="footer">
@@ -25,30 +31,30 @@ function Footer() {
                             {orgData?.fullName || 'Hidayah Center Foundation @ Bandar Tun Razak'}
                         </p>
                         <p className="footer-description" style={{ marginTop: '0.5rem', fontSize: '0.9rem' }}>
-                            Sampaikan Islam, Perkayakan Mualaf
+                            {isBM ? 'Sampaikan Islam, Perkasakan Mualaf' : 'Convey Islam, Empower the Mualaf'}
                         </p>
                     </div>
 
                     <div className="footer-section">
-                        <h4 className="footer-heading">Navigasi</h4>
+                        <h4 className="footer-heading">{isBM ? 'Navigasi' : 'Navigation'}</h4>
                         <ul className="footer-links">
-                            <li><Link to="/">Home</Link></li>
-                            <li><Link to="/classes-for-non-muslims">Classes</Link></li>
-                            <li><Link to="/journey">Journey</Link></li>
-                            <li><Link to="/blog">Stories</Link></li>
+                            <li><Link to={getLink('/')}>{t.nav.home}</Link></li>
+                            <li><Link to={getLink('/classes-for-non-muslims')}>{t.nav.classes}</Link></li>
+                            <li><Link to={getLink('/journey')}>{t.nav.journey}</Link></li>
+                            <li><Link to={getLink('/blog')}>{isBM ? 'Cerita' : 'Stories'}</Link></li>
                         </ul>
                     </div>
 
                     <div className="footer-section">
-                        <h4 className="footer-heading">Terlibat</h4>
+                        <h4 className="footer-heading">{isBM ? 'Terlibat' : 'Get Involved'}</h4>
                         <ul className="footer-links">
-                            <li><Link to="/donate">Donate</Link></li>
-                            <li><Link to="/volunteer">Volunteer</Link></li>
+                            <li><Link to={getLink('/donate')}>{t.nav.donate}</Link></li>
+                            <li><Link to={getLink('/volunteer')}>{t.nav.volunteer}</Link></li>
                         </ul>
                     </div>
 
                     <div className="footer-section">
-                        <h4 className="footer-heading">Hubungi Kami</h4>
+                        <h4 className="footer-heading">{isBM ? 'Hubungi Kami' : 'Contact Us'}</h4>
                         <ul className="footer-contact">
                             <li>
                                 <span className="contact-icon"><Icons.Mail /></span>
@@ -86,8 +92,8 @@ function Footer() {
                 </div>
 
                 <div className="footer-bottom">
-                    <p>Idiahus @ {currentYear} {orgData?.shortName || 'HCFBTR'}. All rights reserved.</p>
-                    <p className="footer-tagline">Built with <Icons.Heart /> for our Islam</p>
+                    <p>Idiahus @ {currentYear} {orgData?.shortName || 'HCFBTR'}. {isBM ? 'Hak cipta terpelihara.' : 'All rights reserved.'}</p>
+                    <p className="footer-tagline">{isBM ? 'Dibina dengan' : 'Built with'} <Icons.Heart /> {isBM ? 'untuk Islam kita' : 'for our Islam'}</p>
                 </div>
             </div>
         </footer>

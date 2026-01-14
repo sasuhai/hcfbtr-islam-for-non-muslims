@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { getDocument } from '../firebase/firestoreService';
+import { useOrganization } from '../context/OrganizationContext';
 import './About.css';
 
 // Simple Icons
@@ -26,6 +27,7 @@ const Icons = {
 };
 
 function About() {
+    const { orgData } = useOrganization();
     const [pageContent, setPageContent] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -199,11 +201,13 @@ function About() {
                     <p className="hero-description" style={{ whiteSpace: 'pre-wrap' }} dangerouslySetInnerHTML={{ __html: hero.description }}></p>
                     <div className="hero-cta">
                         <Link to="/donate" className="btn btn-primary btn-lg shine-effect">
-                            {/* Assuming hero.ctaPrimary and hero.ctaSecondary are part of the default content now */}
                             <span className="btn-icon"><Icons.Heart /></span> Donate Now
                         </Link>
                         <Link to="/volunteer" className="btn btn-outline btn-lg hero-btn-outline">
                             <span className="btn-icon"><Icons.Hand /></span> Volunteer With Us
+                        </Link>
+                        <Link to="/" className="btn btn-outline btn-lg hero-btn-outline">
+                            <span className="btn-icon"><Icons.Book /></span> Islam for Non-Muslims
                         </Link>
                     </div>
                 </div>
@@ -212,10 +216,59 @@ function About() {
                         <path fill="#ffffff" fillOpacity="1" d="M0,96L48,112C96,128,192,160,288,160C384,160,480,128,576,112C672,96,768,96,864,112C960,128,1056,160,1152,160C1248,160,1344,128,1392,112L1440,96L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path>
                     </svg>
                 </div>
+            </section >
+
+            {/* Official Registration Widgets */}
+            <section className="py-20 bg-[var(--bg-secondary)] border-b border-[var(--border-light)]">
+                <div className="container">
+                    <div className="grid md:grid-cols-3 gap-8">
+                        {/* Widget 1 */}
+                        <div className="group relative bg-[var(--bg-card)] p-8 rounded-2xl shadow-2xl hover:shadow-sm transition-all duration-500 transform -translate-y-2 hover:translate-y-0 border border-[var(--border-light)] overflow-hidden">
+                            <div className="absolute top-0 right-0 -mt-4 -mr-4 w-24 h-24 bg-blue-100 dark:bg-blue-900/20 rounded-full opacity-50 blur-2xl group-hover:bg-blue-50 dark:group-hover:bg-blue-900/10 transition-colors"></div>
+                            <div className="relative z-10">
+                                <div className="w-12 h-12 bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-xl flex items-center justify-center mb-6 scale-110 group-hover:scale-100 transition-transform duration-500">
+                                    <span className="iconify text-2xl" data-icon="lucide:building-2"></span>
+                                </div>
+                                <h3 className="text-lg font-semibold text-stone-900 dark:text-white mb-3">Identiti Korporat</h3>
+                                <p className="text-stone-600 dark:text-stone-400 text-sm leading-relaxed">
+                                    HCF BTR adalah cawangan institusi <strong>The Trustees of Hidayah Centre Foundation Registered</strong>.
+                                </p>
+                            </div>
+                        </div>
+
+                        {/* Widget 2 */}
+                        <div className="group relative bg-[var(--bg-card)] p-8 rounded-2xl shadow-2xl hover:shadow-sm transition-all duration-500 transform -translate-y-2 hover:translate-y-0 border border-[var(--border-light)] overflow-hidden">
+                            <div className="absolute top-0 right-0 -mt-4 -mr-4 w-24 h-24 bg-amber-100 dark:bg-amber-900/20 rounded-full opacity-50 blur-2xl group-hover:bg-amber-50 dark:group-hover:bg-amber-900/10 transition-colors"></div>
+                            <div className="relative z-10">
+                                <div className="w-12 h-12 bg-amber-50 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400 rounded-xl flex items-center justify-center mb-6 scale-110 group-hover:scale-100 transition-transform duration-500">
+                                    <span className="iconify text-2xl" data-icon="lucide:landmark"></span>
+                                </div>
+                                <h3 className="text-lg font-semibold text-stone-900 dark:text-white mb-3">Pendaftaran Sah</h3>
+                                <p className="text-stone-600 dark:text-stone-400 text-sm leading-relaxed">
+                                    Diperbadankan di bawah Bahagian Hal Ehwal Undang-undang (BHEUU), <strong>Jabatan Perdana Menteri (JPM)</strong>.
+                                </p>
+                            </div>
+                        </div>
+
+                        {/* Widget 3 */}
+                        <div className="group relative bg-[var(--bg-card)] p-8 rounded-2xl shadow-2xl hover:shadow-sm transition-all duration-500 transform -translate-y-2 hover:translate-y-0 border border-[var(--border-light)] overflow-hidden">
+                            <div className="absolute top-0 right-0 -mt-4 -mr-4 w-24 h-24 bg-emerald-100 dark:bg-emerald-900/20 rounded-full opacity-50 blur-2xl group-hover:bg-emerald-50 dark:group-hover:bg-emerald-900/10 transition-colors"></div>
+                            <div className="relative z-10">
+                                <div className="w-12 h-12 bg-emerald-50 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 rounded-xl flex items-center justify-center mb-6 scale-110 group-hover:scale-100 transition-transform duration-500">
+                                    <span className="iconify text-2xl" data-icon="lucide:file-check"></span>
+                                </div>
+                                <h3 className="text-lg font-semibold text-stone-900 dark:text-white mb-3">No. Pendaftaran</h3>
+                                <p className="text-3xl font-bold text-stone-900 dark:text-white tracking-tight">
+                                    PPAB-14/2012
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </section>
 
             {/* Impact Stats */}
-            <section className="impact-section section">
+            < section className="impact-section section" >
                 <div className="container">
                     <div className="impact-grid">
                         {impactStats.map((stat, index) => (
@@ -227,14 +280,14 @@ function About() {
                         ))}
                     </div>
                 </div>
-            </section>
+            </section >
 
             {/* About Section */}
-            <section className="about-section section">
+            < section className="about-section section" >
                 <div className="container">
                     <div className="about-content">
                         <div className="about-text">
-                            <h2 className="section-title">{about.title}</h2>
+                            <h2 className="section-title">Tentang {orgData?.shortName || 'HCFBTR'}</h2>
                             <p className="section-subtitle">{about.subtitle}</p>
                             <p style={{ whiteSpace: 'pre-wrap' }} dangerouslySetInnerHTML={{ __html: about.paragraph1 }}></p>
                             <p style={{ whiteSpace: 'pre-wrap' }} dangerouslySetInnerHTML={{ __html: about.paragraph2 }}></p>
@@ -242,32 +295,56 @@ function About() {
                                 Baca Perjalanan Kami <span>→</span>
                             </Link>
                         </div>
-                        <div className="about-image">
-                            <div className="image-placeholder" style={{ backgroundImage: 'url(/images/about-students.png)', backgroundSize: 'cover', backgroundPosition: 'center', border: 'none' }}>
+                        <div className="about-image h-full">
+                            <div className="grid grid-cols-2 gap-4 h-full min-h-[500px]">
+                                {/* Large Left Image */}
+                                <div className="row-span-2 relative rounded-2xl overflow-hidden shadow-lg group">
+                                    <img
+                                        src="/hcf_community.png"
+                                        alt="Community Service"
+                                        className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700"
+                                    />
+                                </div>
+                                {/* Top Right Image */}
+                                <div className="relative rounded-2xl overflow-hidden shadow-lg group">
+                                    <img
+                                        src="/hcf_center.png"
+                                        alt="HCF Centre"
+                                        className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700"
+                                    />
+                                </div>
+                                {/* Bottom Right Image */}
+                                <div className="relative rounded-2xl overflow-hidden shadow-lg group">
+                                    <img
+                                        src="/kbm_class.png"
+                                        alt="Classes"
+                                        className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700"
+                                    />
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </section>
+            </section >
 
             {/* Social Feed Section (Facebook) */}
 
-            <section className="social-section section" style={{ backgroundColor: '#f8fafc' }}>
+            <section className="social-section section bg-stone-50 dark:bg-stone-950">
                 <div className="container">
                     <div className="section-header text-center mb-2xl">
-                        <span className="badge-pill mb-sm">Sosial Media</span>
-                        <h2 className="section-title">Ikuti Perkembangan Kami</h2>
-                        <p className="section-subtitle">Latest Updates @ HCF.btr</p>
+                        <span className="badge-pill mb-sm bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400">Sosial Media</span>
+                        <h2 className="section-title text-stone-900 dark:text-white">Ikuti Perkembangan Kami</h2>
+                        <p className="section-subtitle text-stone-500 dark:text-stone-400">Latest Updates @ HCF.btr</p>
                     </div>
 
                     <div className="social-feed-wrapper">
                         {/* Facebook Page Plugin Iframe (Reliable Method) */}
-                        <div className="fb-feed-container card" style={{ padding: '0', overflow: 'hidden', minHeight: '300px', height: '500px', position: 'relative', width: '340px', margin: '0 auto' }}>
+                        <div className="fb-feed-container card bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800" style={{ padding: '0', overflow: 'hidden', minHeight: '300px', height: '600px', position: 'relative', width: '500px', margin: '0 auto' }}>
                             <iframe
                                 key="fb-feed-adapt-test"
-                                src="https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2FHCF.btr&tabs=timeline&width=500&height=500&small_header=true&adapt_container_width=true&hide_cover=false&show_facepile=false"
+                                src="https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2FHCF.btr&tabs=timeline&width=500&height=600&small_header=true&adapt_container_width=true&hide_cover=false&show_facepile=false"
                                 width="100%"
-                                height="500"
+                                height="600"
                                 style={{ border: 'none', overflow: 'hidden' }}
                                 scrolling="no"
                                 frameBorder="0"
@@ -282,11 +359,11 @@ function About() {
                             {/* Connect Card */}
                             <div className="social-connect-card">
                                 <div className="connect-content">
-                                    <div className="fb-logo-container">
+                                    <div className="fb-logo-container dark:bg-blue-900 dark:text-blue-100">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg>
                                     </div>
-                                    <h3>HCF BTR</h3>
-                                    <p className="connect-subtitle">Komuniti Sokongan Mualaf & Asnaf</p>
+                                    <h3 className="text-stone-900 dark:text-white">HCF BTR</h3>
+                                    <p className="connect-subtitle text-stone-500 dark:text-stone-400">Komuniti Sokongan Mualaf & Asnaf</p>
                                     <div className="fb-stats">
                                         <div className="stat-item"><strong>Official</strong> Page</div>
                                         <div className="stat-separator">•</div>
@@ -299,20 +376,20 @@ function About() {
                             </div>
 
                             {/* Info Card - Stay Updated */}
-                            <div className="social-info-card mt-lg">
+                            <div className="social-info-card mt-lg bg-emerald-50 dark:bg-emerald-900/20 border-emerald-100 dark:border-emerald-800/30">
 
-                                <h4>Stay Updated</h4>
-                                <p>
+                                <h4 className="text-emerald-900 dark:text-emerald-300">Stay Updated</h4>
+                                <p className="text-emerald-800 dark:text-emerald-400">
                                     Follow our page to get notifications about upcoming events, donation drives, and community stories.
                                 </p>
                             </div>
                         </div>
                     </div>
                 </div>
-            </section>
+            </section >
 
             {/* Features Section */}
-            <section className="features-section section" style={{ backgroundColor: 'var(--color-bg-light)' }}>
+            < section className="features-section section bg-stone-100 dark:bg-black" >
                 <div className="container">
                     <div className="section-header text-center">
                         <h2 className="section-title">{whyChooseUs.title}</h2>
@@ -330,10 +407,10 @@ function About() {
                         ))}
                     </div>
                 </div>
-            </section>
+            </section >
 
             {/* CTA Section */}
-            <section className="cta-section section">
+            < section className="cta-section section" >
                 <div className="container">
                     <div className="cta-card">
                         <div className="cta-content">
@@ -347,6 +424,9 @@ function About() {
                                 <Link to="/classes" className="btn btn-outline btn-lg" style={{ borderColor: 'white', color: 'white' }}>
                                     Explore Classes
                                 </Link>
+                                <Link to="/" className="btn btn-outline btn-lg" style={{ borderColor: 'white', color: 'white' }}>
+                                    Islam for Non-Muslims
+                                </Link>
                                 <Link to="/donate" className="btn btn-primary btn-lg">
                                     Donate Now
                                 </Link>
@@ -354,8 +434,8 @@ function About() {
                         </div>
                     </div>
                 </div>
-            </section>
-        </div>
+            </section >
+        </div >
     );
 }
 

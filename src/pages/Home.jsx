@@ -1,9 +1,20 @@
 import { Helmet } from "react-helmet-async";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
+import { useOrganization } from "../context/OrganizationContext";
+import { translations } from "../translations";
 
 export default function Home() {
+    const { orgData } = useOrganization();
+    const location = useLocation();
+    const isBM = location.pathname.startsWith('/bm');
+    const t = translations[isBM ? 'bm' : 'en'];
+    const h = t.home;
+    const common = t.common;
+
+    const getLink = (path) => isBM ? `/bm${path}` : path;
+
     return (
-        <main className="bg-stone-50 text-stone-700 font-sans selection:bg-stone-200 selection:text-stone-900" style={{ fontFamily: "'Inter', sans-serif" }}>
+        <main className="bg-stone-50 text-stone-700 dark:bg-black dark:text-stone-300 font-sans selection:bg-stone-200 dark:selection:bg-stone-800 selection:text-stone-900 dark:selection:text-stone-100" style={{ fontFamily: "'Inter', sans-serif" }}>
             <Helmet>
                 <title>
                     Revert or Convert to Islam in Malaysia | Classes for Non-Muslims & Syahadah – Hidayah Centre Foundation
@@ -23,24 +34,24 @@ export default function Home() {
                 <div className="absolute inset-0 z-0 opacity-30 pointer-events-none">
                     {/* Abstract architectural lines background */}
                     <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
-                        <line x1="20%" y1="0" x2="20%" y2="100%" stroke="#E7E5E4" strokeWidth="1"></line>
-                        <line x1="80%" y1="0" x2="80%" y2="100%" stroke="#E7E5E4" strokeWidth="1"></line>
+                        <line x1="20%" y1="0" x2="20%" y2="100%" stroke="currentColor" className="text-stone-200 dark:text-stone-800" strokeWidth="1"></line>
+                        <line x1="80%" y1="0" x2="80%" y2="100%" stroke="currentColor" className="text-stone-200 dark:text-stone-800" strokeWidth="1"></line>
                     </svg>
                 </div>
 
                 <div className="max-w-5xl mx-auto px-6 relative z-10 w-full grid md:grid-cols-2 gap-12 items-center">
                     <div className="max-w-xl order-2 md:order-1">
-                        <p className="text-stone-500 text-sm tracking-widest uppercase mb-6 fade-in font-medium">Hidayah Centre Foundation</p>
-                        <h1 className="text-5xl md:text-7xl font-medium tracking-tighter text-stone-900 leading-[1.1] mb-8 fade-in">
-                            Learn About Islam for non-Muslims. <br />
-                            <span className="text-stone-400">Guidance & Support — <br className="md:hidden" />for your journey.</span>
+                        <p className="text-stone-500 dark:text-stone-500 text-sm tracking-widest uppercase mb-6 fade-in font-medium">Hidayah Centre Foundation</p>
+                        <h1 className="text-5xl md:text-7xl font-medium tracking-tighter text-stone-900 dark:text-white leading-[1.1] mb-8 fade-in">
+                            {h.heroTitle} <br />
+                            <span className="text-stone-400 dark:text-stone-500">{h.heroSubtitle}</span>
                         </h1>
                         <div className="fade-in-delay">
-                            <p className="text-stone-600 text-lg md:text-xl font-light leading-relaxed max-w-lg mb-10">
-                                Hidayah Centre Foundation Bandar Tun Razak (HCFBTR) KL is a trusted Islamic organisation in Malaysia that provides guidance, education, and support for non-Muslims who wish to learn about Islam or revert to Islam. We offer free introductory classes, personal guidance, and assistance with syahadah (declaration of faith) in a respectful and welcoming environment.
+                            <p className="text-stone-600 dark:text-stone-400 text-lg md:text-xl font-light leading-relaxed max-w-lg mb-10">
+                                {h.heroDesc}
                             </p>
-                            <Link to="/convert-to-islam-malaysia" className="inline-flex items-center text-sm font-medium text-stone-900 border-b border-stone-900 pb-1 hover:text-stone-600 hover:border-stone-400 transition-all duration-300">
-                                Learn about Revert to Islam
+                            <Link to={getLink("/convert-to-islam-malaysia")} className="inline-flex items-center text-sm font-medium text-stone-900 dark:text-white border-b border-stone-900 dark:border-white pb-1 hover:text-stone-600 dark:hover:text-stone-300 hover:border-stone-400 transition-all duration-300">
+                                {h.heroCTA}
                                 <span className="iconify ml-2" data-icon="lucide:arrow-right"></span>
                             </Link>
                         </div>
@@ -60,18 +71,18 @@ export default function Home() {
                                 </div>
                             </div>
                             {/* Decorative backing card */}
-                            <div className="absolute top-4 -right-4 w-full h-full border border-stone-300 rounded-sm -z-0 hidden md:block"></div>
+                            <div className="absolute top-4 -right-4 w-full h-full border border-stone-300 dark:border-stone-700 rounded-sm -z-0 hidden md:block"></div>
                         </div>
                     </div>
                 </div>
             </section>
 
             {/* Philosophy Quote */}
-            <section className="py-24 md:py-32 bg-white border-y border-stone-100">
+            <section className="py-24 md:py-32 bg-white dark:bg-stone-900 border-y border-stone-100 dark:border-stone-800">
                 <div className="max-w-3xl mx-auto px-6 text-center">
-                    <span className="iconify mx-auto text-stone-300 mb-8" data-icon="lucide:quote" data-width="24" data-height="24"></span>
-                    <blockquote className="serif-quote text-2xl md:text-4xl text-stone-800 leading-relaxed italic">
-                        “Helping you discover the beauty of Islam with knowledge, compassion, and understanding.”
+                    <span className="iconify mx-auto text-stone-300 dark:text-stone-600 mb-8" data-icon="lucide:quote" data-width="24" data-height="24"></span>
+                    <blockquote className="serif-quote text-2xl md:text-4xl text-stone-800 dark:text-stone-200 leading-relaxed italic">
+                        {h.philosophy}
                     </blockquote>
                 </div>
             </section>
@@ -90,31 +101,28 @@ export default function Home() {
                             </div>
                         </div>
                         <div className="md:col-span-8 md:pl-8">
-                            <h2 className="text-2xl font-medium tracking-tight text-stone-900 mb-8">Islam Classes for Non-Muslims</h2>
-                            <div className="space-y-6 text-stone-600 font-light leading-relaxed text-lg">
+                            <h2 className="text-2xl font-medium tracking-tight text-stone-900 dark:text-white mb-8">{h.classesTitle}</h2>
+                            <div className="space-y-6 text-stone-600 dark:text-stone-400 font-light leading-relaxed text-lg">
                                 <p>
-                                    We provide structured and easy-to-understand Islamic classes specially designed
-                                    for non-Muslims. These classes introduce the basic beliefs of Islam, the purpose
-                                    of life, and common questions about Islamic practices.
+                                    {h.classesDesc}
                                 </p>
                                 <p>
-                                    Classes are offered through Hidayah Centre branches across Malaysia and are
-                                    conducted in English or Bahasa Melayu, depending on availability.
+                                    {h.classesSubDesc}
                                 </p>
                             </div>
 
-                            <div className="grid grid-cols-2 gap-6 mt-12 border-t border-stone-200 pt-8">
+                            <div className="grid grid-cols-2 gap-6 mt-12 border-t border-stone-200 dark:border-stone-800 pt-8">
                                 <div>
-                                    <h3 className="text-sm font-medium text-stone-900 uppercase tracking-wide mb-2">Languages</h3>
-                                    <p className="text-stone-500 text-sm">English, Bahasa Melayu</p>
+                                    <h3 className="text-sm font-medium text-stone-900 dark:text-stone-300 uppercase tracking-wide mb-2">{common.languages}</h3>
+                                    <p className="text-stone-500 dark:text-stone-500 text-sm">English, Bahasa Melayu</p>
                                 </div>
                                 <div>
-                                    <h3 className="text-sm font-medium text-stone-900 uppercase tracking-wide mb-2">Cost</h3>
-                                    <p className="text-stone-500 text-sm">Free of Charge (FOC)</p>
+                                    <h3 className="text-sm font-medium text-stone-900 dark:text-stone-300 uppercase tracking-wide mb-2">{common.cost}</h3>
+                                    <p className="text-stone-500 dark:text-stone-500 text-sm">{common.free}</p>
                                 </div>
                             </div>
                             <div className="mt-8">
-                                <Link to="/classes-for-non-muslims" className="text-stone-900 underline hover:text-stone-600">View Class Schedule →</Link>
+                                <Link to={getLink("/classes-for-non-muslims")} className="text-stone-900 dark:text-stone-300 underline hover:text-stone-600 dark:hover:text-stone-100">{h.viewSchedule} →</Link>
                             </div>
                         </div>
                     </div>
@@ -122,44 +130,41 @@ export default function Home() {
             </section>
 
             {/* Professional Experience (Conversion Process) */}
-            <section id="process" className="py-24 bg-white border-y border-stone-100">
+            <section id="process" className="py-24 bg-white dark:bg-stone-900 border-y border-stone-100 dark:border-stone-800">
                 <div className="max-w-5xl mx-auto px-6">
                     <div className="flex flex-col md:flex-row justify-between items-baseline mb-16">
-                        <h2 className="text-2xl font-medium tracking-tight text-stone-900">Your Journey to Islam</h2>
-                        <span className="text-sm text-stone-400 mt-2 md:mt-0">Step by Step</span>
+                        <h2 className="text-2xl font-medium tracking-tight text-stone-900 dark:text-white">{h.journeyTitle}</h2>
+                        <span className="text-sm text-stone-400 dark:text-stone-600 mt-2 md:mt-0">{common.stepByStep}</span>
                     </div>
 
                     <div className="space-y-0">
                         {/* Item 1 */}
-                        <div className="group border-l border-stone-200 pl-8 pb-12 relative">
-                            <span className="absolute -left-[5px] top-1 h-2.5 w-2.5 rounded-full bg-stone-300 group-hover:bg-emerald-800/60 transition-colors duration-300"></span>
-                            <h3 className="text-lg font-medium text-stone-900 mb-1">Learn & Understand</h3>
-                            <p className="text-stone-500 text-sm mb-4">Foundation</p>
-                            <p className="text-stone-600 font-light leading-relaxed max-w-2xl">
-                                Attend our introductory classes to understand the basic beliefs (Aqidah) and practices of Islam. Ask questions and clarify doubts in a safe, non-judgmental environment.
+                        <div className="group border-l border-stone-200 dark:border-stone-800 pl-8 pb-12 relative">
+                            <span className="absolute -left-[5px] top-1 h-2.5 w-2.5 rounded-full bg-stone-300 dark:bg-stone-700 group-hover:bg-emerald-800/60 transition-colors duration-300"></span>
+                            <h3 className="text-lg font-medium text-stone-900 dark:text-stone-200 mb-1">{h.step1Title}</h3>
+                            <p className="text-stone-500 dark:text-stone-500 text-sm mb-4">{common.foundation}</p>
+                            <p className="text-stone-600 dark:text-stone-400 font-light leading-relaxed max-w-2xl">
+                                {h.step1Desc}
                             </p>
                         </div>
 
                         {/* Item 2 */}
-                        <div className="group border-l border-stone-200 pl-8 pb-12 relative">
-                            <span className="absolute -left-[5px] top-1 h-2.5 w-2.5 rounded-full bg-stone-300 group-hover:bg-emerald-800/60 transition-colors duration-300"></span>
-                            <h3 className="text-lg font-medium text-stone-900 mb-1">Syahadah (Declaration of Faith)</h3>
-                            <p className="text-stone-500 text-sm mb-4">Conversion</p>
-                            <p className="text-stone-600 font-light leading-relaxed max-w-2xl">
-                                Reverting or converting to Islam involves reciting the Syahadah in front of authorised witnesses. Hidayah Centre Foundation provides step-by-step guidance to ensure the process is clear, respectful, and meaningful.
+                        <div className="group border-l border-stone-200 dark:border-stone-800 pl-8 pb-12 relative">
+                            <span className="absolute -left-[5px] top-1 h-2.5 w-2.5 rounded-full bg-stone-300 dark:bg-stone-700 group-hover:bg-emerald-800/60 transition-colors duration-300"></span>
+                            <h3 className="text-lg font-medium text-stone-900 dark:text-stone-200 mb-1">{h.step2Title}</h3>
+                            <p className="text-stone-500 dark:text-stone-500 text-sm mb-4">{common.conversion}</p>
+                            <p className="text-stone-600 dark:text-stone-400 font-light leading-relaxed max-w-2xl">
+                                {h.step2Desc}
                             </p>
-                            <Link to="/shahadah-guidance" className="text-sm mt-2 inline-block text-stone-800 border-b border-stone-300 hover:border-stone-800">Read more about Syahadah</Link>
                         </div>
 
                         {/* Item 3 */}
-                        <div className="group border-l border-stone-200 pl-8 pb-12 relative">
-                            <span className="absolute -left-[5px] top-1 h-2.5 w-2.5 rounded-full bg-stone-300 group-hover:bg-emerald-800/60 transition-colors duration-300"></span>
-                            <h3 className="text-lg font-medium text-stone-900 mb-1">New Muslim Support</h3>
-                            <p className="text-stone-500 text-sm mb-4">Growth (Mualaf)</p>
-                            <p className="text-stone-600 font-light leading-relaxed max-w-2xl">
-                                Becoming a Muslim is a meaningful life change. We continue to support new
-                                Muslims (Mualaf) through education, counselling, and community connections to help
-                                them grow confidently in their new faith.
+                        <div className="group border-l border-stone-200 dark:border-stone-800 pl-8 pb-12 relative">
+                            <span className="absolute -left-[5px] top-1 h-2.5 w-2.5 rounded-full bg-stone-300 dark:bg-stone-700 group-hover:bg-emerald-800/60 transition-colors duration-300"></span>
+                            <h3 className="text-lg font-medium text-stone-900 dark:text-stone-200 mb-1">{h.step3Title}</h3>
+                            <p className="text-stone-500 dark:text-stone-500 text-sm mb-4">{common.growth}</p>
+                            <p className="text-stone-600 dark:text-stone-400 font-light leading-relaxed max-w-2xl">
+                                {h.step3Desc}
                             </p>
                         </div>
                     </div>
@@ -167,41 +172,47 @@ export default function Home() {
             </section>
 
             {/* Consulting Studio (Why Us) */}
-            <section id="why-us" className="py-24 bg-stone-100/50">
+            <section id="why-us" className="py-24 bg-stone-100/50 dark:bg-stone-950">
                 <div className="max-w-5xl mx-auto px-6">
                     <div className="grid md:grid-cols-2 gap-16">
                         <div>
-                            <span className="inline-block py-1 px-3 rounded-full bg-emerald-900/5 text-emerald-900 text-xs font-medium tracking-wide mb-6">About Us</span>
-                            <h2 className="text-3xl font-medium tracking-tight text-stone-900 mb-6">Why Choose Hidayah Centre Foundation</h2>
-                            <p className="text-stone-600 font-light leading-relaxed mb-8">
-                                We are dedicated to providing a supportive and educational environment for everyone interested in Islam.
+                            <span className="inline-block py-1 px-3 rounded-full bg-emerald-900/5 text-emerald-900 dark:text-emerald-500 text-xs font-medium tracking-wide mb-6">{common.aboutUs}</span>
+                            <h2 className="text-3xl font-medium tracking-tight text-stone-900 dark:text-white mb-6">{h.whyUsTitle} ({orgData.shortName || 'HCFBTR'})</h2>
+                            <p className="text-stone-600 dark:text-stone-400 font-light leading-relaxed mb-8">
+                                {isBM ? 'Kami berdedikasi untuk menyediakan persekitaran yang menyokong dan mendidik untuk semua orang yang meminati Islam.' : 'We are dedicated to providing a supportive and educational environment for everyone interested in Islam.'}
                             </p>
                             <ul className="space-y-4">
                                 <li className="flex items-start">
-                                    <span className="iconify text-stone-400 mr-3 mt-1 flex-shrink-0" data-icon="lucide:check"></span>
-                                    <span className="text-stone-700 text-sm">Trusted Islamic organisation in Malaysia</span>
+                                    <span className="iconify text-stone-400 dark:text-stone-600 mr-3 mt-1 flex-shrink-0" data-icon="lucide:check"></span>
+                                    <span className="text-stone-700 dark:text-stone-300 text-sm">{common.trusted}</span>
                                 </li>
                                 <li className="flex items-start">
-                                    <span className="iconify text-stone-400 mr-3 mt-1 flex-shrink-0" data-icon="lucide:check"></span>
-                                    <span className="text-stone-700 text-sm">Free guidance and classes for non-Muslims</span>
+                                    <span className="iconify text-stone-400 dark:text-stone-600 mr-3 mt-1 flex-shrink-0" data-icon="lucide:check"></span>
+                                    <span className="text-stone-700 dark:text-stone-300 text-sm">{common.freeGuidance}</span>
                                 </li>
                                 <li className="flex items-start">
-                                    <span className="iconify text-stone-400 mr-3 mt-1 flex-shrink-0" data-icon="lucide:check"></span>
-                                    <span className="text-stone-700 text-sm">Experienced and compassionate educators</span>
+                                    <span className="iconify text-stone-400 dark:text-stone-600 mr-3 mt-1 flex-shrink-0" data-icon="lucide:check"></span>
+                                    <span className="text-stone-700 dark:text-stone-300 text-sm">{common.educators}</span>
                                 </li>
                                 <li className="flex items-start">
-                                    <span className="iconify text-stone-400 mr-3 mt-1 flex-shrink-0" data-icon="lucide:check"></span>
-                                    <span className="text-stone-700 text-sm">Support before and after syahadah</span>
+                                    <span className="iconify text-stone-400 dark:text-stone-600 mr-3 mt-1 flex-shrink-0" data-icon="lucide:check"></span>
+                                    <span className="text-stone-700 dark:text-stone-300 text-sm">{common.support}</span>
                                 </li>
                             </ul>
-                        </div>
-                        <div className="bg-white p-10 shadow-sm border border-stone-200 rounded-sm flex flex-col justify-center">
-                            <div className="mb-6">
-                                <span className="iconify text-stone-800" data-icon="lucide:layers" data-width="32" data-height="32"></span>
+                            <div className="mt-8">
+                                <Link to={getLink("/about")} className="inline-flex items-center text-sm font-medium text-stone-900 dark:text-stone-300 border-b border-stone-900 dark:border-stone-100 pb-1 hover:text-stone-600 dark:hover:text-stone-100 hover:border-stone-400 transition-all duration-300">
+                                    {common.getToKnow} {orgData.shortName || 'HCFBTR'}
+                                    <span className="iconify ml-2" data-icon="lucide:arrow-right"></span>
+                                </Link>
                             </div>
-                            <h3 className="text-lg font-medium text-stone-900 mb-2">Our Mission - Convey Islam, Empower the Mualaf</h3>
-                            <p className="text-stone-500 text-sm font-light leading-relaxed">
-                                "To share the message of Islam with wisdom and beautiful preaching, and to empower new Muslims to become exemplary believers."
+                        </div>
+                        <div className="bg-white dark:bg-stone-900 p-10 shadow-sm border border-stone-200 dark:border-stone-800 rounded-sm flex flex-col justify-center">
+                            <div className="mb-6">
+                                <span className="iconify text-stone-800 dark:text-stone-200" data-icon="lucide:layers" data-width="32" data-height="32"></span>
+                            </div>
+                            <h3 className="text-lg font-medium text-stone-900 dark:text-white mb-2">{h.missionTitle}</h3>
+                            <p className="text-stone-500 dark:text-stone-400 text-sm font-light leading-relaxed">
+                                {h.missionDesc}
                             </p>
                         </div>
                     </div>
@@ -211,61 +222,39 @@ export default function Home() {
 
 
             {/* Personal Interests (Services) */}
-            <section className="py-24 bg-white">
+            <section className="py-24 bg-white dark:bg-black">
                 <div className="max-w-5xl mx-auto px-6">
-                    <h2 className="text-sm font-medium uppercase tracking-widest text-stone-400 text-center mb-16">Services & Support</h2>
+                    <h2 className="text-sm font-medium uppercase tracking-widest text-stone-400 dark:text-stone-600 text-center mb-16">{common.servicesSupport}</h2>
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
                         <div className="group">
-                            <div className="w-12 h-12 mx-auto bg-stone-50 rounded-full flex items-center justify-center mb-4 group-hover:bg-stone-100 transition-colors">
-                                <span className="iconify text-stone-600" data-icon="lucide:book-open" data-width="20" data-height="20"></span>
+                            <div className="w-12 h-12 mx-auto bg-stone-50 dark:bg-stone-900 rounded-full flex items-center justify-center mb-4 group-hover:bg-stone-100 dark:group-hover:bg-stone-800 transition-colors">
+                                <span className="iconify text-stone-600 dark:text-stone-400" data-icon="lucide:book-open" data-width="20" data-height="20"></span>
                             </div>
-                            <h4 className="text-sm font-medium text-stone-800">Free Classes</h4>
+                            <h4 className="text-sm font-medium text-stone-800 dark:text-stone-200">{common.freeClasses}</h4>
                         </div>
                         <div className="group">
-                            <div className="w-12 h-12 mx-auto bg-stone-50 rounded-full flex items-center justify-center mb-4 group-hover:bg-stone-100 transition-colors">
-                                <span className="iconify text-stone-600" data-icon="lucide:heart-handshake" data-width="20" data-height="20"></span>
+                            <div className="w-12 h-12 mx-auto bg-stone-50 dark:bg-stone-900 rounded-full flex items-center justify-center mb-4 group-hover:bg-stone-100 dark:group-hover:bg-stone-800 transition-colors">
+                                <span className="iconify text-stone-600 dark:text-stone-400" data-icon="lucide:heart-handshake" data-width="20" data-height="20"></span>
                             </div>
-                            <h4 className="text-sm font-medium text-stone-800">Revert Support</h4>
+                            <h4 className="text-sm font-medium text-stone-800 dark:text-stone-200">{common.revertSupport}</h4>
                         </div>
                         <div className="group">
-                            <div className="w-12 h-12 mx-auto bg-stone-50 rounded-full flex items-center justify-center mb-4 group-hover:bg-stone-100 transition-colors">
-                                <span className="iconify text-stone-600" data-icon="lucide:users" data-width="20" data-height="20"></span>
+                            <div className="w-12 h-12 mx-auto bg-stone-50 dark:bg-stone-900 rounded-full flex items-center justify-center mb-4 group-hover:bg-stone-100 dark:group-hover:bg-stone-800 transition-colors">
+                                <span className="iconify text-stone-600 dark:text-stone-400" data-icon="lucide:users" data-width="20" data-height="20"></span>
                             </div>
-                            <h4 className="text-sm font-medium text-stone-800">Community</h4>
+                            <h4 className="text-sm font-medium text-stone-800 dark:text-stone-200">{common.community}</h4>
                         </div>
                         <div className="group">
-                            <div className="w-12 h-12 mx-auto bg-stone-50 rounded-full flex items-center justify-center mb-4 group-hover:bg-stone-100 transition-colors">
-                                <span className="iconify text-stone-600" data-icon="lucide:map-pin" data-width="20" data-height="20"></span>
+                            <div className="w-12 h-12 mx-auto bg-stone-50 dark:bg-stone-900 rounded-full flex items-center justify-center mb-4 group-hover:bg-stone-100 dark:group-hover:bg-stone-800 transition-colors">
+                                <span className="iconify text-stone-600 dark:text-stone-400" data-icon="lucide:map-pin" data-width="20" data-height="20"></span>
                             </div>
-                            <h4 className="text-sm font-medium text-stone-800">Nationwide Branches</h4>
+                            <h4 className="text-sm font-medium text-stone-800 dark:text-stone-200">{common.branches}</h4>
                         </div>
                     </div>
                 </div>
             </section>
 
-            {/* Contact Section */}
-            <section id="contact" className="py-32 bg-stone-900 text-stone-300">
-                <div className="max-w-3xl mx-auto px-6 text-center">
-                    <h2 className="text-3xl md:text-4xl font-medium tracking-tight text-white mb-6">Contact Us</h2>
-                    <p className="text-stone-400 font-light text-lg mb-10 max-w-lg mx-auto">
-                        If you are interested in learning about Islam or reverting to Islam, please contact Hidayah Centre Foundation. Our team will be happy to guide you in a respectful and confidential manner.
-                    </p>
 
-                    <div className="flex flex-col md:flex-row items-center justify-center">
-                        <Link to="/hidayah-centre-branches" className="group bg-stone-800 hover:bg-stone-700 text-white px-8 py-3 rounded text-sm font-medium transition-all duration-300 border border-stone-700 flex items-center gap-2">
-                            <span className="iconify" data-icon="lucide:map-pin"></span>
-                            Find a Branch Near You
-                        </Link>
-                    </div>
-
-                    <div className="mt-24 pt-8 border-t border-stone-800 flex flex-col md:flex-row justify-between items-center text-xs text-stone-500">
-                        <p>© {new Date().getFullYear()} Hidayah Centre Foundation. All rights reserved.</p>
-                        <div className="flex space-x-6 mt-4 md:mt-0">
-                            <span>Malaysia</span>
-                        </div>
-                    </div>
-                </div>
-            </section>
         </main>
     );
 }

@@ -1,0 +1,133 @@
+.volunteer-grid-section {
+    position: relative;
+    padding: 3rem 1rem;
+    background: var(--bg-secondary);
+}
+
+.volunteer-grid-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+}
+
+/* Grid Layout */
+.v-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    /* Dense grid */
+    gap: 2rem 1rem;
+    /* Wider vertical gap, narrow horizontal */
+    padding: 1rem 0;
+}
+
+/* Item Styles (No Card Background) */
+.v-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 0.5rem;
+    transition: transform 0.3s;
+}
+
+.v-item:hover {
+    transform: translateY(-5px);
+}
+
+/* Image Wrapper */
+.v-img-wrapper {
+    width: 80px;
+    height: 80px;
+    margin-bottom: 0.75rem;
+    border-radius: 50%;
+    /* Subtle shadow/border for the image itself to make it pop */
+    box-shadow: var(--shadow-sm);
+    border: 2px solid var(--border-light);
+    overflow: hidden;
+    position: relative;
+    background: var(--bg-tertiary);
+    transition: all 0.3s ease;
+}
+
+.v-item:hover .v-img-wrapper {
+    box-shadow: 0 8px 15px rgba(59, 130, 246, 0.15);
+    border-color: #3b82f6;
+    transform: scale(1.05);
+}
+
+.v-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.v-initial {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg-tertiary);
+    color: var(--text-secondary);
+    font-weight: 700;
+    font-size: 1.5rem;
+}
+
+/* Typography */
+.v-name {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    line-height: 1.3;
+    margin-bottom: 0.25rem;
+}
+
+.v-title {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    line-height: 1.3;
+    margin-bottom: 0.5rem;
+    max-width: 90%;
+}
+
+.v-dept {
+    font-size: 0.65rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 2px 8px;
+    border-radius: 10px;
+    background: var(--bg-tertiary);
+    color: var(--text-secondary);
+}
+
+/* Skeleton */
+.skeleton-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.skeleton-avatar {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: #e2e8f0;
+    margin-bottom: 0.75rem;
+}
+
+.skeleton-text {
+    height: 12px;
+    width: 100px;
+    background: #e2e8f0;
+    border-radius: 4px;
+    margin-bottom: 4px;
+}
+
+.skeleton-text-sm {
+    height: 10px;
+    width: 70px;
+    background: #e2e8f0;
+    border-radius: 4px;
+}

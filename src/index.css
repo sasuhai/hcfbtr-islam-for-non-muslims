@@ -138,35 +138,34 @@
   --max-width: 980px;
 }
 
+/* Dark Mode Theme */
 [data-theme='dark'] {
-  /* Dark Mode Overrides - Apple Dark Mode Style */
   --bg-primary: #000000;
-  --bg-secondary: #1c1c1e;
-  --bg-tertiary: #2c2c2e;
-  --bg-card: #1c1c1e;
+  --bg-secondary: #0a0a0a;
+  --bg-tertiary: #1c1c1e;
+  --bg-card: #0a0a0a;
 
   --text-primary: #f5f5f7;
-  --text-secondary: #86868b;
+  --text-secondary: #a1a1a6;
   --text-tertiary: #636366;
   --text-inverse: #1d1d1f;
 
-  --border-light: #38383a;
-  --border-strong: #48484a;
+  --border-light: #1c1c1e;
+  --border-strong: #38383a;
 
   --color-primary: #0a84ff;
-  /* Apple Dark Mode Blue */
   --color-primary-hover: #409cff;
 
-  --nav-bg: rgba(28, 28, 30, 0.85);
+  --nav-bg: rgba(0, 0, 0, 0.75);
   --nav-border: rgba(255, 255, 255, 0.1);
 
-  /* Update legacy mappings for dark mode */
+  /* Design System Tokens (Dark) */
   --apple-gray-bg: var(--bg-secondary);
   --apple-text-black: var(--text-primary);
   --apple-text-gray: var(--text-secondary);
   --apple-blue: var(--color-primary);
   --apple-blue-hover: var(--color-primary-hover);
-  --apple-card-shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
+  --apple-card-shadow: 0 4px 24px rgba(0, 0, 0, 0.6);
 
   --color-bg-white: var(--bg-primary);
   --color-bg-light: var(--bg-secondary);
@@ -174,10 +173,11 @@
   --color-text-secondary: var(--text-secondary);
   --color-border: var(--border-light);
 
-  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.2);
-  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.3);
-  --shadow-lg: 0 8px 30px rgba(0, 0, 0, 0.4);
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.6);
+  --shadow-lg: 0 8px 30px rgba(0, 0, 0, 0.8);
 }
+
 
 body {
   background-color: var(--bg-primary);
@@ -622,13 +622,13 @@ a:hover {
    Custom Header Styles (From Target)
    ============================================ */
 .navbar {
-  background: rgba(255, 255, 255, 0.8);
+  background: var(--nav-bg);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   position: sticky;
   top: 0;
   z-index: 1000;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  border-bottom: 1px solid var(--nav-border);
 }
 
 .navbar-content {

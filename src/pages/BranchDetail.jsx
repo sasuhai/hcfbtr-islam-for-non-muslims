@@ -15,7 +15,7 @@ export default function BranchDetail() {
     const cityName = city ? formatCityName(city) : "Malaysia";
 
     return (
-        <main className="animate-fade-in">
+        <main className="animate-fade-in bg-stone-50 text-stone-700 dark:bg-black dark:text-stone-300 min-h-screen">
             {/* Meta Tags */}
             <Helmet>
                 <title>
@@ -53,7 +53,7 @@ export default function BranchDetail() {
             <div className="container" style={{ paddingBottom: '60px' }}>
                 <div className="hero" style={{ paddingBottom: '40px' }}>
                     {/* Page Heading */}
-                    <h1>Hidayah Centre {cityName}</h1>
+                    <h1 className="text-stone-900 dark:text-white">Hidayah Centre {cityName}</h1>
 
                     <p>
                         Welcome to Hidayah Centre {cityName}. We are dedicated to providing
@@ -61,7 +61,7 @@ export default function BranchDetail() {
                     </p>
                 </div>
 
-                <div className="section card">
+                <div className="section card bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 p-8 rounded-sm shadow-sm">
                     <h2>Services at {cityName} Branch</h2>
                     <ul>
                         <li>Free Islam classes for non-Muslims in {cityName}</li>
@@ -72,18 +72,18 @@ export default function BranchDetail() {
                 </div>
 
                 <div className="section">
-                    <h2>Contact & Location</h2>
-                    <p>
+                    <h2 className="text-stone-900 dark:text-white">Contact & Location</h2>
+                    <p className="text-stone-600 dark:text-stone-400">
                         To visit or contact our {cityName} branch, please refer to the general
                         contact information or visit our main office for referral.
                     </p>
-                    <p>
+                    <p className="text-stone-500 dark:text-stone-500 italic">
                         <em>(Specific address and contact details for {cityName} would be listed here)</em>
                     </p>
-                    <Link to="/hidayah-centre-branches" className="btn">Back to All Branches</Link>
+                    <Link to="/hidayah-centre-branches" className="btn btn-primary inline-block transition-all">Back to All Branches</Link>
                 </div>
 
-                <div className="section card">
+                <div className="section card bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 p-8 rounded-sm shadow-sm">
                     {/* Internal Links */}
                     <h2>Other Pages You May Find Useful</h2>
                     <ul>

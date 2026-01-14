@@ -68,6 +68,14 @@ function AdminDashboard() {
         icon: '📖', color: 'primary', published: true
     });
 
+
+    // Volunteers state
+    const [employees, setEmployees] = useState([]);
+    const [showVolunteerForm, setShowVolunteerForm] = useState(false);
+    const [editingVolunteer, setEditingVolunteer] = useState(null);
+    const [volunteerForm, setVolunteerForm] = useState({
+        name: '', title: '', department: '', imageUrl: ''
+    });
     // Pages state
     const [pages, setPages] = useState({ home: null, journey: null, donate: null, volunteer: null, classes: null });
     const [editingPage, setEditingPage] = useState(null); // 'home' or 'journey'
@@ -94,7 +102,7 @@ function AdminDashboard() {
     const loadData = async () => {
         setLoading(true);
         try {
-            const [usersData, blogData, classesData, homeData, journeyData, donateData, volunteerData, classesPageData, analyticsRaw] = await Promise.all([
+            const [usersData, blogData, classesData, homeData, journeyData, donateData, volunteerData, classesPageData, analyticsRaw, employeesData] = await Promise.all([
                 getAllDocuments('users'),
                 getAllDocuments('blog-posts'),
                 getAllDocuments('classes'),
@@ -103,9 +111,11 @@ function AdminDashboard() {
                 getDocument('pages', 'donate'),
                 getDocument('pages', 'volunteer'),
                 getDocument('pages', 'classes'),
-                getAllDocuments('analytics_daily')
+                getAllDocuments('analytics_daily'),
+                getAllDocuments('employees')
             ]);
             setUsers(usersData);
+            setEmployees(employeesData || []);
             setBlogPosts(blogData.sort((a, b) => new Date(b.date) - new Date(a.date)));
             setClasses(classesData);
             setPages({
@@ -377,6 +387,57 @@ function AdminDashboard() {
         });
     };
 
+    // VOLUNTEER MANAGEMENT
+    const handleVolunteerSubmit = async (e) => {
+        e.preventDefault();
+        try {
+            if (editingVolunteer) {
+                await updateDocument('employees', editingVolunteer.id, volunteerForm);
+                showMessage('Volunteer updated successfully!');
+            } else {
+                await createDocument('employees', volunteerForm);
+                showMessage('Volunteer created successfully!');
+            }
+            setShowVolunteerForm(false);
+            setEditingVolunteer(null);
+            setVolunteerForm({ name: '', title: '', department: '', imageUrl: '' });
+            loadData();
+        } catch (error) {
+            showMessage('Error saving volunteer: ' + error.message, 'error');
+        }
+    };
+
+    const handleEditVolunteer = (vol) => {
+        setEditingVolunteer(vol);
+        setVolunteerForm({
+            name: vol.name,
+            title: vol.title,
+            department: vol.department || '',
+            imageUrl: vol.imageUrl || ''
+        });
+        setShowVolunteerForm(true);
+    };
+
+    const handleDeleteVolunteer = async (id) => {
+        if (!window.confirm('Delete this volunteer?')) return;
+        try {
+            await deleteDocument('employees', id);
+            showMessage('Volunteer deleted successfully');
+            loadData();
+        } catch (error) {
+            showMessage('Error deleting: ' + error.message, 'error');
+        }
+    };
+
+    const handleVolunteerImageUpload = (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+        if (file.size > 500 * 1024) { showMessage('File too large (Max 500KB)', 'error'); return; }
+        const reader = new FileReader();
+        reader.onloadend = () => setVolunteerForm(prev => ({ ...prev, imageUrl: reader.result }));
+        reader.readAsDataURL(file);
+    };
+
     const handleSaveOrgSettings = async (e) => {
         e.preventDefault();
         setLoading(true);
@@ -495,6 +556,12 @@ function AdminDashboard() {
                     <span className="tab-icon"><Icons.Layout /></span> Pages
                 </button>
                 <button
+                    className={`tab ${activeTab === 'volunteers' ? 'active' : ''}`}
+                    onClick={() => setActiveTab('volunteers')}
+                >
+                    <span className="tab-icon"><Icons.Heart /></span> Volunteers ({employees.length})
+                </button>
+                <button
                     className={`tab ${activeTab === 'settings' ? 'active' : ''}`}
                     onClick={() => setActiveTab('settings')}
                 >
@@ -508,9 +575,20 @@ function AdminDashboard() {
                 {activeTab === 'analytics' && (
                     <div className="tab-content analytics-dashboard">
                         {/* Storage Box */}
-                        <div className="card" style={{ background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', color: 'white', padding: '20px', borderRadius: '12px', marginBottom: '25px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', boxShadow: '0 4px 15px rgba(0,0,0,0.1)' }}>
+                        <div className="card" style={{
+                            background: 'var(--bg-tertiary)',
+                            color: 'var(--text-primary)',
+                            padding: '20px',
+                            borderRadius: '12px',
+                            marginBottom: '25px',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'space-between',
+                            border: '1px solid var(--border-light)',
+                            boxShadow: 'var(--shadow-sm)'
+                        }}>
                             <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
-                                <div style={{ background: 'rgba(255,255,255,0.2)', padding: '12px', borderRadius: '50%', display: 'flex' }}>
+                                <div style={{ background: 'var(--color-primary)', color: 'white', padding: '12px', borderRadius: '50%', display: 'flex' }}>
                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3" /><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3" /><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5" /></svg>
                                 </div>
                                 <div>
@@ -526,9 +604,9 @@ function AdminDashboard() {
                                     </div>
                                 </div>
                             </div>
-                            <div style={{ textAlign: 'right', opacity: 0.7, fontSize: '0.8em', maxWidth: '200px', lineHeight: '1.4' }}>
-                                <div><Icons.AlertTriangle /> Estimate excludes indexes.</div>
-                                <div style={{ marginTop: '5px' }}>Storage Bucket: 0 Bytes (Unused)</div>
+                            <div style={{ textAlign: 'right', color: 'var(--text-secondary)', fontSize: '0.8em', maxWidth: '200px', lineHeight: '1.4' }}>
+                                <div style={{ opacity: 0.8 }}><Icons.AlertTriangle /> Estimate excludes indexes.</div>
+                                <div style={{ marginTop: '5px', opacity: 0.8 }}>Storage Bucket: 0 Bytes (Unused)</div>
                             </div>
                         </div>
                         <div className="content-header" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '15px', marginBottom: '20px' }}>
@@ -653,37 +731,51 @@ function AdminDashboard() {
                         </div>
 
                         {showUserForm && (
-                            <form onSubmit={handleCreateUser} className="admin-form">
-                                <div className="form-group">
-                                    <label>Email Address *</label>
-                                    <input
-                                        type="email"
-                                        value={newUser.email}
-                                        onChange={(e) => setNewUser({ ...newUser, email: e.target.value })}
-                                        required
-                                    />
+                            <form onSubmit={handleCreateUser} className="admin-form card animate-in" style={{ maxWidth: '500px', margin: '0 0 2rem 0', padding: '1.5rem', border: '1px solid var(--border-light)', boxShadow: 'var(--shadow-md)', background: 'var(--bg-card)' }}>
+                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem', paddingBottom: '1rem', borderBottom: '1px solid var(--border-light)' }}>
+                                    <h3 style={{ margin: 0, fontSize: '1.1rem', fontWeight: 700, color: 'var(--text-primary)' }}>Create New Admin User</h3>
+                                    <button type="button" onClick={() => setShowUserForm(false)} style={{ background: 'none', border: 'none', fontSize: '1.1rem', cursor: 'pointer', color: 'var(--text-secondary)' }}>✖</button>
                                 </div>
-                                <div className="form-group">
-                                    <label>Password *</label>
-                                    <input
-                                        type="password"
-                                        value={newUser.password}
-                                        onChange={(e) => setNewUser({ ...newUser, password: e.target.value })}
-                                        required
-                                        minLength="6"
-                                    />
+                                <div style={{ display: 'grid', gap: '1.2rem' }}>
+                                    <div className="form-group" style={{ margin: 0 }}>
+                                        <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-secondary)', marginBottom: '0.4rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Email Address *</label>
+                                        <input
+                                            type="email"
+                                            value={newUser.email}
+                                            onChange={(e) => setNewUser({ ...newUser, email: e.target.value })}
+                                            style={{ width: '100%', padding: '0.5rem 0.75rem', border: '1px solid var(--border-light)', borderRadius: '6px', fontSize: '0.95rem', background: 'var(--bg-tertiary)', color: 'var(--text-primary)' }}
+                                            required
+                                            placeholder="admin@example.com"
+                                        />
+                                    </div>
+                                    <div className="form-group" style={{ margin: 0 }}>
+                                        <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-secondary)', marginBottom: '0.4rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Password *</label>
+                                        <input
+                                            type="password"
+                                            value={newUser.password}
+                                            onChange={(e) => setNewUser({ ...newUser, password: e.target.value })}
+                                            style={{ width: '100%', padding: '0.5rem 0.75rem', border: '1px solid var(--border-light)', borderRadius: '6px', fontSize: '0.95rem', background: 'var(--bg-tertiary)', color: 'var(--text-primary)' }}
+                                            required
+                                            minLength="6"
+                                            placeholder="••••••••"
+                                        />
+                                    </div>
+                                    <div className="form-group" style={{ margin: 0 }}>
+                                        <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-secondary)', marginBottom: '0.4rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Display Name</label>
+                                        <input
+                                            type="text"
+                                            value={newUser.displayName}
+                                            onChange={(e) => setNewUser({ ...newUser, displayName: e.target.value })}
+                                            style={{ width: '100%', padding: '0.5rem 0.75rem', border: '1px solid var(--border-light)', borderRadius: '6px', fontSize: '0.95rem', background: 'var(--bg-tertiary)', color: 'var(--text-primary)' }}
+                                            placeholder="e.g. Admin User"
+                                        />
+                                    </div>
                                 </div>
-                                <div className="form-group">
-                                    <label>Display Name</label>
-                                    <input
-                                        type="text"
-                                        value={newUser.displayName}
-                                        onChange={(e) => setNewUser({ ...newUser, displayName: e.target.value })}
-                                    />
+                                <div style={{ marginTop: '1.5rem', paddingTop: '1rem', borderTop: '1px solid var(--border-light)', display: 'flex', justifyContent: 'flex-end' }}>
+                                    <button type="submit" className="btn btn-primary" style={{ minWidth: '120px' }}>
+                                        <span className="icon-inline"><Icons.Check /></span> Create User
+                                    </button>
                                 </div>
-                                <button type="submit" className="btn btn-primary">
-                                    <span className="icon-inline"><Icons.Check /></span> Create Admin User
-                                </button>
                             </form>
                         )}
 
@@ -740,126 +832,145 @@ function AdminDashboard() {
                         </div>
 
                         {showBlogForm && (
-                            <form onSubmit={handleBlogSubmit} className="admin-form blog-form">
-                                <div className="form-row">
-                                    <div className="form-group">
-                                        <label>Slug (URL) *</label>
+                            <form onSubmit={handleBlogSubmit} className="admin-form card animate-in" style={{ maxWidth: '900px', margin: '0 0 2rem 0', padding: '1.5rem', border: '1px solid var(--border-light)', boxShadow: 'var(--shadow-md)', background: 'var(--bg-card)' }}>
+                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem', paddingBottom: '1rem', borderBottom: '1px solid var(--border-light)' }}>
+                                    <h3 style={{ margin: 0, fontSize: '1.2rem', fontWeight: 700, color: 'var(--text-primary)' }}>{editingBlog ? 'Edit Blog Post' : 'New Blog Post'}</h3>
+                                    <button type="button" onClick={() => setShowBlogForm(false)} style={{ background: 'none', border: 'none', fontSize: '1.1rem', cursor: 'pointer', color: 'var(--text-secondary)' }}>✖</button>
+                                </div>
+
+                                <div style={{ display: 'grid', gap: '1.2rem' }}>
+                                    <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '1rem' }}>
+                                        <div className="form-group" style={{ margin: 0 }}>
+                                            <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-secondary)', marginBottom: '0.4rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Slug (URL) *</label>
+                                            <input
+                                                type="text"
+                                                value={blogForm.slug}
+                                                onChange={(e) => setBlogForm({ ...blogForm, slug: e.target.value })}
+                                                required
+                                                placeholder="my-cool-blog-post"
+                                                style={{ width: '100%', padding: '0.5rem 0.75rem', border: '1px solid var(--border-light)', borderRadius: '6px', fontSize: '0.95rem', background: 'var(--bg-tertiary)', color: 'var(--text-primary)' }}
+                                            />
+                                        </div>
+                                        <div className="form-group" style={{ margin: 0 }}>
+                                            <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-secondary)', marginBottom: '0.4rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Date *</label>
+                                            <input
+                                                type="date"
+                                                value={blogForm.date}
+                                                onChange={(e) => setBlogForm({ ...blogForm, date: e.target.value })}
+                                                required
+                                                style={{ width: '100%', padding: '0.5rem 0.75rem', border: '1px solid var(--border-light)', borderRadius: '6px', fontSize: '0.95rem', background: 'var(--bg-tertiary)', color: 'var(--text-primary)' }}
+                                            />
+                                        </div>
+                                    </div>
+
+                                    <div className="form-group" style={{ margin: 0 }}>
+                                        <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-secondary)', marginBottom: '0.4rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Title *</label>
                                         <input
                                             type="text"
-                                            value={blogForm.slug}
-                                            onChange={(e) => setBlogForm({ ...blogForm, slug: e.target.value })}
+                                            value={blogForm.title}
+                                            onChange={(e) => setBlogForm({ ...blogForm, title: e.target.value })}
                                             required
-                                            placeholder="my-blog-post"
+                                            placeholder="Enter post title"
+                                            style={{ width: '100%', padding: '0.5rem 0.75rem', border: '1px solid var(--border-light)', borderRadius: '6px', fontSize: '1rem', fontWeight: 600, background: 'var(--bg-tertiary)', color: 'var(--text-primary)' }}
                                         />
                                     </div>
-                                    <div className="form-group">
-                                        <label>Date *</label>
-                                        <input
-                                            type="date"
-                                            value={blogForm.date}
-                                            onChange={(e) => setBlogForm({ ...blogForm, date: e.target.value })}
-                                            required
-                                        />
-                                    </div>
-                                </div>
 
-                                <div className="form-group">
-                                    <label>Title *</label>
-                                    <input
-                                        type="text"
-                                        value={blogForm.title}
-                                        onChange={(e) => setBlogForm({ ...blogForm, title: e.target.value })}
-                                        required
-                                    />
-                                </div>
-
-                                <div className="form-group">
-                                    <label>Subtitle (English)</label>
-                                    <input
-                                        type="text"
-                                        value={blogForm.subtitle}
-                                        onChange={(e) => setBlogForm({ ...blogForm, subtitle: e.target.value })}
-                                    />
-                                </div>
-
-                                <div className="form-group">
-                                    <label>Excerpt *</label>
-                                    <textarea
-                                        value={blogForm.excerpt}
-                                        onChange={(e) => setBlogForm({ ...blogForm, excerpt: e.target.value })}
-                                        required
-                                        rows="3"
-                                    />
-                                </div>
-
-                                <div className="form-group">
-                                    <label>Content (HTML) *</label>
-                                    <textarea
-                                        value={blogForm.content}
-                                        onChange={(e) => setBlogForm({ ...blogForm, content: e.target.value })}
-                                        required
-                                        rows="10"
-                                    />
-                                </div>
-
-                                <div className="form-row">
-                                    <div className="form-group">
-                                        <label>Author *</label>
+                                    <div className="form-group" style={{ margin: 0 }}>
+                                        <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-secondary)', marginBottom: '0.4rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Subtitle (English)</label>
                                         <input
                                             type="text"
-                                            value={blogForm.author}
-                                            onChange={(e) => setBlogForm({ ...blogForm, author: e.target.value })}
-                                            required
+                                            value={blogForm.subtitle}
+                                            onChange={(e) => setBlogForm({ ...blogForm, subtitle: e.target.value })}
+                                            placeholder="Secondary title"
+                                            style={{ width: '100%', padding: '0.5rem 0.75rem', border: '1px solid var(--border-light)', borderRadius: '6px', fontSize: '0.95rem', background: 'var(--bg-tertiary)', color: 'var(--text-primary)' }}
                                         />
                                     </div>
-                                    <div className="form-group">
-                                        <label>Icon/Em
 
-                                            oji</label>
+                                    <div className="form-group" style={{ margin: 0 }}>
+                                        <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-secondary)', marginBottom: '0.4rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Excerpt *</label>
+                                        <textarea
+                                            value={blogForm.excerpt}
+                                            onChange={(e) => setBlogForm({ ...blogForm, excerpt: e.target.value })}
+                                            required
+                                            rows="2"
+                                            placeholder="Short summary for preview"
+                                            style={{ width: '100%', padding: '0.6rem 0.75rem', border: '1px solid var(--border-light)', borderRadius: '6px', fontSize: '0.95rem', background: 'var(--bg-tertiary)', color: 'var(--text-primary)', resize: 'vertical' }}
+                                        />
+                                    </div>
+
+                                    <div className="form-group" style={{ margin: 0 }}>
+                                        <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-secondary)', marginBottom: '0.4rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Content (HTML) *</label>
+                                        <textarea
+                                            value={blogForm.content}
+                                            onChange={(e) => setBlogForm({ ...blogForm, content: e.target.value })}
+                                            required
+                                            rows="8"
+                                            placeholder="HTML content here..."
+                                            style={{ width: '100%', padding: '0.6rem 0.75rem', border: '1px solid var(--border-light)', borderRadius: '6px', fontSize: '0.9rem', fontFamily: 'monospace', background: 'var(--bg-tertiary)', color: 'var(--text-primary)', resize: 'vertical' }}
+                                        />
+                                    </div>
+
+                                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+                                        <div className="form-group" style={{ margin: 0 }}>
+                                            <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-secondary)', marginBottom: '0.4rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Author *</label>
+                                            <input
+                                                type="text"
+                                                value={blogForm.author}
+                                                onChange={(e) => setBlogForm({ ...blogForm, author: e.target.value })}
+                                                required
+                                                style={{ width: '100%', padding: '0.5rem 0.75rem', border: '1px solid var(--border-light)', borderRadius: '6px', fontSize: '0.95rem', background: 'var(--bg-tertiary)', color: 'var(--text-primary)' }}
+                                            />
+                                        </div>
+                                        <div className="form-group" style={{ margin: 0 }}>
+                                            <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-secondary)', marginBottom: '0.4rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Icon/Emoji</label>
+                                            <input
+                                                type="text"
+                                                value={blogForm.image}
+                                                onChange={(e) => setBlogForm({ ...blogForm, image: e.target.value })}
+                                                placeholder="e.g. 🕌"
+                                                style={{ width: '100%', padding: '0.5rem 0.75rem', border: '1px solid var(--border-light)', borderRadius: '6px', fontSize: '0.95rem', background: 'var(--bg-tertiary)', color: 'var(--text-primary)' }}
+                                            />
+                                        </div>
+                                    </div>
+
+                                    <div className="form-group" style={{ margin: 0 }}>
+                                        <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-secondary)', marginBottom: '0.4rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Tags (comma separated)</label>
                                         <input
                                             type="text"
-                                            value={blogForm.image}
-                                            onChange={(e) => setBlogForm({ ...blogForm, image: e.target.value })}
+                                            value={blogForm.tags}
+                                            onChange={(e) => setBlogForm({ ...blogForm, tags: e.target.value })}
+                                            placeholder="faith, community, education"
+                                            style={{ width: '100%', padding: '0.5rem 0.75rem', border: '1px solid var(--border-light)', borderRadius: '6px', fontSize: '0.95rem', background: 'var(--bg-tertiary)', color: 'var(--text-primary)' }}
                                         />
                                     </div>
-                                </div>
 
-                                <div className="form-group">
-                                    <label>Tags (comma separated)</label>
-                                    <input
-                                        type="text"
-                                        value={blogForm.tags}
-                                        onChange={(e) => setBlogForm({ ...blogForm, tags: e.target.value })}
-                                        placeholder="tag1, tag2, tag3"
-                                    />
-                                </div>
-
-                                <div className="form-row">
-                                    <div className="form-group checkbox">
-                                        <label>
+                                    <div style={{ display: 'flex', gap: '1.5rem', background: 'var(--bg-tertiary)', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border-light)' }}>
+                                        <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer', fontSize: '0.9rem', fontWeight: 600, color: 'var(--text-primary)' }}>
                                             <input
                                                 type="checkbox"
                                                 checked={blogForm.featured}
                                                 onChange={(e) => setBlogForm({ ...blogForm, featured: e.target.checked })}
+                                                style={{ width: '1.1rem', height: '1.1rem' }}
                                             />
                                             Featured Post
                                         </label>
-                                    </div>
-                                    <div className="form-group checkbox">
-                                        <label>
+                                        <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer', fontSize: '0.9rem', fontWeight: 600, color: 'var(--text-primary)' }}>
                                             <input
                                                 type="checkbox"
                                                 checked={blogForm.published}
                                                 onChange={(e) => setBlogForm({ ...blogForm, published: e.target.checked })}
+                                                style={{ width: '1.1rem', height: '1.1rem' }}
                                             />
                                             Published
                                         </label>
                                     </div>
                                 </div>
 
-                                <button type="submit" className="btn btn-primary">
-                                    {editingBlog ? <><span className="icon-inline"><Icons.Save /></span> Update Post</> : <><span className="icon-inline"><Icons.Check /></span> Create Post</>}
-                                </button>
+                                <div style={{ marginTop: '1.5rem', paddingTop: '1rem', borderTop: '1px solid #f1f5f9', display: 'flex', justifyContent: 'flex-end' }}>
+                                    <button type="submit" className="btn btn-primary" style={{ minWidth: '150px' }}>
+                                        {editingBlog ? <><span className="icon-inline"><Icons.Save /></span> Update Post</> : <><span className="icon-inline"><Icons.Check /></span> Create Post</>}
+                                    </button>
+                                </div>
                             </form>
                         )}
 
@@ -933,83 +1044,103 @@ function AdminDashboard() {
                         </div>
 
                         {showClassForm && (
-                            <form onSubmit={handleClassSubmit} className="admin-form">
-                                <div className="form-group">
-                                    <label>Title *</label>
-                                    <input
-                                        type="text"
-                                        value={classForm.title}
-                                        onChange={(e) => setClassForm({ ...classForm, title: e.target.value })}
-                                        required
-                                    />
+                            <form onSubmit={handleClassSubmit} className="admin-form card animate-in" style={{ maxWidth: '700px', margin: '0 0 2rem 0', padding: '1.5rem', border: '1px solid var(--border-light)', boxShadow: 'var(--shadow-md)', background: 'var(--bg-card)' }}>
+                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem', paddingBottom: '1rem', borderBottom: '1px solid var(--border-light)' }}>
+                                    <h3 style={{ margin: 0, fontSize: '1.2rem', fontWeight: 700, color: 'var(--text-primary)' }}>{editingClass ? 'Edit Class' : 'New Class'}</h3>
+                                    <button type="button" onClick={() => setShowClassForm(false)} style={{ background: 'none', border: 'none', fontSize: '1.1rem', cursor: 'pointer', color: 'var(--text-secondary)' }}>✖</button>
                                 </div>
 
-                                <div className="form-group">
-                                    <label>Subtitle (English)</label>
-                                    <input
-                                        type="text"
-                                        value={classForm.subtitle}
-                                        onChange={(e) => setClassForm({ ...classForm, subtitle: e.target.value })}
-                                    />
-                                </div>
-
-                                <div className="form-group">
-                                    <label>Objective *</label>
-                                    <textarea
-                                        value={classForm.objective}
-                                        onChange={(e) => setClassForm({ ...classForm, objective: e.target.value })}
-                                        required
-                                        rows="3"
-                                    />
-                                </div>
-
-                                <div className="form-row">
-                                    <div className="form-group">
-                                        <label>Audience</label>
+                                <div style={{ display: 'grid', gap: '1.2rem' }}>
+                                    <div className="form-group" style={{ margin: 0 }}>
+                                        <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-secondary)', marginBottom: '0.4rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Title *</label>
                                         <input
                                             type="text"
-                                            value={classForm.audience}
-                                            onChange={(e) => setClassForm({ ...classForm, audience: e.target.value })}
+                                            value={classForm.title}
+                                            onChange={(e) => setClassForm({ ...classForm, title: e.target.value })}
+                                            required
+                                            placeholder="Class Name"
+                                            style={{ width: '100%', padding: '0.5rem 0.75rem', border: '1px solid var(--border-light)', borderRadius: '6px', fontSize: '1rem', fontWeight: 600, background: 'var(--bg-tertiary)', color: 'var(--text-primary)' }}
                                         />
                                     </div>
-                                    <div className="form-group">
-                                        <label>Schedule</label>
+
+                                    <div className="form-group" style={{ margin: 0 }}>
+                                        <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-secondary)', marginBottom: '0.4rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Subtitle (English)</label>
                                         <input
                                             type="text"
-                                            value={classForm.schedule}
-                                            onChange={(e) => setClassForm({ ...classForm, schedule: e.target.value })}
+                                            value={classForm.subtitle}
+                                            onChange={(e) => setClassForm({ ...classForm, subtitle: e.target.value })}
+                                            placeholder="Secondary title"
+                                            style={{ width: '100%', padding: '0.5rem 0.75rem', border: '1px solid var(--border-light)', borderRadius: '6px', fontSize: '0.95rem', background: 'var(--bg-tertiary)', color: 'var(--text-primary)' }}
                                         />
+                                    </div>
+
+                                    <div className="form-group" style={{ margin: 0 }}>
+                                        <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-secondary)', marginBottom: '0.4rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Objective *</label>
+                                        <textarea
+                                            value={classForm.objective}
+                                            onChange={(e) => setClassForm({ ...classForm, objective: e.target.value })}
+                                            required
+                                            rows="3"
+                                            placeholder="What will students learn?"
+                                            style={{ width: '100%', padding: '0.6rem 0.75rem', border: '1px solid var(--border-light)', borderRadius: '6px', fontSize: '0.95rem', background: 'var(--bg-tertiary)', color: 'var(--text-primary)', resize: 'vertical' }}
+                                        />
+                                    </div>
+
+                                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+                                        <div className="form-group" style={{ margin: 0 }}>
+                                            <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-secondary)', marginBottom: '0.4rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Audience</label>
+                                            <input
+                                                type="text"
+                                                value={classForm.audience}
+                                                onChange={(e) => setClassForm({ ...classForm, audience: e.target.value })}
+                                                placeholder="e.g. Beginners"
+                                                style={{ width: '100%', padding: '0.5rem 0.75rem', border: '1px solid var(--border-light)', borderRadius: '6px', fontSize: '0.95rem', background: 'var(--bg-tertiary)', color: 'var(--text-primary)' }}
+                                            />
+                                        </div>
+                                        <div className="form-group" style={{ margin: 0 }}>
+                                            <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-secondary)', marginBottom: '0.4rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Schedule</label>
+                                            <input
+                                                type="text"
+                                                value={classForm.schedule}
+                                                onChange={(e) => setClassForm({ ...classForm, schedule: e.target.value })}
+                                                placeholder="e.g. Sundays, 10 AM"
+                                                style={{ width: '100%', padding: '0.5rem 0.75rem', border: '1px solid var(--border-light)', borderRadius: '6px', fontSize: '0.95rem', background: 'var(--bg-tertiary)', color: 'var(--text-primary)' }}
+                                            />
+                                        </div>
+                                    </div>
+
+                                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+                                        <div className="form-group" style={{ margin: 0 }}>
+                                            <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-secondary)', marginBottom: '0.4rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Theme Color</label>
+                                            <select
+                                                value={classForm.color}
+                                                onChange={(e) => setClassForm({ ...classForm, color: e.target.value })}
+                                                style={{ width: '100%', padding: '0.5rem 0.75rem', border: '1px solid var(--border-light)', borderRadius: '6px', fontSize: '0.95rem', background: 'var(--bg-tertiary)', color: 'var(--text-primary)' }}
+                                            >
+                                                <option value="primary">Deep Blue (Primary)</option>
+                                                <option value="secondary">Teal (Secondary)</option>
+                                                <option value="accent">Amber (Accent)</option>
+                                            </select>
+                                        </div>
+                                        <div style={{ display: 'flex', alignItems: 'flex-end' }}>
+                                            <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer', fontSize: '0.9rem', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '0.5rem' }}>
+                                                <input
+                                                    type="checkbox"
+                                                    checked={classForm.published}
+                                                    onChange={(e) => setClassForm({ ...classForm, published: e.target.checked })}
+                                                    style={{ width: '1.2rem', height: '1.2rem' }}
+                                                />
+                                                Published / visible
+                                            </label>
+                                        </div>
                                     </div>
                                 </div>
 
-                                <div className="form-row">
-                                    <div className="form-group">
-                                        <label>Color</label>
-                                        <select
-                                            value={classForm.color}
-                                            onChange={(e) => setClassForm({ ...classForm, color: e.target.value })}
-                                        >
-                                            <option value="primary">Primary</option>
-                                            <option value="secondary">Secondary</option>
-                                            <option value="accent">Accent</option>
-                                        </select>
-                                    </div>
+                                <div style={{ marginTop: '1.5rem', paddingTop: '1rem', borderTop: '1px solid #f1f5f9', display: 'flex', justifyContent: 'flex-end' }}>
+                                    <button type="submit" className="btn btn-primary" style={{ minWidth: '150px' }}>
+                                        {editingClass ? <><span className="icon-inline"><Icons.Save /></span> Save Changes</> : <><span className="icon-inline"><Icons.Check /></span> Create Class</>}
+                                    </button>
                                 </div>
-
-                                <div className="form-group checkbox">
-                                    <label>
-                                        <input
-                                            type="checkbox"
-                                            checked={classForm.published}
-                                            onChange={(e) => setClassForm({ ...classForm, published: e.target.checked })}
-                                        />
-                                        Published
-                                    </label>
-                                </div>
-
-                                <button type="submit" className="btn btn-primary">
-                                    {editingClass ? <><span className="icon-inline"><Icons.Save /></span> Update Class</> : <><span className="icon-inline"><Icons.Check /></span> Create Class</>}
-                                </button>
                             </form>
                         )}
 
@@ -1072,7 +1203,7 @@ function AdminDashboard() {
                                 <p>Edit Home, Journey, Donate, and Volunteer page content</p>
                             </div>
                             <a href="#/migrate-pages" target="_blank" className="btn btn-secondary">
-                                <span className="icon-inline">�</span> Backup & Restore Data
+                                <span className="icon-inline"></span> Backup & Restore Data
                             </a>
                         </div>
 
@@ -1116,7 +1247,7 @@ function AdminDashboard() {
                                             <h4>Content Sections:</h4>
                                             <ul style={{ listStyle: 'none', padding: 0 }}>
                                                 <li>✓ Header Section</li>
-                                                <li>✓ Timeline ({pages.journey.timeline?.length || 0} events)</li>
+                                                <li>✓ Timeline ({pages.journey.timeline?.length || 0})</li>
                                                 <li>✓ Testimonials ({pages.journey.testimonials?.length || 0})</li>
                                                 <li>✓ Milestones ({pages.journey.milestones?.length || 0})</li>
                                                 <li>✓ Vision 2030</li>
@@ -1237,12 +1368,13 @@ function AdminDashboard() {
                                             <a href={`/#/migrate-pages`} target="_blank" style={{ marginLeft: '1rem' }}>🔄 Run Migration</a>
                                         </p>
                                         <div className="formatting-guide" style={{
-                                            background: '#f5f5f7',
+                                            background: 'var(--bg-secondary)',
                                             padding: '1rem',
                                             borderRadius: '8px',
                                             marginBottom: '1rem',
                                             fontSize: '0.9rem',
-                                            color: '#333'
+                                            color: 'var(--text-primary)',
+                                            border: '1px solid var(--border-light)'
                                         }}>
                                             <strong>Formatting Guide:</strong>
                                             <ul style={{ margin: '0.5rem 0 0 1.2rem', padding: 0 }}>
@@ -1260,8 +1392,10 @@ function AdminDashboard() {
                                                 fontFamily: 'monospace',
                                                 fontSize: '14px',
                                                 padding: '1rem',
-                                                border: '1px solid var(--color-border)',
-                                                borderRadius: '8px'
+                                                border: '1px solid var(--border-light)',
+                                                borderRadius: '8px',
+                                                background: 'var(--bg-tertiary)',
+                                                color: 'var(--text-primary)'
                                             }}
                                         />
                                         <div className="modal-actions" style={{ marginTop: '1rem', display: 'flex', gap: '1rem' }}>
@@ -1296,6 +1430,199 @@ function AdminDashboard() {
                     </div>
                 )}
 
+                {/* VOLUNTEERS TAB */}
+                {activeTab === 'volunteers' && (
+                    <div className="tab-content">
+                        <div className="section-header">
+                            <h2>Manage Volunteers</h2>
+                            <p>Add and edit team members shown on the Volunteer page.</p>
+                            <button className="btn btn-primary" onClick={() => {
+                                setEditingVolunteer(null);
+                                setVolunteerForm({ name: '', title: '', department: '', imageUrl: '' });
+                                setShowVolunteerForm(true);
+                            }}>
+                                <span className="icon-inline"><Icons.Plus /></span> Add Volunteer
+                            </button>
+                        </div>
+
+
+
+                        {showVolunteerForm && (
+                            <form onSubmit={handleVolunteerSubmit} className="admin-form card animate-in" style={{
+                                maxWidth: '600px',
+                                margin: '0 0 2rem 0',
+                                padding: '1.5rem',
+                                border: '1px solid var(--border-light)',
+                                boxShadow: 'var(--shadow-md)',
+                                background: 'var(--bg-card)'
+                            }}>
+                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem', paddingBottom: '1rem', borderBottom: '1px solid var(--border-light)' }}>
+                                    <h3 style={{ margin: 0, fontSize: '1.25rem', fontWeight: 700, color: 'var(--text-primary)' }}>{editingVolunteer ? 'Edit Volunteer' : 'Add Volunteer'}</h3>
+                                    <button type="button" onClick={() => setShowVolunteerForm(false)} className="btn-close" style={{ background: 'none', border: 'none', fontSize: '1.2rem', cursor: 'pointer', color: 'var(--text-secondary)' }}>✖</button>
+                                </div>
+
+                                <div style={{ display: 'grid', gap: '1.25rem' }}>
+                                    {/* Name */}
+                                    <div className="form-group" style={{ margin: 0 }}>
+                                        <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: 600, color: 'var(--text-secondary)', marginBottom: '0.5rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Full Name</label>
+                                        <input
+                                            required
+                                            type="text"
+                                            value={volunteerForm.name}
+                                            onChange={e => setVolunteerForm({ ...volunteerForm, name: e.target.value })}
+                                            style={{ width: '100%', padding: '0.6rem 1rem', border: '1px solid var(--border-light)', borderRadius: '6px', fontSize: '1rem', background: 'var(--bg-tertiary)', color: 'var(--text-primary)' }}
+                                            placeholder="e.g. Suhaidi Ali"
+                                        />
+                                    </div>
+
+                                    {/* Row: Title & Dept */}
+                                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.25rem' }}>
+                                        <div className="form-group" style={{ margin: 0 }}>
+                                            <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: 600, color: 'var(--text-secondary)', marginBottom: '0.5rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Title / Role</label>
+                                            <input
+                                                required
+                                                type="text"
+                                                value={volunteerForm.title}
+                                                onChange={e => setVolunteerForm({ ...volunteerForm, title: e.target.value })}
+                                                style={{ width: '100%', padding: '0.6rem 1rem', border: '1px solid var(--border-light)', borderRadius: '6px', fontSize: '1rem', background: 'var(--bg-tertiary)', color: 'var(--text-primary)' }}
+                                                placeholder="e.g. Vice President"
+                                            />
+                                        </div>
+                                        <div className="form-group" style={{ margin: 0 }}>
+                                            <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: 600, color: 'var(--text-secondary)', marginBottom: '0.5rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Department</label>
+                                            <select
+                                                value={
+                                                    ['Management', 'Engineering', 'Education', 'Outreach', 'Finance', 'Administration', ...employees.map(e => e.department)].includes(volunteerForm.department)
+                                                        ? volunteerForm.department
+                                                        : (volunteerForm.department ? 'OTHER' : '')
+                                                }
+                                                onChange={e => {
+                                                    const val = e.target.value;
+                                                    if (val === 'OTHER') {
+                                                        setVolunteerForm({ ...volunteerForm, department: 'New Department' });
+                                                    } else {
+                                                        setVolunteerForm({ ...volunteerForm, department: val });
+                                                    }
+                                                }}
+                                                style={{ width: '100%', padding: '0.6rem 1rem', border: '1px solid var(--border-light)', borderRadius: '6px', fontSize: '1rem', background: 'var(--bg-tertiary)', color: 'var(--text-primary)', marginBottom: '0.5rem' }}
+                                            >
+                                                <option value="">-- Choose Department --</option>
+                                                {[...new Set(['Management', 'Engineering', 'Education', 'Outreach', 'Finance', 'Administration', ...employees.map(e => e.department).filter(d => d && typeof d === 'string' && d.trim() !== '')])].sort().map(d => (
+                                                    <option key={d} value={d}>{d}</option>
+                                                ))}
+                                                <option value="OTHER">+ Add New / Custom...</option>
+                                            </select>
+
+                                            {/* Custom Input appears if not in the known list or if 'OTHER' selected */}
+                                            {(!['Management', 'Engineering', 'Education', 'Outreach', 'Finance', 'Administration', ...employees.map(e => e.department)].includes(volunteerForm.department) || volunteerForm.department === 'New Department') && (
+                                                <input
+                                                    required
+                                                    type="text"
+                                                    value={volunteerForm.department === 'New Department' ? '' : volunteerForm.department}
+                                                    onChange={e => setVolunteerForm({ ...volunteerForm, department: e.target.value })}
+                                                    placeholder="Type new department name..."
+                                                    style={{ width: '100%', padding: '0.6rem 1rem', border: '1px solid var(--border-light)', borderRadius: '6px', fontSize: '1rem', background: 'var(--bg-tertiary)', color: 'var(--text-primary)' }}
+                                                />
+                                            )}
+                                        </div>
+                                    </div>
+
+                                    {/* Photo Section (Compact) */}
+                                    <div className="form-group" style={{ margin: 0 }}>
+                                        <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: 600, color: 'var(--text-secondary)', marginBottom: '0.5rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Profile Photo</label>
+                                        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', padding: '0.75rem', border: '1px solid var(--border-light)', borderRadius: '8px', background: 'var(--bg-tertiary)' }}>
+                                            <div style={{ width: '48px', height: '48px', borderRadius: '50%', background: 'var(--bg-card)', overflow: 'hidden', flexShrink: 0, border: '2px solid var(--border-light)', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>
+                                                {volunteerForm.imageUrl ? (
+                                                    <img src={volunteerForm.imageUrl} alt="Preview" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                                                ) : (
+                                                    <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text-secondary)', fontSize: '1.2rem', fontWeight: 'bold' }}><Icons.User style={{ width: '1.5rem', height: '1.5rem', opacity: 0.3, color: 'var(--text-secondary)' }} /></div>
+                                                )}
+                                            </div>
+
+                                            <div style={{ flex: 1, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                                <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', fontWeight: 500 }}>
+                                                    {volunteerForm.imageUrl
+                                                        ? (volunteerForm.imageUrl.startsWith('data:') ? '✅ Custom Photo Uploaded' : '🔗 Linked via URL')
+                                                        : 'No photo selected'
+                                                    }
+                                                </div>
+                                                <div style={{ display: 'flex', gap: '0.5rem' }}>
+                                                    {volunteerForm.imageUrl ? (
+                                                        <button type="button" onClick={() => setVolunteerForm({ ...volunteerForm, imageUrl: '' })} className="btn btn-sm btn-danger btn-outline" style={{ padding: '0.25rem 0.75rem', fontSize: '0.75rem' }}>
+                                                            Remove
+                                                        </button>
+                                                    ) : (
+                                                        <label className="btn btn-sm btn-primary" style={{ cursor: 'pointer', padding: '0.35rem 0.75rem', fontSize: '0.75rem', marginBottom: 0, display: 'inline-flex', alignItems: 'center' }}>
+                                                            <span style={{ marginRight: '4px' }}>📁</span> Upload
+                                                            <input type="file" accept="image/*" onChange={handleVolunteerImageUpload} style={{ display: 'none' }} />
+                                                        </label>
+                                                    )}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {/* Simple URL Fallback if no image */}
+                                        {!volunteerForm.imageUrl && (
+                                            <div style={{ marginTop: '0.5rem' }}>
+                                                <input
+                                                    type="text"
+                                                    placeholder="Or paste image URL..."
+                                                    value={volunteerForm.imageUrl}
+                                                    onChange={e => setVolunteerForm({ ...volunteerForm, imageUrl: e.target.value })}
+                                                    style={{ width: '100%', fontSize: '0.8rem', padding: '0.4rem', border: '1px solid var(--border-light)', borderRadius: '4px', background: 'var(--bg-tertiary)', color: 'var(--text-primary)' }}
+                                                />
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
+
+                                <div className="form-actions" style={{ marginTop: '1.5rem', paddingTop: '1rem', borderTop: '1px solid var(--border-light)', display: 'flex', justifyContent: 'flex-end', gap: '0.75rem' }}>
+                                    <button type="button" className="btn btn-secondary" onClick={() => setShowVolunteerForm(false)}>Cancel</button>
+                                    <button type="submit" className="btn btn-primary" style={{ minWidth: '100px' }}>
+                                        <span className="icon-inline"><Icons.Save /></span> Save
+                                    </button>
+                                </div>
+                            </form>
+                        )}
+
+                        <div className="data-table">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Volunteer</th>
+                                        <th>Role</th>
+                                        <th>Dept</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {employees.map(vol => (
+                                        <tr key={vol.id}>
+                                            <td>
+                                                <div className="post-title" style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                                                    {vol.imageUrl ? (
+                                                        <img src={vol.imageUrl} alt="" style={{ width: 30, height: 30, borderRadius: '50%' }} />
+                                                    ) : (
+                                                        <div style={{ width: 30, height: 30, borderRadius: '50%', background: 'var(--bg-tertiary)', color: 'var(--text-secondary)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                                            {vol.name.charAt(0)}
+                                                        </div>
+                                                    )}
+                                                    {vol.name}
+                                                </div>
+                                            </td>
+                                            <td>{vol.title}</td>
+                                            <td>{vol.department}</td>
+                                            <td className="actions">
+                                                <button className="btn-icon" onClick={() => handleEditVolunteer(vol)}><Icons.Edit /></button>
+                                                <button className="btn-icon btn-danger" onClick={() => handleDeleteVolunteer(vol.id)}><Icons.Trash /></button>
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                )}
+
                 {/* SETTINGS TAB */}
                 {activeTab === 'settings' && orgForm && (
                     <div className="tab-content settings-tab">
@@ -1304,167 +1631,208 @@ function AdminDashboard() {
                             <p>Manage your foundation's details.</p>
                         </div>
 
-                        <form onSubmit={handleSaveOrgSettings} className="settings-form card">
-                            <div className="form-group">
-                                <label>Short Name (Logo Text)</label>
-                                <input
-                                    type="text"
-                                    value={orgForm.shortName}
-                                    onChange={(e) => setOrgForm({ ...orgForm, shortName: e.target.value })}
-                                    required
-                                />
-                                <small>Appears in branding and logos (e.g., HCF.BTR)</small>
-                            </div>
-
-                            <div className="form-group">
-                                <label>Full Name</label>
-                                <input
-                                    type="text"
-                                    value={orgForm.fullName}
-                                    onChange={(e) => setOrgForm({ ...orgForm, fullName: e.target.value })}
-                                    required
-                                />
-                                <small>Appears in footer and expanded branding</small>
-                            </div>
-
-                            <div className="form-group">
-                                <label>Email Address</label>
-                                <input
-                                    type="email"
-                                    value={orgForm.email}
-                                    onChange={(e) => setOrgForm({ ...orgForm, email: e.target.value })}
-                                    required
-                                />
-                            </div>
-
-                            <div className="form-group">
-                                <label>Address</label>
-                                <textarea
-                                    value={orgForm.address}
-                                    onChange={(e) => setOrgForm({ ...orgForm, address: e.target.value })}
-                                    rows="3"
-                                ></textarea>
-                            </div>
-
-                            <div className="form-group">
-                                <label>Phone Numbers</label>
-                                {orgForm.phone.map((number, index) => (
-                                    <div key={index} className="phone-input-group" style={{ display: 'flex', gap: '10px', marginBottom: '10px' }}>
-                                        <input
-                                            type="text"
-                                            value={number}
-                                            onChange={(e) => handleOrgPhoneChange(index, e.target.value)}
-                                            placeholder="+60 12-345 6789"
-                                        />
-                                        <button type="button" onClick={() => removePhoneField(index)} className="btn btn-outline btn-sm btn-icon"><Icons.Trash /></button>
-                                    </div>
-                                ))}
-                                <button type="button" onClick={addPhoneField} className="btn btn-secondary btn-sm">
-                                    <span className="icon-inline"><Icons.Plus /></span> Add Phone Number
-                                </button>
-                            </div>
-
-                            <div className="form-group">
-                                <label>Social Media Links</label>
-                                <div style={{ marginBottom: '1rem' }}>
-                                    <label style={{ fontSize: '0.9rem', color: 'var(--apple-text-gray)' }}>Facebook URL</label>
-                                    <input
-                                        type="url"
-                                        value={orgForm.facebook || ''}
-                                        onChange={(e) => setOrgForm({ ...orgForm, facebook: e.target.value })}
-                                        placeholder="https://facebook.com/..."
-                                    />
-                                </div>
-                                <div>
-                                    <label style={{ fontSize: '0.9rem', color: 'var(--apple-text-gray)' }}>Instagram URL</label>
-                                    <input
-                                        type="url"
-                                        value={orgForm.instagram || ''}
-                                        onChange={(e) => setOrgForm({ ...orgForm, instagram: e.target.value })}
-                                        placeholder="https://instagram.com/..."
-                                    />
-                                </div>
-                            </div>
-
-                            <div className="form-group">
-                                <label>Bank Account Details</label>
-                                <div style={{ marginBottom: '1rem' }}>
-                                    <label style={{ fontSize: '0.9rem', color: 'var(--apple-text-gray)' }}>Bank Name</label>
-                                    <input
-                                        type="text"
-                                        value={orgForm.bank?.bankName || ''}
-                                        onChange={(e) => setOrgForm({ ...orgForm, bank: { ...orgForm.bank, bankName: e.target.value } })}
-                                        placeholder="e.g. Maybank"
-                                    />
-                                </div>
-                                <div style={{ marginBottom: '1rem' }}>
-                                    <label style={{ fontSize: '0.9rem', color: 'var(--apple-text-gray)' }}>Account Name</label>
-                                    <input
-                                        type="text"
-                                        value={orgForm.bank?.accountName || ''}
-                                        onChange={(e) => setOrgForm({ ...orgForm, bank: { ...orgForm.bank, accountName: e.target.value } })}
-                                        placeholder="e.g. Hidayah Center Foundation"
-                                    />
-                                </div>
-                                <div>
-                                    <label style={{ fontSize: '0.9rem', color: 'var(--apple-text-gray)' }}>Account Number</label>
-                                    <input
-                                        type="text"
-                                        value={orgForm.bank?.accountNumber || ''}
-                                        onChange={(e) => setOrgForm({ ...orgForm, bank: { ...orgForm.bank, accountNumber: e.target.value } })}
-                                        placeholder="e.g. 5642 0350 1894"
-                                    />
-                                </div>
-                                <div style={{ marginTop: '1rem', borderTop: '1px solid var(--color-border)', paddingTop: '1rem' }}>
-                                    <label>Donation QR Code</label>
-                                    <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-                                        {orgForm.qrCodeUrl && (
-                                            <div style={{ position: 'relative' }}>
-                                                <div className="preview-image" style={{ width: '100px', height: '100px', border: '1px solid #ddd', borderRadius: '8px', overflow: 'hidden' }}>
-                                                    <img src={orgForm.qrCodeUrl} alt="QR Code" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
-                                                </div>
-                                                <button
-                                                    type="button"
-                                                    onClick={() => setOrgForm({ ...orgForm, qrCodeUrl: '' })}
-                                                    className="btn btn-danger btn-sm"
-                                                    style={{
-                                                        marginTop: '8px',
-                                                        width: '100%',
-                                                        padding: '6px 12px',
-                                                        fontSize: '12px'
-                                                    }}
-                                                    title="Delete QR Code"
-                                                >
-                                                    <Icons.Trash /> Delete
-                                                </button>
-                                            </div>
-                                        )}
-                                        <div style={{ flex: 1 }}>
+                        <form onSubmit={handleSaveOrgSettings} className="admin-form card animate-in" style={{ maxWidth: '800px', margin: '0 0 2rem 0', padding: '1.5rem', border: '1px solid var(--border-light)', boxShadow: 'var(--shadow-md)', background: 'var(--bg-card)' }}>
+                            <div style={{ display: 'grid', gap: '2rem' }}>
+                                {/* Basic Branding */}
+                                <section>
+                                    <h3 style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '1.25rem', paddingBottom: '0.5rem', borderBottom: '2px solid var(--border-light)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                                        <Icons.Layout style={{ width: '1.1rem' }} /> Basic Branding
+                                    </h3>
+                                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.25rem' }}>
+                                        <div className="form-group" style={{ margin: 0 }}>
+                                            <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-secondary)', marginBottom: '0.4rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Short Name (Logo Text)</label>
                                             <input
-                                                type="file"
-                                                accept="image/*"
-                                                onChange={handleQrUpload}
-                                                disabled={uploadingQr}
+                                                type="text"
+                                                value={orgForm.shortName}
+                                                onChange={(e) => setOrgForm({ ...orgForm, shortName: e.target.value })}
+                                                required
+                                                style={{ width: '100%', padding: '0.5rem 0.75rem', border: '1px solid var(--border-light)', borderRadius: '6px', fontSize: '0.95rem', background: 'var(--bg-tertiary)', color: 'var(--text-primary)' }}
+                                                placeholder="e.g. HCF.BTR"
                                             />
-                                            {uploadingQr && <span className="loading-spinner-small">Uploading...</span>}
-                                            <small style={{ display: 'block', marginTop: '5px', color: 'var(--apple-text-gray)' }}>
-                                                Upload your DuitNow/Bank QR Code image. This will be displayed on the Donate page.
-                                            </small>
+                                            <small style={{ color: 'var(--text-secondary)', fontSize: '0.75rem', marginTop: '0.25rem', display: 'block', opacity: 0.8 }}>Appears in navigation and logos</small>
+                                        </div>
+                                        <div className="form-group" style={{ margin: 0 }}>
+                                            <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-secondary)', marginBottom: '0.4rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Email Address</label>
+                                            <input
+                                                type="email"
+                                                value={orgForm.email}
+                                                onChange={(e) => setOrgForm({ ...orgForm, email: e.target.value })}
+                                                required
+                                                style={{ width: '100%', padding: '0.5rem 0.75rem', border: '1px solid var(--border-light)', borderRadius: '6px', fontSize: '0.95rem', background: 'var(--bg-tertiary)', color: 'var(--text-primary)' }}
+                                                placeholder="contact@hcfbtr.com"
+                                            />
+                                        </div>
+                                        <div className="form-group" style={{ margin: 0, gridColumn: 'span 2' }}>
+                                            <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-secondary)', marginBottom: '0.4rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Full Foundation Name</label>
+                                            <input
+                                                type="text"
+                                                value={orgForm.fullName}
+                                                onChange={(e) => setOrgForm({ ...orgForm, fullName: e.target.value })}
+                                                required
+                                                style={{ width: '100%', padding: '0.5rem 0.75rem', border: '1px solid var(--border-light)', borderRadius: '6px', fontSize: '0.95rem', background: 'var(--bg-tertiary)', color: 'var(--text-primary)' }}
+                                                placeholder="Hidayah Center Foundation Bintulu"
+                                            />
                                         </div>
                                     </div>
-                                </div>
+                                </section>
+
+                                {/* Contact & Location */}
+                                <section>
+                                    <h3 style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '1.25rem', paddingBottom: '0.5rem', borderBottom: '2px solid var(--border-light)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                                        <Icons.MapPin style={{ width: '1.1rem' }} /> Contact & Location
+                                    </h3>
+                                    <div style={{ display: 'grid', gap: '1.25rem' }}>
+                                        <div className="form-group" style={{ margin: 0 }}>
+                                            <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-secondary)', marginBottom: '0.4rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>HQ Address</label>
+                                            <textarea
+                                                value={orgForm.address}
+                                                onChange={(e) => setOrgForm({ ...orgForm, address: e.target.value })}
+                                                rows="2"
+                                                style={{ width: '100%', padding: '0.5rem 0.75rem', border: '1px solid var(--border-light)', borderRadius: '6px', fontSize: '0.95rem', background: 'var(--bg-tertiary)', color: 'var(--text-primary)', resize: 'vertical' }}
+                                                placeholder="Full physical address"
+                                            />
+                                        </div>
+                                        <div className="form-group" style={{ margin: 0 }}>
+                                            <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-secondary)', marginBottom: '0.4rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Phone Numbers</label>
+                                            <div style={{ display: 'grid', gap: '0.75rem' }}>
+                                                {orgForm.phone.map((number, index) => (
+                                                    <div key={index} style={{ display: 'flex', gap: '0.5rem' }}>
+                                                        <input
+                                                            type="text"
+                                                            value={number}
+                                                            onChange={(e) => handleOrgPhoneChange(index, e.target.value)}
+                                                            placeholder="+60 12-345 6789"
+                                                            style={{ flex: 1, padding: '0.5rem 0.75rem', border: '1px solid var(--border-light)', borderRadius: '6px', fontSize: '0.9rem', background: 'var(--bg-tertiary)', color: 'var(--text-primary)' }}
+                                                        />
+                                                        <button type="button" onClick={() => removePhoneField(index)} className="btn btn-icon btn-danger btn-outline" style={{ padding: '0.4rem', background: 'transparent' }}>
+                                                            <Icons.Trash style={{ width: '1rem', height: '1rem' }} />
+                                                        </button>
+                                                    </div>
+                                                ))}
+                                                <button type="button" onClick={addPhoneField} className="btn btn-secondary btn-sm" style={{ alignSelf: 'flex-start', fontSize: '0.8rem', padding: '0.4rem 0.8rem' }}>
+                                                    <span className="icon-inline"><Icons.Plus /></span> Add Number
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </section>
+
+                                {/* Banking & Donations */}
+                                <section>
+                                    <h3 style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '1.25rem', paddingBottom: '0.5rem', borderBottom: '2px solid var(--border-light)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                                        <Icons.CreditCard style={{ width: '1.1rem' }} /> Banking & Donations
+                                    </h3>
+                                    <div style={{ display: 'grid', gap: '1.25rem' }}>
+                                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.25rem' }}>
+                                            <div className="form-group" style={{ margin: 0 }}>
+                                                <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-secondary)', marginBottom: '0.4rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Bank Name</label>
+                                                <input
+                                                    type="text"
+                                                    value={orgForm.bank?.bankName || ''}
+                                                    onChange={(e) => setOrgForm({ ...orgForm, bank: { ...orgForm.bank, bankName: e.target.value } })}
+                                                    placeholder="e.g. Maybank"
+                                                    style={{ width: '100%', padding: '0.5rem 0.75rem', border: '1px solid var(--border-light)', borderRadius: '6px', fontSize: '0.95rem', background: 'var(--bg-tertiary)', color: 'var(--text-primary)' }}
+                                                />
+                                            </div>
+                                            <div className="form-group" style={{ margin: 0 }}>
+                                                <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-secondary)', marginBottom: '0.4rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Account Number</label>
+                                                <input
+                                                    type="text"
+                                                    value={orgForm.bank?.accountNumber || ''}
+                                                    onChange={(e) => setOrgForm({ ...orgForm, bank: { ...orgForm.bank, accountNumber: e.target.value } })}
+                                                    placeholder="e.g. 5642 0350 1894"
+                                                    style={{ width: '100%', padding: '0.5rem 0.75rem', border: '1px solid var(--border-light)', borderRadius: '6px', fontSize: '0.95rem', background: 'var(--bg-tertiary)', color: 'var(--text-primary)' }}
+                                                />
+                                            </div>
+                                        </div>
+                                        <div className="form-group" style={{ margin: 0 }}>
+                                            <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-secondary)', marginBottom: '0.4rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Account Beneficiary Name</label>
+                                            <input
+                                                type="text"
+                                                value={orgForm.bank?.accountName || ''}
+                                                onChange={(e) => setOrgForm({ ...orgForm, bank: { ...orgForm.bank, accountName: e.target.value } })}
+                                                placeholder="e.g. Hidayah Center Foundation"
+                                                style={{ width: '100%', padding: '0.5rem 0.75rem', border: '1px solid var(--border-light)', borderRadius: '6px', fontSize: '0.95rem', background: 'var(--bg-tertiary)', color: 'var(--text-primary)' }}
+                                            />
+                                        </div>
+
+                                        <div style={{ marginTop: '0.5rem', background: 'var(--bg-tertiary)', padding: '1.25rem', borderRadius: '8px', border: '1px solid var(--border-light)' }}>
+                                            <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-secondary)', marginBottom: '1rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Donation QR Code</label>
+                                            <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
+                                                {orgForm.qrCodeUrl ? (
+                                                    <div style={{ textAlign: 'center' }}>
+                                                        <div style={{ width: '120px', height: '120px', border: '2px solid var(--bg-card)', borderRadius: '8px', overflow: 'hidden', boxShadow: '0 4px 6px rgba(0,0,0,0.1)', background: 'var(--bg-card)' }}>
+                                                            <img src={orgForm.qrCodeUrl} alt="QR Code" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+                                                        </div>
+                                                        <button
+                                                            type="button"
+                                                            onClick={() => setOrgForm({ ...orgForm, qrCodeUrl: '' })}
+                                                            className="btn btn-danger btn-sm"
+                                                            style={{ marginTop: '0.5rem', fontSize: '0.7rem', padding: '0.3rem 0.6rem' }}
+                                                        >
+                                                            <Icons.Trash style={{ width: '0.8rem' }} /> Replace
+                                                        </button>
+                                                    </div>
+                                                ) : (
+                                                    <div style={{ width: '120px', height: '120px', border: '2px dashed var(--border-light)', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--bg-card)', color: 'var(--text-secondary)' }}>
+                                                        <Icons.Type style={{ width: '2rem', height: '2rem', opacity: 0.3 }} />
+                                                    </div>
+                                                )}
+                                                <div style={{ flex: 1 }}>
+                                                    <label className="btn btn-secondary btn-sm" style={{ cursor: 'pointer', marginBottom: '0.5rem' }}>
+                                                        <Icons.Plus style={{ width: '1rem' }} /> {orgForm.qrCodeUrl ? 'Change QR Image' : 'Upload QR Image'}
+                                                        <input type="file" accept="image/*" onChange={handleQrUpload} disabled={uploadingQr} style={{ display: 'none' }} />
+                                                    </label>
+                                                    {uploadingQr && <div style={{ fontSize: '0.8rem', color: '#3b82f6' }}>Uploading...</div>}
+                                                    <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', margin: '0.5rem 0 0 0', lineHeight: '1.4' }}>
+                                                        Upload your DuitNow/Bank QR Code. It will be featured on the main Donate page.
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </section>
+
+                                {/* Social Presence */}
+                                <section>
+                                    <h3 style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '1.25rem', paddingBottom: '0.5rem', borderBottom: '2px solid var(--border-light)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                                        <Icons.Share2 style={{ width: '1.1rem' }} /> Social Presence
+                                    </h3>
+                                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.25rem' }}>
+                                        <div className="form-group" style={{ margin: 0 }}>
+                                            <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-secondary)', marginBottom: '0.4rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Facebook URL</label>
+                                            <input
+                                                type="url"
+                                                value={orgForm.facebook || ''}
+                                                onChange={(e) => setOrgForm({ ...orgForm, facebook: e.target.value })}
+                                                placeholder="https://facebook.com/..."
+                                                style={{ width: '100%', padding: '0.5rem 0.75rem', border: '1px solid var(--border-light)', borderRadius: '6px', fontSize: '0.95rem', background: 'var(--bg-tertiary)', color: 'var(--text-primary)' }}
+                                            />
+                                        </div>
+                                        <div className="form-group" style={{ margin: 0 }}>
+                                            <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-secondary)', marginBottom: '0.4rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Instagram URL</label>
+                                            <input
+                                                type="url"
+                                                value={orgForm.instagram || ''}
+                                                onChange={(e) => setOrgForm({ ...orgForm, instagram: e.target.value })}
+                                                placeholder="https://instagram.com/..."
+                                                style={{ width: '100%', padding: '0.5rem 0.75rem', border: '1px solid var(--border-light)', borderRadius: '6px', fontSize: '0.95rem', background: 'var(--bg-tertiary)', color: 'var(--text-primary)' }}
+                                            />
+                                        </div>
+                                    </div>
+                                </section>
                             </div>
 
-                            <div className="form-actions">
-                                <button type="submit" className="btn btn-primary">
-                                    <span className="icon-inline"><Icons.Save /></span> Save Settings
+                            <div style={{ marginTop: '2.5rem', paddingTop: '1.5rem', borderTop: '2px solid var(--border-light)', display: 'flex', justifyContent: 'flex-end' }}>
+                                <button type="submit" className="btn btn-primary" style={{ minWidth: '180px', padding: '0.8rem 1.5rem', fontSize: '1rem', fontWeight: 700, boxShadow: 'var(--shadow-md)' }}>
+                                    <span className="icon-inline"><Icons.Save /></span> Update All Settings
                                 </button>
                             </div>
                         </form>
                     </div>
                 )}
             </div>
-        </div >
+        </div>
     );
 }
 

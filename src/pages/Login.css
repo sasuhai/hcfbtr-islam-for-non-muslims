@@ -7,6 +7,12 @@
     justify-content: center;
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     padding: 40px 20px;
+    transition: background 0.3s ease;
+}
+
+[data-theme='dark'] .login-page {
+    background: linear-gradient(135deg, #1a2a6c 0%, #b21f1f 50%, #fdbb2d 100%);
+    background: linear-gradient(135deg, #0a0a0a 0%, #1c1c1e 100%);
 }
 
 .login-container {
@@ -16,12 +22,11 @@
 }
 
 .login-card {
-    background: var(--color-bg-white);
+    background: var(--bg-card);
     border-radius: 20px;
     padding: 50px 40px;
-    box-shadow:
-        0 20px 60px rgba(0, 0, 0, 0.3),
-        0 0 0 1px rgba(255, 255, 255, 0.1);
+    box-shadow: var(--shadow-lg);
+    border: 1px solid var(--border-light);
 }
 
 .login-header {
@@ -43,8 +48,8 @@
 }
 
 .login-error {
-    background: #fff3f3;
-    border: 1px solid #ffcaca;
+    background: rgba(211, 47, 47, 0.1);
+    border: 1px solid rgba(211, 47, 47, 0.2);
     border-radius: 12px;
     padding: 16px;
     margin-bottom: 25px;
@@ -52,13 +57,13 @@
     align-items: center;
     gap: 12px;
     font-size: var(--font-size-small);
-    color: #d32f2f;
+    color: #ef5350;
     animation: shake 0.4s ease-in-out;
 }
 
 .login-error svg {
     flex-shrink: 0;
-    color: #d32f2f;
+    color: #ef5350;
 }
 
 .login-form {
@@ -81,19 +86,20 @@
 
 .login-form input {
     padding: 14px 16px;
-    border: 1.5px solid var(--color-border-light);
+    border: 1.5px solid var(--border-light);
     border-radius: 12px;
     font-size: var(--font-size-base);
     font-family: var(--font-primary);
-    color: var(--color-text-primary);
-    background-color: var(--color-bg-white);
+    color: var(--text-primary);
+    background-color: var(--bg-tertiary);
     transition: all 0.2s ease;
 }
 
 .login-form input:focus {
     outline: none;
+    background-color: var(--bg-primary);
     border-color: var(--color-primary);
-    box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+    box-shadow: 0 0 0 4px rgba(10, 132, 255, 0.1);
 }
 
 .login-form input:disabled {
@@ -156,7 +162,7 @@
     margin-top: 30px;
     text-align: center;
     padding-top: 25px;
-    border-top: 1px solid var(--color-border-light);
+    border-top: 1px solid var(--border-light);
 }
 
 .login-footer p {

@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { getDocument } from '../firebase/firestoreService';
+import VolunteerGrid from '../components/VolunteerGrid';
 import './Volunteer.css';
 
 const Icons = {
@@ -147,10 +148,17 @@ function Volunteer() {
                     <div className="volunteer-header-content text-center">
                         <h1 className="page-title">{c.header.title}</h1>
                         <p className="page-subtitle">{c.header.subtitle}</p>
-                        <p className="volunteer-intro" style={{ whiteSpace: 'pre-wrap' }} dangerouslySetInnerHTML={{ __html: c.header.intro }}></p>
+                        <p className="volunteer-intro" style={{ whiteSpace: 'pre-wrap', marginBottom: '40px' }} dangerouslySetInnerHTML={{ __html: c.header.intro }}></p>
+                        <a href="#registration" className="btn btn-primary btn-lg animate-fade-in-up" style={{ borderRadius: '980px', textDecoration: 'none' }}>
+                            Register to Volunteer Now!
+                        </a>
                     </div>
                 </div>
             </section>
+
+
+            {/* Volunteer Grid */}
+            <VolunteerGrid />
 
             {/* Opportunities */}
             <section className="opportunities-section section">
@@ -209,7 +217,7 @@ function Volunteer() {
             </section>
 
             {/* Application Form */}
-            <section className="form-section section">
+            <section id="registration" className="form-section section">
                 <div className="container">
                     <div className="form-container">
                         <div className="form-header text-center">
@@ -341,7 +349,10 @@ function Volunteer() {
                     </div>
                 </div>
             </section>
-        </div>
+
+
+
+        </div >
     );
 }
 

@@ -50,7 +50,7 @@ export default function Branches() {
                     <ul style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '8px' }}>
                         {cities.map((city) => (
                             <li key={city.slug} style={{ listStyle: 'none', margin: 0 }}>
-                                <Link to={`/branches/${city.slug}`} className="btn" style={{ display: 'block', textAlign: 'center', backgroundColor: '#f5f5f7', color: '#1d1d1f' }}>
+                                <Link to={`/branches/${city.slug}`} className="btn" style={{ display: 'block', textAlign: 'center', backgroundColor: 'var(--bg-secondary)', color: 'var(--text-primary)' }}>
                                     {city.name}
                                 </Link>
                             </li>
@@ -97,7 +97,7 @@ export default function Branches() {
                     </ul>
                 </div>
 
-                <div className="section" style={{ borderTop: '1px solid #e5e5e5', paddingTop: '40px' }}>
+                <div className="section" style={{ borderTop: '1px solid var(--border-light)', paddingTop: '40px' }}>
                     {/* Malay SEO Section */}
                     <h2>Cawangan Hidayah Centre di Malaysia</h2>
                     <p>
