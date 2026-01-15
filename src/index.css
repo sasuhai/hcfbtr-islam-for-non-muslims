@@ -629,13 +629,14 @@ a:hover {
    Custom Header Styles
    ============================================ */
 .navbar {
-  background: var(--nav-bg);
+  background: var(--bg-primary);
+  /* Solid background for better contrast */
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   position: sticky;
   top: 0;
   z-index: 1000;
-  border-bottom: 1px solid var(--nav-border);
+  border-bottom: 1px solid var(--border-light);
   padding-top: env(safe-area-inset-top, 0);
 }
 
@@ -822,7 +823,10 @@ a:hover {
     width: 100%;
     padding: 1.25rem 0;
     border-bottom: 1px solid var(--border-light);
+    color: var(--text-primary) !important;
+    /* Force primary text color */
     opacity: 1;
+    display: block;
   }
 
   .mobile-only-extras {
