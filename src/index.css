@@ -636,6 +636,7 @@ a:hover {
   top: 0;
   z-index: 1000;
   border-bottom: 1px solid var(--nav-border);
+  padding-top: env(safe-area-inset-top, 0);
 }
 
 .navbar-content {
@@ -792,12 +793,12 @@ a:hover {
   }
 
   .navbar-content {
-    height: 56px;
+    height: 64px;
   }
 
   .nav-links {
     position: fixed;
-    top: 60px;
+    top: calc(64px + env(safe-area-inset-top, 0));
     left: 0;
     right: 0;
     bottom: 0;
