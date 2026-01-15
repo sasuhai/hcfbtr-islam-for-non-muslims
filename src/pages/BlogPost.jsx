@@ -51,7 +51,7 @@ function BlogPost() {
             const foundPost = allPosts.find(p => p.slug === slug);
 
             if (!foundPost) {
-                navigate('/blog');
+                navigate('/journey');
                 return;
             }
 
@@ -64,7 +64,7 @@ function BlogPost() {
             setRelatedPosts(related);
         } catch (error) {
             console.error("Error loading post:", error);
-            navigate('/blog');
+            navigate('/journey');
         } finally {
             setLoading(false);
         }

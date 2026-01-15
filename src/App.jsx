@@ -7,7 +7,6 @@ import ClassesForNonMuslims from './pages/ClassesForNonMuslims';
 import Branches from './pages/Branches';
 import BranchDetail from './pages/BranchDetail';
 import AdminDashboard from './pages/AdminDashboard';
-import Blog from './pages/Blog';
 import Donate from './pages/Donate';
 import Volunteer from './pages/Volunteer';
 import Journey from './pages/Journey';
@@ -49,9 +48,6 @@ function App() {
 
         <Route path="/admin" element={<AdminDashboard />} />
         <Route path="/:lang/admin" element={<AdminDashboard />} />
-
-        <Route path="/blog" element={<Blog />} />
-        <Route path="/:lang/blog" element={<Blog />} />
 
         <Route path="/blog/:slug" element={<BlogPost />} />
         <Route path="/:lang/blog/:slug" element={<BlogPost />} />

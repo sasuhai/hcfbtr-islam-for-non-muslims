@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
-import { getDocument } from '../firebase/firestoreService';
+import { Link } from 'react-router-dom';
+import { getDocument, getAllDocuments } from '../firebase/firestoreService';
 import { useOrganization } from '../context/OrganizationContext';
 import './Journey.css';
 
@@ -21,12 +22,66 @@ const Icons = {
     ArrowRight: () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 18 15 12 9 6" /></svg>
 };
 
+const getPostImage = (post) => {
+    if (post.image && (post.image.startsWith('http') || post.image.startsWith('/'))) return post.image;
+    const images = [
+        '/images/blog-student-reading.png',
+        '/images/blog-community-volunteers.png',
+        '/images/blog-teacher-mentoring.png',
+        '/images/blog-youth-group.png',
+        '/images/blog-quran-rehal.png',
+        '/images/blog-mosque-arch.png',
+        '/images/blog-kampung-surau.png',
+        '/images/community_gathering.png',
+        '/images/students_classroom_learning.png',
+        '/images/about-students.png',
+        '/images/blog-featured.png',
+        '/images/hero-volunteer.png'
+    ];
+    let hash = 0;
+    const str = post.title || '';
+    for (let i = 0; i < str.length; i++) {
+        hash = ((hash << 5) - hash) + str.charCodeAt(i);
+        hash |= 0;
+    }
+    const index = Math.abs(hash) % images.length;
+    return images[index];
+};
+
+const extractYoutubeId = (url) => {
+    if (!url) return null;
+    const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+    const match = url.match(regExp);
+    return (match && match[2].length === 11) ? match[2] : null;
+};
+
+const getVideoEmbedUrl = (link) => {
+    if (!link) return "";
+
+    const ytId = extractYoutubeId(link);
+    if (ytId) return `https://www.youtube.com/embed/${ytId}?autoplay=1`;
+
+    if (link.includes('facebook.com')) {
+        return `https://www.facebook.com/plugins/video.php?href=${encodeURIComponent(link)}&show_text=0&autoplay=1`;
+    }
+
+    return link;
+};
+
 function Journey() {
     const [pageContent, setPageContent] = useState(null);
     const [loading, setLoading] = useState(true);
     const scrollRef = useRef(null);
     const [currentIndex, setCurrentIndex] = useState(0);
     const { orgData } = useOrganization();
+
+    // Blog Integration States
+    const [blogPosts, setBlogPosts] = useState([]);
+    const [blogVideos, setBlogVideos] = useState([]);
+    const [selectedTag, setSelectedTag] = useState('semua');
+    const [activeVideo, setActiveVideo] = useState(null);
+    const [videoPlaying, setVideoPlaying] = useState(false);
+    const [blogError, setBlogError] = useState(null);
 
     const scroll = (direction) => {
         if (scrollRef.current) {
@@ -36,7 +91,16 @@ function Journey() {
     };
 
     useEffect(() => {
-        loadPageContent();
+        const fetchData = async () => {
+            setLoading(true);
+            await Promise.all([
+                loadPageContent(),
+                loadBlogPosts(),
+                loadBlogVideos()
+            ]);
+            setLoading(false);
+        };
+        fetchData();
     }, []);
 
     const loadPageContent = async () => {
@@ -46,8 +110,35 @@ function Journey() {
         } catch (err) {
             console.error('Error loading journey page:', err);
             setPageContent(getDefaultContent());
-        } finally {
-            setLoading(false);
+        }
+    };
+
+    const loadBlogPosts = async () => {
+        try {
+            const posts = await getAllDocuments('blog-posts');
+            const publishedPosts = posts.filter(post => post.published === true);
+            const sortedPosts = publishedPosts.sort((a, b) => new Date(b.date) - new Date(a.date));
+            setBlogPosts(sortedPosts);
+            setBlogError(null);
+        } catch (err) {
+            console.error('Error loading blog posts:', err);
+            setBlogError('Gagal memuatkan artikel.');
+        }
+    };
+
+    const loadBlogVideos = async () => {
+        try {
+            const videos = await getAllDocuments('blog-videos');
+            const publishedVideos = videos
+                .filter(v => v.published === true)
+                .sort((a, b) => (b.date?.seconds || 0) - (a.date?.seconds || 0));
+            setBlogVideos(publishedVideos);
+            if (publishedVideos.length > 0) {
+                const featured = publishedVideos.find(v => v.featured);
+                setActiveVideo(featured || publishedVideos[0]);
+            }
+        } catch (err) {
+            console.error('Error loading blog videos:', err);
         }
     };
 
@@ -179,6 +270,13 @@ function Journey() {
 
     const visibleTestimonials = testimonials.slice(currentIndex, currentIndex + 3);
 
+    const allTags = ['semua', ...new Set(blogPosts.flatMap(post => post.tags || []))].sort();
+    const featuredPost = blogPosts.find(post => post.featured);
+    const filteredPosts = (selectedTag === 'semua'
+        ? blogPosts
+        : blogPosts.filter(post => post.tags && post.tags.includes(selectedTag))
+    ).filter(post => post.id !== featuredPost?.id);
+
     return (
         <div className="journey-page">
             {/* Header */}
@@ -279,6 +377,166 @@ function Journey() {
                     </div>
                 </div>
             </section>
+
+            {/* Cinematic Reels Section Integrated from Blog */}
+            {blogVideos.length > 0 && (
+                <section className="video-section section-sm bg-stone-50 dark:bg-stone-900/50">
+                    <div className="container">
+                        <h2 className="section-title text-center mb-8">Album & Kenangan: Menuju 2 Dekad Melangkah</h2>
+                        <div className="video-layout">
+                            {/* Main Player */}
+                            <div className="video-player-main card overflow-hidden">
+                                {activeVideo && (
+                                    <div className="aspect-video relative bg-black">
+                                        {!videoPlaying ? (
+                                            <div
+                                                className="absolute inset-0 z-10 cursor-pointer group"
+                                                onClick={() => setVideoPlaying(true)}
+                                            >
+                                                {(() => {
+                                                    const ytId = extractYoutubeId(activeVideo.link);
+                                                    const thumbSrc = activeVideo.thumbnail || (ytId ? `https://img.youtube.com/vi/${ytId}/maxresdefault.jpg` : '');
+                                                    return thumbSrc ? (
+                                                        <img src={thumbSrc} alt="" className="w-full h-full object-cover" />
+                                                    ) : (
+                                                        <div className="thumb-fallback text-4xl">
+                                                            <span className="iconify" data-icon="lucide:video"></span>
+                                                        </div>
+                                                    );
+                                                })()}
+                                                {/* Play Button Overlay */}
+                                                <div className="absolute inset-0 flex items-center justify-center bg-black/20 group-hover:bg-black/10 transition-all">
+                                                    <div className="w-16 h-16 bg-white/90 rounded-full flex items-center justify-center text-stone-900 shadow-2xl group-hover:scale-110 transition-transform">
+                                                        <span className="iconify" data-icon="lucide:play" data-width="32" style={{ marginLeft: '4px' }}></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        ) : (
+                                            <iframe
+                                                src={getVideoEmbedUrl(activeVideo.link)}
+                                                title={activeVideo.title}
+                                                className="w-full h-full border-0"
+                                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                                allowFullScreen
+                                            ></iframe>
+                                        )}
+                                    </div>
+                                )}
+                                <div className="p-6">
+                                    <h3 className="text-xl font-bold mb-2">{activeVideo?.title}</h3>
+                                    <p className="text-stone-600 dark:text-stone-400 text-sm">{activeVideo?.description}</p>
+                                </div>
+                            </div>
+
+                            {/* Archive Thumbnails */}
+                            <div className="video-sidebar custom-scrollbar">
+                                <div className="video-archive-list">
+                                    {blogVideos.filter(v => v.id !== activeVideo?.id).map((video) => (
+                                        <button
+                                            key={video.id}
+                                            onClick={() => {
+                                                setActiveVideo(video);
+                                                setVideoPlaying(false);
+                                            }}
+                                            className="video-thumb-card"
+                                        >
+                                            <div className="thumb-img-wrapper">
+                                                {(() => {
+                                                    const ytId = extractYoutubeId(video.link);
+                                                    const thumbSrc = video.thumbnail || (ytId ? `https://img.youtube.com/vi/${ytId}/mqdefault.jpg` : '');
+                                                    return thumbSrc ? (
+                                                        <img src={thumbSrc} alt="" className="thumb-img" />
+                                                    ) : (
+                                                        <div className="thumb-fallback"><span className="iconify" data-icon="lucide:video"></span></div>
+                                                    );
+                                                })()}
+                                                <div className="play-overlay"><span className="iconify" data-icon="lucide:play"></span></div>
+                                            </div>
+                                            <div className="thumb-text">
+                                                <h4 className="text-sm font-semibold line-clamp-2">{video.title}</h4>
+                                                <p className="text-xs opacity-60">
+                                                    {video.date?.toDate ? video.date.toDate().toLocaleDateString('ms-MY') : ''}
+                                                </p>
+                                            </div>
+                                        </button>
+                                    ))}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            )}
+
+            {/* Featured Post Integrated from Blog */}
+            {featuredPost && (
+                <section className="featured-section section-sm">
+                    <div className="container">
+                        <Link to={`/blog/${featuredPost.slug}`} className="featured-post-compact card">
+                            <div className="featured-content-compact">
+                                <div className="featured-image-compact">
+                                    <img src={getPostImage(featuredPost)} alt={featuredPost.title} />
+                                    <div className="featured-badge">Sorotan | Featured</div>
+                                </div>
+                                <div className="featured-text-compact">
+                                    <div className="post-meta mb-2">
+                                        <span className="post-date text-xs uppercase tracking-wider">{new Date(featuredPost.date).toLocaleDateString('ms-MY', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
+                                    </div>
+                                    <h2 className="text-2xl md:text-4xl font-bold mb-4">{featuredPost.title}</h2>
+                                    <p className="text-lg opacity-80 mb-6 line-clamp-3">{featuredPost.excerpt}</p>
+                                    <span className="btn btn-primary btn-sm">Baca Kisah Penuh | Read Full Story</span>
+                                </div>
+                            </div>
+                        </Link>
+                    </div>
+                </section>
+            )}
+
+            {/* Blog Posts Grid Integrated from Blog */}
+            {blogPosts.length > 0 && (
+                <section className="posts-section section-sm">
+                    <div className="container">
+                        <h2 className="section-title text-center mb-8">Arkib Cerita & Berita</h2>
+                        <div className="tag-filter mb-8">
+                            {allTags.map((tag) => (
+                                <button
+                                    key={tag}
+                                    onClick={() => setSelectedTag(tag)}
+                                    className={`tag-button ${selectedTag === tag ? 'active' : ''}`}
+                                >
+                                    {tag}
+                                </button>
+                            ))}
+                        </div>
+
+                        {blogError && (
+                            <div className="text-center py-8">
+                                <p className="text-red-500">{blogError}</p>
+                            </div>
+                        )}
+
+                        <div className="posts-grid">
+                            {filteredPosts.map((post) => (
+                                <Link key={post.id} to={`/blog/${post.slug}`} className="post-card card">
+                                    <div className="post-image" style={{ backgroundImage: `url(${getPostImage(post)})` }}>
+                                    </div>
+                                    <div className="post-content">
+                                        <div className="post-meta">
+                                            <span className="post-date">{new Date(post.date).toLocaleDateString('ms-MY', { year: 'numeric', month: 'short', day: 'numeric' })}</span>
+                                        </div>
+                                        <h3 className="post-title">{post.title}</h3>
+                                        <p className="post-excerpt">{post.excerpt}</p>
+                                        <div className="post-tags">
+                                            {post.tags && post.tags.slice(0, 2).map((tag, index) => (
+                                                <span key={index} className="badge">{tag}</span>
+                                            ))}
+                                        </div>
+                                    </div>
+                                </Link>
+                            ))}
+                        </div>
+                    </div>
+                </section>
+            )}
 
             {/* Forward Looking */}
             <section className="forward-section section" style={{ backgroundColor: 'var(--color-primary)' }}>

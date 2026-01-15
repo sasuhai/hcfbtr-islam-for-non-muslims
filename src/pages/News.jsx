@@ -223,7 +223,7 @@ export default function News() {
 
                 {/* Masthead */}
                 <header className="px-6 py-6 text-center border-b-4 border-double border-stone-800">
-                    <h1 className="md:text-7xl lg:text-8xl leading-none uppercase text-5xl font-bold text-stone-900 tracking-tighter font-masthead mb-2">
+                    <h1 className="md:text-5xl lg:text-6xl leading-none uppercase text-4xl font-bold text-stone-900 tracking-tighter font-masthead mb-2">
                         The {shortName} Chronicle
                     </h1>
 
