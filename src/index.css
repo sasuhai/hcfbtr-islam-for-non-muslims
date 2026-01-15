@@ -811,7 +811,8 @@ a:hover {
     display: flex !important;
     /* Ensure flex is active */
     flex-direction: column;
-    padding: 2rem;
+    padding: 1rem 1.5rem;
+    /* Reduced horizontal and vertical padding */
     gap: 0;
     transform: translateX(100%);
     transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
@@ -826,34 +827,37 @@ a:hover {
   }
 
   .nav-links a {
-    font-size: 1.25rem;
+    font-size: 1.1rem;
+    /* Smaller, more balanced font */
     width: 100%;
-    padding: 1.25rem 0;
+    padding: 0.85rem 0;
+    /* Significantly reduced vertical padding */
     border-bottom: 1px solid var(--border-light);
     color: var(--text-primary) !important;
-    /* Force primary text color */
     opacity: 1;
     display: block;
+    font-weight: 500;
   }
 
   .mobile-only-extras {
     display: flex;
     flex-direction: column;
     width: 100%;
-    gap: 1rem;
-    padding-top: 2rem;
+    gap: 0.75rem;
+    padding-top: 1.5rem;
   }
 
   .mobile-extra-btn {
     display: flex;
     align-items: center;
-    gap: 1rem;
-    background: var(--bg-tertiary);
+    gap: 0.75rem;
+    background: var(--bg-secondary);
     border: 1px solid var(--border-light);
-    padding: 1rem;
+    padding: 0.75rem 1rem;
+    /* Compact padding for utility buttons */
     border-radius: 12px;
     width: 100%;
-    font-size: 1.1rem;
+    font-size: 1rem;
     color: var(--text-primary);
     cursor: pointer;
     text-decoration: none;
