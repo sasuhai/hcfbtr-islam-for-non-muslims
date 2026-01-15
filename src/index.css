@@ -796,8 +796,13 @@ a:hover {
     display: none;
   }
 
+  .navbar {
+    overflow: visible !important;
+  }
+
   .navbar-content {
     height: 64px;
+    overflow: visible !important;
   }
 
   .nav-links {
@@ -805,21 +810,21 @@ a:hover {
     top: calc(64px + env(safe-area-inset-top, 0));
     left: 0;
     right: 0;
-    bottom: 0;
+    height: 100vh !important;
+    /* Force high height to break out of containing block */
     background: #ffffff !important;
-    /* Force solid white background */
     display: flex !important;
-    /* Ensure flex is active */
     flex-direction: column;
-    padding: 1rem 1.5rem;
-    /* Reduced horizontal and vertical padding */
+    padding: 1.5rem 1.5rem 120px;
+    /* Extra padding at bottom for utility buttons */
     gap: 0;
     transform: translateX(100%);
     transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
     z-index: 10001;
-    /* Overlay on top of navbar */
     align-items: flex-start;
-    overflow-y: auto;
+    overflow-y: auto !important;
+    /* Ensure scroll is allowed */
+    -webkit-overflow-scrolling: touch;
   }
 
   .nav-links.mobile-open {
