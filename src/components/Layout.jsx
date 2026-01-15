@@ -66,19 +66,16 @@ export default function Layout({ children }) {
                         <Link to={getLink('/donate')} className={isActive('/donate')}>{t.nav.donate}</Link>
                         <Link to={getLink('/about')} className={isActive('/about')}>{t.nav.about}</Link>
 
-                        {/* Mobile Only Extras */}
+                        {/* Mobile Only Extras - Compact Row */}
                         <div className="mobile-only-extras">
-                            <button onClick={toggleLanguage} className="mobile-extra-btn">
-                                <span className="iconify" data-icon="lucide:languages"></span>
-                                {isBM ? 'English' : 'Bahasa Melayu'}
+                            <button onClick={toggleLanguage} className="mobile-extra-btn-compact font-bold">
+                                {isBM ? 'EN' : 'BM'}
                             </button>
-                            <button onClick={toggleTheme} className="mobile-extra-btn">
+                            <button onClick={toggleTheme} className="mobile-extra-btn-compact" title="Toggle Theme">
                                 <span className="iconify" data-icon={theme === 'dark' ? 'lucide:sun' : 'lucide:moon'}></span>
-                                {theme === 'dark' ? 'Light Mode' : 'Dark Mode'}
                             </button>
-                            <Link to="/admin" className="mobile-extra-btn">
+                            <Link to="/admin" className="mobile-extra-btn-compact" title="Admin">
                                 <span className="iconify" data-icon="lucide:settings"></span>
-                                Admin
                             </Link>
                         </div>
                     </div>
