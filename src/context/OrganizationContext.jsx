@@ -15,6 +15,12 @@ const defaultOrgData = {
     phone: [],
     facebook: '',
     instagram: '',
+    hqUrl: '',
+    operatingHours: [
+        { day: 'Monday - Friday', time: '09:00 - 17:00' },
+        { day: 'Saturday', time: '09:00 - 13:00' },
+        { day: 'Sunday', time: 'Closed' }
+    ],
     bank: {
         bankName: '',
         accountName: '',

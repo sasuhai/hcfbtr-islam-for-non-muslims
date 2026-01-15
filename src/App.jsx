@@ -12,16 +12,24 @@ import Donate from './pages/Donate';
 import Volunteer from './pages/Volunteer';
 import Journey from './pages/Journey';
 import About from './pages/About';
+import News from './pages/News';
+import Contact from './pages/Contact';
+import BlogPost from './pages/BlogPost';
 import Login from './pages/Login';
 
+import ScrollToTop from './components/ScrollToTop';
 
 function App() {
   return (
     <Layout>
+      <ScrollToTop />
       <Routes>
         {/* Simplified Routing with Language Prefix */}
         <Route path="/" element={<Home />} />
         <Route path="/:lang" element={<Home />} />
+
+        <Route path="/news" element={<News />} />
+        <Route path="/:lang/news" element={<News />} />
 
         <Route path="/convert-to-islam-malaysia" element={<ConvertToIslam />} />
         <Route path="/:lang/convert-to-islam-malaysia" element={<ConvertToIslam />} />
@@ -45,6 +53,9 @@ function App() {
         <Route path="/blog" element={<Blog />} />
         <Route path="/:lang/blog" element={<Blog />} />
 
+        <Route path="/blog/:slug" element={<BlogPost />} />
+        <Route path="/:lang/blog/:slug" element={<BlogPost />} />
+
         <Route path="/donate" element={<Donate />} />
         <Route path="/:lang/donate" element={<Donate />} />
 
@@ -56,6 +67,9 @@ function App() {
 
         <Route path="/about" element={<About />} />
         <Route path="/:lang/about" element={<About />} />
+
+        <Route path="/contact" element={<Contact />} />
+        <Route path="/:lang/contact" element={<Contact />} />
       </Routes>
     </Layout>
   );

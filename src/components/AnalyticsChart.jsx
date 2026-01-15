@@ -2,8 +2,8 @@
 import React, { useState } from 'react';
 import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
-const AnalyticsChart = ({ data, topPages }) => {
-    const [timeGrouping, setTimeGrouping] = useState('day');
+const AnalyticsChart = ({ data, topPages, frequency, onFrequencyChange }) => {
+    const timeGrouping = frequency || 'day';
     const [selectedMetrics, setSelectedMetrics] = useState(['totalPageViews']); // Array of selected keys
 
     // Colors for different lines
@@ -107,7 +107,7 @@ const AnalyticsChart = ({ data, topPages }) => {
 
                     <select
                         value={timeGrouping}
-                        onChange={(e) => setTimeGrouping(e.target.value)}
+                        onChange={(e) => onFrequencyChange(e.target.value)}
                         className="form-select"
                         style={{ padding: '8px', borderRadius: '4px', border: '1px solid var(--border-light)', background: 'var(--bg-tertiary)', color: 'var(--text-primary)' }}
                     >

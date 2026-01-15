@@ -141,31 +141,70 @@ export default function Home() {
                         {/* Item 1 */}
                         <div className="group border-l border-stone-200 dark:border-stone-800 pl-8 pb-12 relative">
                             <span className="absolute -left-[5px] top-1 h-2.5 w-2.5 rounded-full bg-stone-300 dark:bg-stone-700 group-hover:bg-emerald-800/60 transition-colors duration-300"></span>
-                            <h3 className="text-lg font-medium text-stone-900 dark:text-stone-200 mb-1">{h.step1Title}</h3>
-                            <p className="text-stone-500 dark:text-stone-500 text-sm mb-4">{common.foundation}</p>
-                            <p className="text-stone-600 dark:text-stone-400 font-light leading-relaxed max-w-2xl">
-                                {h.step1Desc}
-                            </p>
+                            <div className="grid md:grid-cols-2 gap-8 items-start">
+                                <div className="max-w-xl">
+                                    <h3 className="text-lg font-medium text-stone-900 dark:text-stone-200 mb-1">{h.step1Title}</h3>
+                                    <p className="text-stone-500 dark:text-stone-500 text-sm mb-4">{common.foundation}</p>
+                                    <p className="text-stone-600 dark:text-stone-400 font-light leading-relaxed">
+                                        {h.step1Desc}
+                                    </p>
+                                </div>
+                                <div className="mt-4 md:mt-0 max-w-md">
+                                    <div className="aspect-[16/9] bg-stone-100 dark:bg-stone-800 rounded-sm overflow-hidden mb-3 border border-stone-200 dark:border-stone-800">
+                                        <img src="/images/journey-understand.png" alt="Foundation" className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700" />
+                                    </div>
+                                    <Link to={getLink("/classes-for-non-muslims")} className="inline-flex items-center text-sm font-medium text-stone-900 dark:text-stone-300 border-b border-transparent hover:border-stone-900 dark:hover:border-stone-300 transition-all">
+                                        {isBM ? 'Kelas untuk bukan Islam' : 'Classes for non-Muslims'}
+                                        <span className="iconify ml-2" data-icon="lucide:arrow-right" data-width="14"></span>
+                                    </Link>
+                                </div>
+                            </div>
                         </div>
 
                         {/* Item 2 */}
                         <div className="group border-l border-stone-200 dark:border-stone-800 pl-8 pb-12 relative">
                             <span className="absolute -left-[5px] top-1 h-2.5 w-2.5 rounded-full bg-stone-300 dark:bg-stone-700 group-hover:bg-emerald-800/60 transition-colors duration-300"></span>
-                            <h3 className="text-lg font-medium text-stone-900 dark:text-stone-200 mb-1">{h.step2Title}</h3>
-                            <p className="text-stone-500 dark:text-stone-500 text-sm mb-4">{common.conversion}</p>
-                            <p className="text-stone-600 dark:text-stone-400 font-light leading-relaxed max-w-2xl">
-                                {h.step2Desc}
-                            </p>
+                            <div className="grid md:grid-cols-2 gap-8 items-start">
+                                <div className="max-w-xl">
+                                    <h3 className="text-lg font-medium text-stone-900 dark:text-stone-200 mb-1">{h.step2Title}</h3>
+                                    <p className="text-stone-500 dark:text-stone-500 text-sm mb-4">{common.conversion}</p>
+                                    <p className="text-stone-600 dark:text-stone-400 font-light leading-relaxed">
+                                        {h.step2Desc}
+                                    </p>
+                                </div>
+                                <div className="mt-4 md:mt-0 max-w-md">
+                                    <div className="aspect-[16/9] bg-stone-100 dark:bg-stone-800 rounded-sm overflow-hidden mb-3 border border-stone-200 dark:border-stone-800">
+                                        <img src="/images/journey-convert.png" alt="Conversion" className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700" />
+                                    </div>
+                                    <Link to={getLink("/convert-to-islam-malaysia")} className="inline-flex items-center text-sm font-medium text-stone-900 dark:text-stone-300 border-b border-transparent hover:border-stone-900 dark:hover:border-stone-300 transition-all">
+                                        {isBM ? 'Kembali kepada Islam' : 'Reverting to Islam'}
+                                        <span className="iconify ml-2" data-icon="lucide:arrow-right" data-width="14"></span>
+                                    </Link>
+                                </div>
+                            </div>
                         </div>
 
                         {/* Item 3 */}
                         <div className="group border-l border-stone-200 dark:border-stone-800 pl-8 pb-12 relative">
                             <span className="absolute -left-[5px] top-1 h-2.5 w-2.5 rounded-full bg-stone-300 dark:bg-stone-700 group-hover:bg-emerald-800/60 transition-colors duration-300"></span>
-                            <h3 className="text-lg font-medium text-stone-900 dark:text-stone-200 mb-1">{h.step3Title}</h3>
-                            <p className="text-stone-500 dark:text-stone-500 text-sm mb-4">{common.growth}</p>
-                            <p className="text-stone-600 dark:text-stone-400 font-light leading-relaxed max-w-2xl">
-                                {h.step3Desc}
-                            </p>
+                            <div className="grid md:grid-cols-2 gap-8 items-start">
+                                <div className="max-w-xl">
+                                    <h3 className="text-lg font-medium text-stone-900 dark:text-stone-200 mb-1">{h.step3Title}</h3>
+                                    <p className="text-stone-500 dark:text-stone-500 text-sm mb-4">{common.growth}</p>
+                                    <p className="text-stone-600 dark:text-stone-400 font-light leading-relaxed">
+                                        {h.step3Desc}
+                                    </p>
+                                </div>
+                                <div className="mt-4 md:mt-0 max-w-md">
+                                    <div className="aspect-[16/9] bg-stone-100 dark:bg-stone-800 rounded-sm overflow-hidden mb-3 border border-stone-200 dark:border-stone-800">
+                                        <img src="/images/journey-support.png" alt="Growth" className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700" />
+                                    </div>
+                                    <Link to={getLink("/about")} className="inline-flex items-center text-sm font-medium text-stone-900 dark:text-stone-300 border-b border-transparent hover:border-stone-900 dark:hover:border-stone-300 transition-all">
+                                        {isBM ? 'Sokongan untuk Mualaf' : 'Supports for Mualaf'}
+                                        <span className="iconify ml-2" data-icon="lucide:arrow-right" data-width="14"></span>
+                                    </Link>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

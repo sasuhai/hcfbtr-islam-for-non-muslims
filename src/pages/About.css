@@ -51,8 +51,7 @@ h4 {
    ============================================ */
 .hero-section {
     position: relative;
-    height: 90vh;
-    min-height: 700px;
+    min-height: 85vh;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -63,7 +62,8 @@ h4 {
     color: white;
     text-align: center;
     overflow: hidden;
-    padding-top: 120px;
+    padding-top: 140px;
+    padding-bottom: 120px;
 }
 
 .hero-overlay {
@@ -120,6 +120,7 @@ h4 {
     display: flex;
     gap: 20px;
     justify-content: center;
+    margin-bottom: 20px;
 }
 
 .hero-cta .btn {
@@ -172,13 +173,13 @@ h4 {
 
 .impact-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 40px;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
     text-align: center;
 }
 
 .impact-number {
-    font-size: 80px;
+    font-size: 56px;
     font-weight: 600;
     background: linear-gradient(180deg, var(--text-primary) 0%, var(--text-tertiary) 100%);
     -webkit-background-clip: text;
@@ -190,7 +191,7 @@ h4 {
 }
 
 .impact-label {
-    font-size: 21px;
+    font-size: 17px;
     font-weight: 600;
     color: var(--text-primary);
 }
@@ -551,10 +552,14 @@ h4 {
     }
 
     .about-content,
-    .social-feed-wrapper,
-    .impact-grid {
+    .social-feed-wrapper {
         grid-template-columns: 1fr;
         gap: 40px;
+    }
+
+    .impact-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 30px;
     }
 
     .social-side-panel {

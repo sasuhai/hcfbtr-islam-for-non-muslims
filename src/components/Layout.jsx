@@ -68,7 +68,8 @@ export default function Layout({ children }) {
                         <Link to={getLink('/classes-for-non-muslims')} className={isActive('/classes-for-non-muslims')}>{t.nav.classes}</Link>
                         <Link to={getLink('/convert-to-islam-malaysia')} className={isActive('/convert-to-islam-malaysia')}>{t.nav.revert}</Link>
 
-                        <Link to={getLink('/blog')} className={isActive('/blog')}>{t.nav.news}</Link>
+                        <Link to={getLink('/news')} className={isActive('/news')}>{t.nav.news}</Link>
+                        <Link to={getLink('/blog')} className={isActive('/blog')}>Blog</Link>
                         <Link to={getLink('/journey')} className={isActive('/journey')}>{t.nav.journey}</Link>
                         <Link to={getLink('/volunteer')} className={isActive('/volunteer')}>{t.nav.volunteer}</Link>
                         <Link to={getLink('/donate')} className={isActive('/donate')}>{t.nav.donate}</Link>

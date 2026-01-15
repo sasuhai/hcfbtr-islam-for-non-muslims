@@ -1,0 +1,74 @@
+.blog-post-page {
+    animation: fadeIn 0.8s ease-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.blog-content {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    color: var(--color-text-primary, #1c1917);
+    line-height: 1.8;
+}
+
+.blog-content h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.25rem;
+    font-weight: 700;
+    margin-top: 3rem;
+    margin-bottom: 1.5rem;
+    color: #0c0a09;
+    text-align: left;
+}
+
+.blog-content p {
+    margin-bottom: 2rem;
+    font-size: 1.15rem;
+}
+
+.blog-content img {
+    border-radius: 12px;
+    margin: 3rem 0;
+    box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+}
+
+.blog-content blockquote {
+    background: #fdfcfb;
+    border-left: 4px solid #059669;
+    padding: 2rem;
+    font-style: italic;
+    color: #44403c;
+    margin: 3rem 0;
+    border-radius: 0 8px 8px 0;
+}
+
+.blog-content ul,
+.blog-content ol {
+    margin-bottom: 2rem;
+    padding-left: 1.5rem;
+}
+
+.blog-content li {
+    margin-bottom: 0.75rem;
+    font-size: 1.15rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .blog-content h2 {
+        font-size: 1.75rem;
+    }
+
+    .blog-content p {
+        font-size: 1.05rem;
+    }
+}

@@ -144,7 +144,12 @@ function About() {
             subtitle: "",
             description: ""
         },
-        impactStats: [],
+        impactStats: [
+            { number: '20+', label: 'Tahun Perkhidmatan', sublabel: 'Years of Service' },
+            { number: '1000+', label: 'Mualaf Dibimbing', sublabel: 'Students Guided' },
+            { number: '500+', label: 'Sukarelawan Aktif', sublabel: 'Active Volunteers' },
+            { number: '15+', label: 'Program & Kelas', sublabel: 'Programs & Classes' }
+        ],
         about: {
             title: "",
             subtitle: "",
@@ -219,46 +224,46 @@ function About() {
             </section >
 
             {/* Official Registration Widgets */}
-            <section className="py-20 bg-[var(--bg-secondary)] border-b border-[var(--border-light)]">
-                <div className="container">
-                    <div className="grid md:grid-cols-3 gap-8">
+            <section className="py-12 bg-stone-50 dark:bg-stone-900/50 border-b border-stone-100 dark:border-stone-800">
+                <div className="max-w-7xl mx-auto px-4 md:px-8">
+                    <div className="grid grid-cols-3 gap-4 md:gap-8">
                         {/* Widget 1 */}
-                        <div className="group relative bg-[var(--bg-card)] p-8 rounded-2xl shadow-2xl hover:shadow-sm transition-all duration-500 transform -translate-y-2 hover:translate-y-0 border border-[var(--border-light)] overflow-hidden">
+                        <div className="group relative bg-[var(--bg-card)] p-4 md:p-8 rounded-2xl shadow-2xl hover:shadow-sm transition-all duration-500 transform -translate-y-2 hover:translate-y-0 border border-[var(--border-light)] overflow-hidden">
                             <div className="absolute top-0 right-0 -mt-4 -mr-4 w-24 h-24 bg-blue-100 dark:bg-blue-900/20 rounded-full opacity-50 blur-2xl group-hover:bg-blue-50 dark:group-hover:bg-blue-900/10 transition-colors"></div>
                             <div className="relative z-10">
-                                <div className="w-12 h-12 bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-xl flex items-center justify-center mb-6 scale-110 group-hover:scale-100 transition-transform duration-500">
-                                    <span className="iconify text-2xl" data-icon="lucide:building-2"></span>
+                                <div className="w-10 h-10 md:w-12 md:h-12 bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-xl flex items-center justify-center mb-4 md:mb-6 scale-110 group-hover:scale-100 transition-transform duration-500">
+                                    <span className="iconify text-xl md:text-2xl" data-icon="lucide:building-2"></span>
                                 </div>
-                                <h3 className="text-lg font-semibold text-stone-900 dark:text-white mb-3">Identiti Korporat</h3>
-                                <p className="text-stone-600 dark:text-stone-400 text-sm leading-relaxed">
+                                <h3 className="text-sm md:text-lg font-semibold text-stone-900 dark:text-white mb-2 md:mb-3">Identiti Korporat</h3>
+                                <p className="text-stone-600 dark:text-stone-400 text-xs md:text-sm leading-relaxed">
                                     HCF BTR adalah cawangan institusi <strong>The Trustees of Hidayah Centre Foundation Registered</strong>.
                                 </p>
                             </div>
                         </div>
 
                         {/* Widget 2 */}
-                        <div className="group relative bg-[var(--bg-card)] p-8 rounded-2xl shadow-2xl hover:shadow-sm transition-all duration-500 transform -translate-y-2 hover:translate-y-0 border border-[var(--border-light)] overflow-hidden">
+                        <div className="group relative bg-[var(--bg-card)] p-4 md:p-8 rounded-2xl shadow-2xl hover:shadow-sm transition-all duration-500 transform -translate-y-2 hover:translate-y-0 border border-[var(--border-light)] overflow-hidden">
                             <div className="absolute top-0 right-0 -mt-4 -mr-4 w-24 h-24 bg-amber-100 dark:bg-amber-900/20 rounded-full opacity-50 blur-2xl group-hover:bg-amber-50 dark:group-hover:bg-amber-900/10 transition-colors"></div>
                             <div className="relative z-10">
-                                <div className="w-12 h-12 bg-amber-50 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400 rounded-xl flex items-center justify-center mb-6 scale-110 group-hover:scale-100 transition-transform duration-500">
-                                    <span className="iconify text-2xl" data-icon="lucide:landmark"></span>
+                                <div className="w-10 h-10 md:w-12 md:h-12 bg-amber-50 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400 rounded-xl flex items-center justify-center mb-4 md:mb-6 scale-110 group-hover:scale-100 transition-transform duration-500">
+                                    <span className="iconify text-xl md:text-2xl" data-icon="lucide:landmark"></span>
                                 </div>
-                                <h3 className="text-lg font-semibold text-stone-900 dark:text-white mb-3">Pendaftaran Sah</h3>
-                                <p className="text-stone-600 dark:text-stone-400 text-sm leading-relaxed">
+                                <h3 className="text-sm md:text-lg font-semibold text-stone-900 dark:text-white mb-2 md:mb-3">Pendaftaran Sah</h3>
+                                <p className="text-stone-600 dark:text-stone-400 text-xs md:text-sm leading-relaxed">
                                     Diperbadankan di bawah Bahagian Hal Ehwal Undang-undang (BHEUU), <strong>Jabatan Perdana Menteri (JPM)</strong>.
                                 </p>
                             </div>
                         </div>
 
                         {/* Widget 3 */}
-                        <div className="group relative bg-[var(--bg-card)] p-8 rounded-2xl shadow-2xl hover:shadow-sm transition-all duration-500 transform -translate-y-2 hover:translate-y-0 border border-[var(--border-light)] overflow-hidden">
+                        <div className="group relative bg-[var(--bg-card)] p-4 md:p-8 rounded-2xl shadow-2xl hover:shadow-sm transition-all duration-500 transform -translate-y-2 hover:translate-y-0 border border-[var(--border-light)] overflow-hidden">
                             <div className="absolute top-0 right-0 -mt-4 -mr-4 w-24 h-24 bg-emerald-100 dark:bg-emerald-900/20 rounded-full opacity-50 blur-2xl group-hover:bg-emerald-50 dark:group-hover:bg-emerald-900/10 transition-colors"></div>
                             <div className="relative z-10">
-                                <div className="w-12 h-12 bg-emerald-50 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 rounded-xl flex items-center justify-center mb-6 scale-110 group-hover:scale-100 transition-transform duration-500">
-                                    <span className="iconify text-2xl" data-icon="lucide:file-check"></span>
+                                <div className="w-10 h-10 md:w-12 md:h-12 bg-emerald-50 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 rounded-xl flex items-center justify-center mb-4 md:mb-6 scale-110 group-hover:scale-100 transition-transform duration-500">
+                                    <span className="iconify text-xl md:text-2xl" data-icon="lucide:file-check"></span>
                                 </div>
-                                <h3 className="text-lg font-semibold text-stone-900 dark:text-white mb-3">No. Pendaftaran</h3>
-                                <p className="text-3xl font-bold text-stone-900 dark:text-white tracking-tight">
+                                <h3 className="text-sm md:text-lg font-semibold text-stone-900 dark:text-white mb-2 md:mb-3">No. Pendaftaran</h3>
+                                <p className="text-lg md:text-3xl font-bold text-stone-900 dark:text-white tracking-tight">
                                     PPAB-14/2012
                                 </p>
                             </div>
@@ -269,7 +274,7 @@ function About() {
 
             {/* Impact Stats */}
             < section className="impact-section section" >
-                <div className="container">
+                <div className="max-w-7xl mx-auto px-6">
                     <div className="impact-grid">
                         {impactStats.map((stat, index) => (
                             <div key={index} className="impact-card">
@@ -419,9 +424,12 @@ function About() {
                             <p className="cta-description" style={{ whiteSpace: 'pre-wrap' }} dangerouslySetInnerHTML={{ __html: cta.description }}></p>
                             <div className="cta-buttons">
                                 <Link to="/volunteer" className="btn btn-secondary btn-lg">
-                                    Support Our Mission (Volunteer)
+                                    Support & Volunteer
                                 </Link>
-                                <Link to="/classes" className="btn btn-outline btn-lg" style={{ borderColor: 'white', color: 'white' }}>
+                                <Link to="/news" className="btn btn-outline btn-lg" style={{ borderColor: 'white', color: 'white' }}>
+                                    News & Stories
+                                </Link>
+                                <Link to="/classes-for-non-muslims" className="btn btn-outline btn-lg" style={{ borderColor: 'white', color: 'white' }}>
                                     Explore Classes
                                 </Link>
                                 <Link to="/" className="btn btn-outline btn-lg" style={{ borderColor: 'white', color: 'white' }}>

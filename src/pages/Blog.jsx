@@ -54,8 +54,11 @@ function Blog() {
             setLoading(true);
             const posts = await getAllDocuments('blog-posts');
 
+            // Only show published posts
+            const publishedPosts = posts.filter(post => post.published !== false);
+
             // Sort posts by date (newest first)
-            const sortedPosts = posts.sort((a, b) => new Date(b.date) - new Date(a.date));
+            const sortedPosts = publishedPosts.sort((a, b) => new Date(b.date) - new Date(a.date));
             setBlogPosts(sortedPosts);
             setError(null);
         } catch (err) {
@@ -66,11 +69,12 @@ function Blog() {
         }
     };
 
-    const filteredPosts = selectedTag === 'semua'
-        ? blogPosts
-        : blogPosts.filter(post => post.tags && post.tags.includes(selectedTag));
-
     const featuredPost = blogPosts.find(post => post.featured);
+
+    const filteredPosts = (selectedTag === 'semua'
+        ? blogPosts
+        : blogPosts.filter(post => post.tags && post.tags.includes(selectedTag))
+    ).filter(post => post.id !== featuredPost?.id);
 
     return (
         <div className="blog-page">
