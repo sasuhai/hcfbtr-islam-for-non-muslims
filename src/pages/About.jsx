@@ -344,10 +344,10 @@ function About() {
 
                     <div className="social-feed-wrapper">
                         {/* Facebook Page Plugin Iframe (Reliable Method) */}
-                        <div className="fb-feed-container card bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800" style={{ padding: '0', overflow: 'hidden', minHeight: '300px', height: '600px', position: 'relative', width: '500px', margin: '0 auto' }}>
+                        <div className="fb-feed-container card bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800" style={{ padding: '0', overflow: 'hidden', minHeight: '300px', height: '600px', position: 'relative', width: '100%', maxWidth: '500px', margin: '0 auto' }}>
                             <iframe
                                 key="fb-feed-adapt-test"
-                                src="https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2FHCF.btr&tabs=timeline&width=500&height=600&small_header=true&adapt_container_width=true&hide_cover=false&show_facepile=false"
+                                src={`https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2FHCF.btr&tabs=timeline&width=${window.innerWidth < 500 ? window.innerWidth - 40 : 500}&height=600&small_header=true&adapt_container_width=true&hide_cover=false&show_facepile=false`}
                                 width="100%"
                                 height="600"
                                 style={{ border: 'none', overflow: 'hidden' }}

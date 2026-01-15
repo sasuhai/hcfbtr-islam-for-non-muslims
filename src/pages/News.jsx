@@ -243,8 +243,15 @@ export default function News() {
                             )}
                             {!facebook && !instagram && <span className="text-[10px] font-bold uppercase tracking-wider text-stone-400">Social Connect</span>}
                         </div>
-                        <div className="flex-1 text-center text-sm font-bold uppercase tracking-wide text-stone-700">
-                            {locationName}, {new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
+                        <div className="flex-1 text-center text-sm font-bold uppercase tracking-wide text-stone-700 leading-tight">
+                            <div>{new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</div>
+                            <div className="text-[11px] font-serif italic tracking-normal normal-case opacity-80">
+                                {new Intl.DateTimeFormat('en-u-ca-islamic-umalqura-nu-latn', {
+                                    day: 'numeric',
+                                    month: 'long',
+                                    year: 'numeric'
+                                }).format(new Date())}
+                            </div>
                         </div>
                         <div className="flex-1 text-center border-l border-stone-300 text-[10px] font-bold uppercase tracking-wide text-stone-700">
                             {email} {phone ? `| ${phone}` : ''}

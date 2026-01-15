@@ -146,7 +146,7 @@ export default function ClassesForNonMuslims() {
                             <div className="w-12 h-12 bg-white dark:bg-stone-800 rounded-full flex items-center justify-center mb-6 group-hover:bg-sky-100 dark:group-hover:bg-sky-900/40 transition-colors">
                                 <span className="iconify text-sky-600 dark:text-sky-400 group-hover:text-sky-800 dark:group-hover:text-sky-300" data-icon="lucide:clipboard-check" data-width="24" data-height="24"></span>
                             </div>
-                            <h3 className="text-xl font-medium text-stone-900 dark:text-white mb-4">{isBM ? 'Pendaftaran Pelukan Islam' : 'Registration of Revert to Islam'}</h3>
+                            <h3 className="text-xl font-medium text-stone-900 dark:text-white mb-4">{isBM ? 'Pendaftaran Memeluk Islam' : 'Registration of Revert to Islam'}</h3>
                             <p className="text-stone-600 font-light leading-relaxed">
                                 {isBM ? 'Kami menyediakan bimbingan peribadi melalui proses pendaftaran rasmi, memastikan pengalaman yang lancar dan menyokong bagi individu yang memeluk Islam secara rasmi.' : 'We provide personal guidance through the official registration process, ensuring a smooth and supportive experience for individuals formally embracing Islam.'}
                             </p>
@@ -283,7 +283,7 @@ export default function ClassesForNonMuslims() {
 
                     {/* Classes for Conversion */}
                     <div className="mt-12 bg-white dark:bg-stone-900 p-10 rounded-sm shadow-sm border border-stone-100 dark:border-stone-800">
-                        <h2 className="text-2xl font-medium tracking-tight text-stone-900 dark:text-white mb-6">{isBM ? 'Kelas untuk Mereka yang Mempertimbangkan Pembasuhan Islam' : 'Classes for Those Considering Reversion to Islam'}</h2>
+                        <h2 className="text-2xl font-medium tracking-tight text-stone-900 dark:text-white mb-6">{isBM ? 'Kelas untuk Mereka yang Mempertimbangkan untuk Memeluk Islam' : 'Classes for Those Considering Reversion to Islam'}</h2>
                         <p className="text-stone-600 dark:text-stone-400 font-light leading-relaxed mb-6">
                             {isBM ? 'Ramai peserta menghadiri kelas ini sebagai sebahagian daripada perjalanan mereka untuk memeluk Islam. Jika anda mempertimbangkan untuk memeluk Islam, anda juga boleh merujuk kepada panduan kami tentang cara memeluk Islam di Malaysia.' : 'Many participants attend these classes as part of their journey towards reverting to Islam. If you are considering reversion, you may also refer to our guide on how to revert to Islam in Malaysia.'}
                         </p>

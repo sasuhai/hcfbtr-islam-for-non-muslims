@@ -208,3 +208,93 @@
     transform: scale(1.1);
     transition: transform 0.2s ease, color 0.2s ease;
 }
+
+/* Mobile Optimizations for News Page */
+@media (max-width: 980px) {
+    .news-page {
+        padding: 0.5rem !important;
+    }
+
+    .news-container {
+        max-width: 100% !important;
+        box-shadow: none !important;
+        border: none !important;
+    }
+
+    /* Shrink masthead on mobile */
+    .font-masthead {
+        font-size: 2.2rem !important;
+        letter-spacing: -0.02em !important;
+        line-height: 1 !important;
+    }
+
+    /* Top Metadata Strip - stack or hide on very small screens */
+    .news-container .flex.justify-between.items-center.px-6.py-2 {
+        flex-direction: column !important;
+        gap: 0.5rem !important;
+        padding: 1rem !important;
+        text-align: center !important;
+    }
+
+    /* Navigation row (FB/IG/Date etc) */
+    .news-container .flex.items-center.justify-center.gap-4.mt-4.py-2 {
+        flex-direction: column !important;
+        max-width: 100% !important;
+        gap: 1rem !important;
+    }
+
+    .news-container .flex-1.border-r,
+    .news-container .flex-1.border-l {
+        border: none !important;
+        width: 100% !important;
+    }
+
+    /* Main Grid Layout */
+    .news-container .grid-cols-12 {
+        display: flex !important;
+        flex-direction: column !important;
+    }
+
+    .news-container .col-span-3,
+    .news-container .col-span-6,
+    .news-container .col-span-12 {
+        width: 100% !important;
+        padding: 0 !important;
+    }
+
+    /* Vertical separators */
+    .vertical-separator::after {
+        display: none !important;
+    }
+
+    /* Mobile Sidebar spacing */
+    aside.col-span-3 {
+        padding: 1.5rem 1rem !important;
+        border-top: 2px solid #1c1917 !important;
+        background: rgba(0, 0, 0, 0.03) !important;
+    }
+
+    /* Hero section font sizing */
+    .font-headline.text-3xl.line-tight {
+        font-size: 1.75rem !important;
+    }
+
+    .font-headline.text-5xl.lg\:text-6xl {
+        font-size: 2.5rem !important;
+    }
+
+    /* Video section */
+    .news-container .flex.flex-col.lg\:flex-row {
+        flex-direction: column !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .font-masthead {
+        font-size: 1.8rem !important;
+    }
+
+    .news-container header {
+        padding: 1.5rem 0.5rem !important;
+    }
+}
