@@ -629,8 +629,8 @@ a:hover {
    Custom Header Styles
    ============================================ */
 .navbar {
-  background: #ffffff;
-  /* Use solid white for best contrast */
+  background: var(--bg-primary);
+  /* Use variable for theme support */
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   position: sticky;
@@ -812,7 +812,8 @@ a:hover {
     right: 0;
     height: 100vh !important;
     /* Force high height to break out of containing block */
-    background: #ffffff !important;
+    background: var(--bg-primary) !important;
+    /* Adapt to theme */
     display: flex !important;
     flex-direction: column;
     padding: 1.5rem 1.5rem 120px;
