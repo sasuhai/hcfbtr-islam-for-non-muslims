@@ -382,3 +382,17 @@
     filter: grayscale(80%) brightness(0.9) contrast(1.1);
     mix-blend-mode: normal;
 }
+
+/* Chronicle Advertisement Section */
+.chronicle-ad-border {
+    border-style: double;
+    border-width: 6px;
+}
+
+.newspaper-ad-gradient {
+    background: linear-gradient(135deg, rgba(0, 0, 0, 0.03) 0%, rgba(0, 0, 0, 0) 50%, rgba(0, 0, 0, 0.03) 100%);
+}
+
+[data-theme='dark'] .newspaper-ad-gradient {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0) 50%, rgba(255, 255, 255, 0.03) 100%);
+}

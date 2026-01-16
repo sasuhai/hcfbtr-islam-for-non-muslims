@@ -104,99 +104,108 @@ function Donate() {
                 <div className="container">
                     <div className="premium-donate-wrapper">
                         {/* Main Donation Card */}
-                        <div className="donation-main-card">
-                            <div className="donation-card-header">
-                                <h2><span className="icon-inline"><Icons.Heart /></span> {c.premiumSection.title}</h2>
-                                <p className="header-subtitle">{c.premiumSection.subtitle}</p>
-                            </div>
-
-                            <div className="donation-card-content">
-                                {/* QR Code Section - Only show if QR code exists */}
-                                {orgData?.qrCodeUrl && (
-                                    <>
-                                        <div className="qr-code-section">
-                                            <div className="qr-code-wrapper">
-                                                <img
-                                                    src={orgData.qrCodeUrl}
-                                                    alt="Donation QR Code"
-                                                    className="qr-code-image"
-                                                    style={{ width: '100%', height: '100%', objectFit: 'contain' }}
-                                                />
+                        {/* Main Donation Card - Redesigned to match the poster screenshot */}
+                        <div className="donation-poster-card shadow-2xl">
+                            {/* Top part with background image and text overlay */}
+                            <div className="poster-header relative overflow-hidden">
+                                <div className="poster-bg-img" style={{ backgroundImage: `linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('/nmnr_class.png')` }}></div>
+                                <div className="poster-header-content relative z-10 flex flex-col items-center justify-center h-full text-center p-6 pt-12">
+                                    <div className="duitnow-logo-wrapper mb-4">
+                                        <div className="duitnow-logo bg-white rounded-full p-1.5 w-16 h-16 flex items-center justify-center shadow-lg">
+                                            <div className="flex flex-col items-center">
+                                                <div className="text-[#d81e5b] font-black text-[10px] leading-none uppercase">DuitNow</div>
+                                                <div className="text-stone-800 font-bold text-[8px] leading-none">QR</div>
                                             </div>
-                                            <div className="qr-code-label">
-                                                <span>{c.premiumSection.qrLabel}</span>
-                                            </div>
-                                        </div>
-
-                                        {/* Divider */}
-                                        <div className="donation-divider">
-                                            <span>{c.premiumSection.dividerText}</span>
-                                        </div>
-                                    </>
-                                )}
-
-                                {/* Bank Details Section */}
-                                <div className="bank-details-section">
-                                    <h3 className="bank-details-title">
-                                        {c.premiumSection.bankTitle}
-                                    </h3>
-
-                                    <div className="bank-info-grid">
-                                        <div className="bank-info-item">
-                                            <div className="info-label">{c.premiumSection.bankLabels?.accountName || 'Account Name'}</div>
-                                            <div className="info-value">{orgData?.bank?.accountName}</div>
-                                        </div>
-
-                                        <div className="bank-info-item">
-                                            <div className="info-label">{c.premiumSection.bankLabels?.bankName || 'Bank Name'}</div>
-                                            <div className="info-value">{orgData?.bank?.bankName}</div>
-                                        </div>
-
-                                        <div className="bank-info-item featured">
-                                            <div className="info-label">{c.premiumSection.bankLabels?.accountNumber || 'Account Number'}</div>
-                                            <div className="info-value account-number">{orgData?.bank?.accountNumber}</div>
-                                            <button className="copy-btn" onClick={() => navigator.clipboard.writeText(orgData?.bank?.accountNumber)}>
-                                                <Icons.Copy /> {c.premiumSection.bankLabels?.copy || 'Copy'}
-                                            </button>
                                         </div>
                                     </div>
+                                    <h2 className="text-white font-bold text-4xl md:text-5xl uppercase tracking-tight mb-0">INFAQ DI SINI</h2>
+                                    <p className="text-white text-lg md:text-xl font-medium mt-1">Donate Here</p>
+                                </div>
+                                {/* The curved bottom shape */}
+                                <div className="poster-curve">
+                                    <svg viewBox="0 0 1440 120" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+                                        <path fill="#9e1b12" d="M0,120 L1440,120 L1440,0 C1080,80 360,80 0,0 L0,120 Z"></path>
+                                    </svg>
+                                </div>
+                            </div>
+
+                            {/* Bottom part with red background and bank details */}
+                            <div className="poster-body bg-[#9e1b12] text-white p-8 md:p-12 text-center pb-16">
+                                <div className="space-y-6">
+                                    <div>
+                                        <h3 className="text-xl md:text-2xl font-medium uppercase tracking-wide leading-tight">
+                                            {orgData?.fullName?.split('Bandar Tun Razak')[0] || "HIDAYAH CENTRE FOUNDATION"}
+                                        </h3>
+                                        <p className="text-xl md:text-2xl font-bold mt-1">
+                                            {orgData?.bank?.accountName?.split('Foundation ')[1] || "RH Bandar Tun Razak"}
+                                        </p>
+                                    </div>
+
+                                    <div className="text-3xl md:text-4xl font-bold tracking-wider py-4 border-y border-white/20">
+                                        {orgData?.bank?.accountNumber || "1211 3010 7744 82"}
+                                    </div>
+
+                                    <div className="bank-logo-container flex justify-center py-4">
+                                        <div className="bg-white rounded-lg p-4 px-8 shadow-inner flex items-center justify-center min-w-[200px]">
+                                            <div className="flex items-center gap-2">
+                                                <span className="text-[#9e1b12] font-black text-2xl italic">BANK</span>
+                                                <div className="h-8 w-px bg-stone-300 mx-1"></div>
+                                                <span className="text-[#9e1b12] font-bold text-2xl tracking-tighter">ISLAM</span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div className="reference-text mt-8">
+                                        <p className="text-xl md:text-2xl italic font-light">
+                                            Rujukan: <span className="font-bold">Infak {orgData?.shortName || "HCFBTR"}</span>
+                                        </p>
+                                    </div>
+
+                                    <button
+                                        className="mt-8 bg-white/10 hover:bg-white/20 text-white border border-white/30 px-6 py-2 rounded-full text-sm transition-all backdrop-blur-sm"
+                                        onClick={() => {
+                                            navigator.clipboard.writeText(orgData?.bank?.accountNumber);
+                                            alert("Account number copied!");
+                                        }}
+                                    >
+                                        Copy Account Number
+                                    </button>
                                 </div>
                             </div>
                         </div>
 
-                        {/* Instructions Card */}
-                        <div className="donation-instructions-card">
-                            <div className="instructions-header">
-                                <h3><span className="icon-inline"><Icons.Mail /></span> {c.instructions.title}</h3>
-                                <p>{c.instructions.subtitle}</p>
+                        {/* Redesigned Instructions Section - Compact & Consistent */}
+                        <div className="donation-after-action mt-12">
+                            <div className="section-header-compact text-center mb-8">
+                                <h3 className="text-2xl font-bold" style={{ color: 'var(--text-primary)' }}>{c.instructions.title}</h3>
+                                <p style={{ color: 'var(--text-secondary)', fontSize: '0.875rem' }}>{c.instructions.subtitle}</p>
                             </div>
 
-                            <div className="instructions-content">
+                            <div className="action-steps-grid">
                                 {c.instructions.steps?.map((step, idx) => (
-                                    <div className="instruction-step" key={idx}>
-                                        <div className="step-number">{step.number}</div>
-                                        <div className="step-content">
-                                            <h4>{step.title}</h4>
-                                            {step.desc && <p>{step.desc}</p>}
-                                            {/* Inject contact options if it's the contact step (index 1) */}
+                                    <div className="action-step-card" key={idx}>
+                                        <div className="action-step-icon-wrapper">
+                                            <div className="action-step-number">{step.number}</div>
+                                            <div className="action-icon">
+                                                {idx === 0 && <span className="iconify" data-icon="lucide:camera" data-width="24"></span>}
+                                                {idx === 1 && <span className="iconify" data-icon="lucide:send" data-width="24"></span>}
+                                                {idx === 2 && <span className="iconify" data-icon="lucide:mail-check" data-width="24"></span>}
+                                            </div>
+                                        </div>
+                                        <div className="action-step-body">
+                                            <h4 className="font-bold text-sm mb-1" style={{ color: 'var(--text-primary)' }}>{step.title}</h4>
+                                            {step.desc && <p style={{ color: 'var(--text-secondary)', fontSize: '0.75rem', lineHeight: '1.625' }}>{step.desc}</p>}
+
+                                            {/* Specific sub-actions for the contact step (index 1) */}
                                             {idx === 1 && (
-                                                <div className="contact-options">
+                                                <div className="action-buttons-compact mt-3">
                                                     {orgData?.phone?.[0] && (
-                                                        <a href={`https://wa.me/${orgData.phone[0].replace(/[^0-9]/g, '')}`} className="contact-option whatsapp" target="_blank" rel="noopener noreferrer">
-                                                            <span className="contact-icon"><Icons.Message /></span>
-                                                            <div>
-                                                                <div className="contact-label">WhatsApp</div>
-                                                                <div className="contact-value">{orgData.phone[0]}</div>
-                                                            </div>
+                                                        <a href={`https://wa.me/${orgData.phone[0].replace(/[^0-9]/g, '')}`} className="action-btn-mini whatsapp" target="_blank" rel="noopener noreferrer">
+                                                            <Icons.Message /> <span>WhatsApp</span>
                                                         </a>
                                                     )}
-
-                                                    <a href={`mailto:${orgData?.email}`} className="contact-option email">
-                                                        <span className="contact-icon"><Icons.Mail /></span>
-                                                        <div>
-                                                            <div className="contact-label">Email</div>
-                                                            <div className="contact-value">{orgData?.email}</div>
-                                                        </div>
+                                                    <a href={`mailto:${orgData?.email}`} className="action-btn-mini email">
+                                                        <Icons.Mail /> <span>Email</span>
                                                     </a>
                                                 </div>
                                             )}
@@ -207,34 +216,120 @@ function Donate() {
                         </div>
 
                         {/* Thank You Card */}
-                        <div className="thank-you-card">
-                            <div className="thank-you-icon"><Icons.Check /></div>
-                            <h3>{c.thankYou.title}</h3>
-                            <p className="thank-you-subtitle">{c.thankYou.subtitle}</p>
-                            <p className="thank-you-message" style={{ whiteSpace: 'pre-wrap' }} dangerouslySetInnerHTML={{ __html: c.thankYou.message }}></p>
-                            <div className="thank-you-stats">
-                                {c.thankYou.stats?.map((stat, idx) => (
-                                    <div className="thank-you-stat" key={idx}>
-                                        <div className="stat-value">{stat.value}</div>
-                                        <div className="stat-label">{stat.label}</div>
+                        {/* Other Ways to Give Section */}
+                        <div className="other-donations-section mt-20 mb-12">
+                            <div className="section-header-compact text-center mb-10">
+                                <h3 className="text-2xl md:text-3xl font-bold mb-2" style={{ color: 'var(--text-primary)' }}>Wait!.. Selain Wang Tunai anda juga boleh menyumbangkan:</h3>
+                                <p className="text-sm md:text-base font-medium" style={{ color: 'var(--text-secondary)' }}>Wait!.. Apart from cash, you can also contribute:</p>
+                            </div>
+
+                            <div className="other-donations-grid">
+                                <div className="other-donation-card">
+                                    <div className="other-card-img-wrapper">
+                                        <img src="/images/ibadah_essentials.png" alt="Keperluan Ibadah" className="other-card-img" />
                                     </div>
-                                ))}
+                                    <div className="other-card-content">
+                                        <h4>Keperluan Ibadah</h4>
+                                        <p>Al-Quran, Iqra, buku solat & barang mengaji.</p>
+                                    </div>
+                                </div>
+
+                                <div className="other-donation-card">
+                                    <div className="other-card-img-wrapper">
+                                        <img src="/images/basic_necessities.png" alt="Keperluan Asasi" className="other-card-img" />
+                                    </div>
+                                    <div className="other-card-content">
+                                        <h4>Keperluan Asasi</h4>
+                                        <p>Pakaian & tajaan Iftar.</p>
+                                    </div>
+                                </div>
+
+                                <div className="other-donation-card">
+                                    <div className="other-card-img-wrapper">
+                                        <img src="/images/experience_donation.png" alt="Donate Experience" className="other-card-img" />
+                                    </div>
+                                    <div className="other-card-content">
+                                        <h4>Donate Experience</h4>
+                                        <p>Menaja aktiviti atau modul pembelajaran yang menarik buat mualaf.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Compact Thank You Section */}
+                        <div className="donation-thank-you-banner mt-12 overflow-hidden relative">
+                            <div className="thank-you-bg-texture absolute inset-0 opacity-[0.03] pointer-events-none"></div>
+                            <div className="relative z-10 p-8 md:p-12">
+                                <div className="thank-you-header-compact flex flex-col items-center text-center">
+                                    <div className="thank-you-heart-icon mb-4">
+                                        <Icons.Heart />
+                                    </div>
+                                    <h3 className="text-2xl md:text-3xl font-bold mb-2" style={{ color: 'var(--text-primary)' }}>{c.thankYou.title}</h3>
+                                    <p className="text-sm md:text-base font-medium max-w-2xl mx-auto mb-8" style={{ color: 'var(--text-secondary)' }}>
+                                        {c.thankYou.subtitle}
+                                    </p>
+                                </div>
+
+                                <div className="thank-you-stats-compact grid grid-cols-1 md:grid-cols-3 gap-4 max-w-4xl mx-auto">
+                                    {c.thankYou.stats?.map((stat, idx) => (
+                                        <div className="stat-card-compact" key={idx}>
+                                            <div className="stat-value-mini">{stat.value}</div>
+                                            <div className="stat-label-mini">{stat.label}</div>
+                                        </div>
+                                    ))}
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </section>
 
-            {/* Contact */}
-            <section className="contact-donate-section section">
+            {/* Redesigned Contact Section - Invitational & Empathetic */}
+            <section className="contact-help-section section pb-24">
                 <div className="container">
-                    <div className="contact-donate-card">
-                        <h2>Ada Soalan?</h2>
-                        <p className="contact-subtitle">Have Questions?</p>
-                        <p>Kami sedia membantu. Hubungi kami untuk maklumat lanjut mengenai cara menyumbang atau impak sumbangan anda.</p>
-                        <div className="contact-info">
-                            <p>📧 {orgData?.email}</p>
-                            {orgData?.phone?.[0] && <p>📱 {orgData.phone[0]}</p>}
+                    <div className="contact-help-card overflow-hidden relative">
+                        <div className="help-card-glow"></div>
+                        <div className="contact-help-content relative z-10">
+                            <div className="help-icon-badge mb-6">
+                                <span className="iconify" data-icon="lucide:message-circle-question" data-width="40"></span>
+                            </div>
+
+                            <h2 className="help-title" style={{ color: 'var(--text-primary)' }}>Masih tertanya-tanya?</h2>
+                            <p className="help-subtitle mb-6" style={{ color: 'var(--text-secondary)' }}>Still wondering? We're here to listen.</p>
+
+                            <div className="help-message-box p-6 rounded-2xl mb-8 max-w-2xl mx-auto" style={{ backgroundColor: 'var(--bg-secondary)', border: '1px solid var(--border-light)' }}>
+                                <p className="italic leading-relaxed" style={{ color: 'var(--text-primary)' }}>
+                                    "Setiap niat murni pasti ada persoalannya. Sama ada anda ingin tahu tentang impak sumbangan atau cara lain untuk menyumbang, kami sedia membantu dengan setulus hati."
+                                </p>
+                            </div>
+
+                            <div className="help-actions flex flex-wrap justify-center gap-6">
+                                {orgData?.phone?.[0] && (
+                                    <a href={`https://wa.me/${orgData.phone[0].replace(/[^0-9]/g, '')}`} className="help-btn whatsapp-help" target="_blank" rel="noopener noreferrer">
+                                        <div className="btn-icon-circular">
+                                            <Icons.Message />
+                                        </div>
+                                        <div className="btn-text-content">
+                                            <span className="btn-label">Tanya melalui WhatsApp</span>
+                                            <span className="btn-subtext">{orgData.phone[0]}</span>
+                                        </div>
+                                    </a>
+                                )}
+
+                                <a href={`mailto:${orgData?.email}`} className="help-btn email-help">
+                                    <div className="btn-icon-circular">
+                                        <Icons.Mail />
+                                    </div>
+                                    <div className="btn-text-content">
+                                        <span className="btn-label">Hantarkan Email</span>
+                                        <span className="btn-subtext">{orgData?.email}</span>
+                                    </div>
+                                </a>
+                            </div>
+
+                            <p className="help-footer-note mt-10 text-sm font-medium uppercase tracking-widest" style={{ color: 'var(--text-tertiary)' }}>
+                                #SatuHatiSatuTujuan
+                            </p>
                         </div>
                     </div>
                 </div>

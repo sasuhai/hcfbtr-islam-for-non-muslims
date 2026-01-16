@@ -1,4 +1,6 @@
 import { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
+import { translations } from '../translations';
 import { getDocument } from '../firebase/firestoreService';
 import VolunteerGrid from '../components/VolunteerGrid';
 import './Volunteer.css';
@@ -14,6 +16,9 @@ const Icons = {
 };
 
 function Volunteer() {
+    const location = useLocation();
+    const isBM = location.pathname.startsWith('/bm');
+    const t = translations[isBM ? 'bm' : 'en'];
     const [content, setContent] = useState(null);
     const [loading, setLoading] = useState(true);
 
@@ -29,9 +34,14 @@ function Volunteer() {
 
     const getDefaultContent = () => ({
         header: {
-            title: "Volunteer",
-            subtitle: "Jadilah Sebahagian Daripada Perubahan",
-            intro: "Sertai kami dalam memberi impak positif kepada generasi masa depan. Masa dan kepakaran anda boleh mengubah hidup ratusan pelajar."
+            title: "Volunteer With Us",
+            subtitle: "Bina Masa Depan, Satu Niat Murni",
+            intro: "Sertai misi kami untuk memperkasakan mualaf dan membina komuniti yang lebih berilmu. Kepakaran anda adalah kunci kepada pembinaan ummah yang lebih kuat."
+        },
+        hero: {
+            badge: "KOMUNITI HCFBTR",
+            buttonText: "Daftar Sebagai Sukarelawan",
+            metaText: "Sertai 500+ sukarelawan aktif"
         },
         opportunities: [
             {
@@ -138,20 +148,45 @@ function Volunteer() {
 
     if (loading) return <div className="loading-screen">Loading...</div>;
 
-    const c = content || getDefaultContent();
+    const defaultContent = getDefaultContent();
+    const c = content ? { ...defaultContent, ...content } : defaultContent;
 
     return (
         <div className="volunteer-page">
-            {/* Header */}
-            <section className="volunteer-header">
+            {/* Redesigned Hero Section */}
+            <section className="volunteer-hero">
+                <div className="hero-background-glow"></div>
+                <div className="hero-particles"></div>
                 <div className="container">
-                    <div className="volunteer-header-content text-center">
-                        <h1 className="page-title">{c.header.title}</h1>
-                        <p className="page-subtitle">{c.header.subtitle}</p>
-                        <p className="volunteer-intro" style={{ whiteSpace: 'pre-wrap', marginBottom: '40px' }} dangerouslySetInnerHTML={{ __html: c.header.intro }}></p>
-                        <a href="#registration" className="btn btn-primary btn-lg animate-fade-in-up" style={{ borderRadius: '980px', textDecoration: 'none' }}>
-                            Register to Volunteer Now!
-                        </a>
+                    <div className="hero-grid">
+                        <div className="hero-text-content">
+                            <div className="hero-badge animate-fade-in">
+                                <span className="pulse-dot"></span>
+                                {c.hero?.badge}
+                            </div>
+                            <h1 className="hero-main-title animate-slide-in-left">
+                                {c.header?.title} <br />
+                                <span className="gradient-text">{c.header?.subtitle}</span>
+                            </h1>
+                            <p className="hero-description animate-fade-in-up" dangerouslySetInnerHTML={{ __html: c.header?.intro }}>
+                            </p>
+                            <div className="hero-actions animate-fade-in-up">
+                                <a href="#registration" className="btn-hero-primary">
+                                    {isBM ? 'Daftar Sekarang' : 'Register Now'}
+                                    <Icons.Check />
+                                </a>
+                                <p className="hero-meta">{isBM ? 'Sertai misi kami hari ini' : 'Join our mission today'}</p>
+                            </div>
+                        </div>
+                        <div className="hero-graphic-content animate-fade-in">
+                            <div className="graphic-container">
+                                <img
+                                    src="/images/volunteer-hero.png"
+                                    alt="Impactful Volunteer Graphic"
+                                    className="hero-main-img"
+                                />
+                            </div>
+                        </div>
                     </div>
                 </div>
             </section>
@@ -240,7 +275,6 @@ function Volunteer() {
                                         placeholder="Nama anda"
                                     />
                                 </div>
-
                                 <div className="form-group">
                                     <label htmlFor="email">Email *</label>
                                     <input
@@ -268,7 +302,6 @@ function Volunteer() {
                                         placeholder="+60123456789"
                                     />
                                 </div>
-
                                 <div className="form-group">
                                     <label htmlFor="interest">Bidang Minat | Area of Interest *</label>
                                     <select
@@ -289,41 +322,44 @@ function Volunteer() {
                                 </div>
                             </div>
 
-                            <div className="form-group">
-                                <label htmlFor="availability">Ketersediaan | Availability *</label>
-                                <input
-                                    type="text"
-                                    id="availability"
-                                    name="availability"
-                                    value={formData.availability}
-                                    onChange={handleChange}
-                                    required
-                                    placeholder="Contoh: Setiap Sabtu pagi, Selasa petang"
-                                />
+                            <div className="form-row">
+                                <div className="form-group">
+                                    <label htmlFor="availability">Ketersediaan | Availability *</label>
+                                    <input
+                                        type="text"
+                                        id="availability"
+                                        name="availability"
+                                        value={formData.availability}
+                                        onChange={handleChange}
+                                        required
+                                        placeholder="Contoh: Setiap Sabtu pagi, Selasa petang"
+                                    />
+                                </div>
                             </div>
 
-                            <div className="form-group">
-                                <label htmlFor="experience">Pengalaman Berkaitan | Relevant Experience</label>
-                                <textarea
-                                    id="experience"
-                                    name="experience"
-                                    value={formData.experience}
-                                    onChange={handleChange}
-                                    rows="3"
-                                    placeholder="Kongsi pengalaman atau kemahiran yang berkaitan..."
-                                ></textarea>
-                            </div>
-
-                            <div className="form-group">
-                                <label htmlFor="message">Mesej Tambahan | Additional Message</label>
-                                <textarea
-                                    id="message"
-                                    name="message"
-                                    value={formData.message}
-                                    onChange={handleChange}
-                                    rows="4"
-                                    placeholder="Apa yang memotivasi anda untuk menjadi sukarelawan?"
-                                ></textarea>
+                            <div className="form-row">
+                                <div className="form-group">
+                                    <label htmlFor="experience">Pengalaman | Experience</label>
+                                    <textarea
+                                        id="experience"
+                                        name="experience"
+                                        value={formData.experience}
+                                        onChange={handleChange}
+                                        rows="2"
+                                        placeholder="Kemahiran berkaitan..."
+                                    ></textarea>
+                                </div>
+                                <div className="form-group">
+                                    <label htmlFor="message">Motivasi | Motivation</label>
+                                    <textarea
+                                        id="message"
+                                        name="message"
+                                        value={formData.message}
+                                        onChange={handleChange}
+                                        rows="2"
+                                        placeholder="Mengapa anda ingin sertai?"
+                                    ></textarea>
+                                </div>
                             </div>
 
                             <button type="submit" className="btn btn-primary btn-lg form-submit">

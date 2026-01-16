@@ -26,13 +26,21 @@ function Footer() {
             <div className="container">
                 <div className="footer-content">
                     <div className="footer-section">
-                        <h3 className="footer-title">{orgData?.shortName || 'HCFBTR'}</h3>
-                        <p className="footer-description">
-                            {orgData?.fullName || 'Hidayah Center Foundation @ Bandar Tun Razak'}
-                        </p>
-                        <p className="footer-description" style={{ marginTop: '0.5rem', fontSize: '0.9rem' }}>
-                            {isBM ? 'Sampaikan Islam, Perkasakan Mualaf' : 'Convey Islam, Empower the Mualaf'}
-                        </p>
+                        <div className="footer-mission-statement">
+                            <h3 className="footer-title">{orgData?.shortName || 'HCFBTR'}</h3>
+                            <div className="mission-divider"></div>
+                            <p className="mission-text">
+                                {isBM ? 'Sampaikan Islam, Perkasakan Mualaf' : 'Convey Islam, Empower the Mualaf'}
+                            </p>
+                            <p className="mission-cta">
+                                {isBM
+                                    ? 'Sertai kami dalam menyebarkan keindahan Islam dan menyokong Mualaf kami.'
+                                    : 'Be part of the journey. Join us in sharing the message of Islam and supporting our Mualaf.'}
+                            </p>
+                            <p className="footer-description">
+                                {orgData?.fullName || 'Hidayah Center Foundation @ Bandar Tun Razak'}
+                            </p>
+                        </div>
                     </div>
 
                     <div className="footer-section">
@@ -41,6 +49,7 @@ function Footer() {
                             <li><Link to={getLink('/')}>{t.nav.home}</Link></li>
                             <li><Link to={getLink('/classes-for-non-muslims')}>{t.nav.classes}</Link></li>
                             <li><Link to={getLink('/journey')}>{t.nav.journey}</Link></li>
+                            <li><Link to={getLink('/news')}>{t.nav.news}</Link></li>
                             <li><Link to={getLink('/blog')}>{isBM ? 'Cerita' : 'Stories'}</Link></li>
                         </ul>
                     </div>
@@ -50,6 +59,7 @@ function Footer() {
                         <ul className="footer-links">
                             <li><Link to={getLink('/donate')}>{t.nav.donate}</Link></li>
                             <li><Link to={getLink('/volunteer')}>{t.nav.volunteer}</Link></li>
+                            <li><Link to={getLink('/about')}>{t.nav.about}</Link></li>
                         </ul>
                     </div>
 
@@ -69,7 +79,14 @@ function Footer() {
                             {orgData?.address && (
                                 <li>
                                     <span className="contact-icon" style={{ alignSelf: 'flex-start' }}><Icons.MapPin /></span>
-                                    <span>{orgData.address}</span>
+                                    <a
+                                        href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(orgData.address)}`}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="address-link"
+                                    >
+                                        {orgData.address}
+                                    </a>
                                 </li>
                             )}
                             {/* Social Media Links */}

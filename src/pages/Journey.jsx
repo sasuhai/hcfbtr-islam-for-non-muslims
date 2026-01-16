@@ -23,7 +23,12 @@ const Icons = {
 };
 
 const getPostImage = (post) => {
-    if (post.image && (post.image.startsWith('http') || post.image.startsWith('/'))) return post.image;
+    // Return uploaded image if it's a URL, path, or base64 data URL
+    if (post.image && (post.image.startsWith('http') || post.image.startsWith('/') || post.image.startsWith('data:'))) {
+        return post.image;
+    }
+
+    // Fallback to default images based on title hash
     const images = [
         '/images/blog-student-reading.png',
         '/images/blog-community-volunteers.png',
@@ -72,6 +77,7 @@ function Journey() {
     const [pageContent, setPageContent] = useState(null);
     const [loading, setLoading] = useState(true);
     const scrollRef = useRef(null);
+    const blogScrollRef = useRef(null);
     const [currentIndex, setCurrentIndex] = useState(0);
     const { orgData } = useOrganization();
 
@@ -87,6 +93,13 @@ function Journey() {
         if (scrollRef.current) {
             const amount = 340; // Card width + margin approx
             scrollRef.current.scrollBy({ left: direction === 'left' ? -amount : amount, behavior: 'smooth' });
+        }
+    };
+
+    const scrollBlog = (direction) => {
+        if (blogScrollRef.current) {
+            const amount = 350; // Card width + margin approx
+            blogScrollRef.current.scrollBy({ left: direction === 'left' ? -amount : amount, behavior: 'smooth' });
         }
     };
 
@@ -514,26 +527,65 @@ function Journey() {
                             </div>
                         )}
 
-                        <div className="posts-grid">
-                            {filteredPosts.map((post) => (
-                                <Link key={post.id} to={`/blog/${post.slug}`} className="post-card card">
-                                    <div className="post-image" style={{ backgroundImage: `url(${getPostImage(post)})` }}>
-                                    </div>
-                                    <div className="post-content">
-                                        <div className="post-meta">
-                                            <span className="post-date">{new Date(post.date).toLocaleDateString('ms-MY', { year: 'numeric', month: 'short', day: 'numeric' })}</span>
+                        {filteredPosts.length > 6 ? (
+                            <div className="posts-scroll-wrapper">
+                                <button
+                                    className="scroll-btn scroll-btn-left"
+                                    onClick={() => scrollBlog('left')}
+                                    aria-label="Scroll Left"
+                                >
+                                    <Icons.ArrowLeft />
+                                </button>
+                                <button
+                                    className="scroll-btn scroll-btn-right"
+                                    onClick={() => scrollBlog('right')}
+                                    aria-label="Scroll Right"
+                                >
+                                    <Icons.ArrowRight />
+                                </button>
+                                <div className="posts-grid-scroll" ref={blogScrollRef}>
+                                    {filteredPosts.map((post) => (
+                                        <Link key={post.id} to={`/blog/${post.slug}`} className="post-card card">
+                                            <div className="post-image" style={{ backgroundImage: `url(${getPostImage(post)})` }}>
+                                            </div>
+                                            <div className="post-content">
+                                                <div className="post-meta">
+                                                    <span className="post-date">{new Date(post.date).toLocaleDateString('ms-MY', { year: 'numeric', month: 'short', day: 'numeric' })}</span>
+                                                </div>
+                                                <h3 className="post-title">{post.title}</h3>
+                                                <p className="post-excerpt">{post.excerpt}</p>
+                                                <div className="post-tags">
+                                                    {post.tags && post.tags.slice(0, 2).map((tag, index) => (
+                                                        <span key={index} className="badge">{tag}</span>
+                                                    ))}
+                                                </div>
+                                            </div>
+                                        </Link>
+                                    ))}
+                                </div>
+                            </div>
+                        ) : (
+                            <div className="posts-grid">
+                                {filteredPosts.map((post) => (
+                                    <Link key={post.id} to={`/blog/${post.slug}`} className="post-card card">
+                                        <div className="post-image" style={{ backgroundImage: `url(${getPostImage(post)})` }}>
                                         </div>
-                                        <h3 className="post-title">{post.title}</h3>
-                                        <p className="post-excerpt">{post.excerpt}</p>
-                                        <div className="post-tags">
-                                            {post.tags && post.tags.slice(0, 2).map((tag, index) => (
-                                                <span key={index} className="badge">{tag}</span>
-                                            ))}
+                                        <div className="post-content">
+                                            <div className="post-meta">
+                                                <span className="post-date">{new Date(post.date).toLocaleDateString('ms-MY', { year: 'numeric', month: 'short', day: 'numeric' })}</span>
+                                            </div>
+                                            <h3 className="post-title">{post.title}</h3>
+                                            <p className="post-excerpt">{post.excerpt}</p>
+                                            <div className="post-tags">
+                                                {post.tags && post.tags.slice(0, 2).map((tag, index) => (
+                                                    <span key={index} className="badge">{tag}</span>
+                                                ))}
+                                            </div>
                                         </div>
-                                    </div>
-                                </Link>
-                            ))}
-                        </div>
+                                    </Link>
+                                ))}
+                            </div>
+                        )}
                     </div>
                 </section>
             )}

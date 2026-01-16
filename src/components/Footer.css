@@ -36,11 +36,45 @@
     color: var(--apple-text-black);
 }
 
-.footer-description {
+/* Mission Statement Section */
+.footer-mission-statement {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    max-width: 320px;
+}
+
+.mission-text {
+    font-size: 16px;
+    line-height: 1.4;
+    font-weight: 500;
+    color: var(--apple-text-black);
+    letter-spacing: -0.01em;
+    margin: 0;
+    position: relative;
+    padding-left: 0;
+}
+
+.mission-cta {
     font-size: 12px;
-    line-height: 1.5;
+    line-height: 1.6;
     color: var(--apple-text-gray);
-    max-width: 300px;
+    margin: 0;
+}
+
+.mission-divider {
+    width: 30px;
+    height: 1px;
+    background-color: var(--apple-text-black);
+    margin: 4px 0 8px;
+    opacity: 0.3;
+}
+
+.footer-description {
+    font-size: 11px;
+    line-height: 1.4;
+    color: #86868b;
+    margin-top: -4px;
 }
 
 .footer-heading {
@@ -92,13 +126,15 @@
     gap: 4px;
 }
 
-.footer-contact a {
+.footer-contact a,
+.address-link {
     color: var(--apple-text-gray);
     text-decoration: none;
     transition: color 0.2s;
 }
 
-.footer-contact a:hover {
+.footer-contact a:hover,
+.address-link:hover {
     color: var(--apple-text-black);
     text-decoration: underline;
 }

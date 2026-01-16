@@ -28,7 +28,44 @@ const Icons = {
 
 function About() {
     const { orgData } = useOrganization();
-    const [pageContent, setPageContent] = useState(null);
+
+    const getDefaultContent = () => ({
+        hero: {
+            title: "Sampaikan Islam, Perkasakan Mualaf",
+            subtitle: "Convey Islam, Empower the Mualaf",
+            description: "HCFBTR bergerak dengan sokongan sumbangan dana, tenaga dan kepakaran daripada masyarakat yang prihatin, bagi menjayakan misi dakwah dan kebajikan dalam menyampaikan keindahan Islam serta memperkasakan kehidupan para mualaf."
+        },
+        impactStats: [
+            { number: '20+', label: 'Tahun Perkhidmatan', sublabel: 'Years of Service' },
+            { number: '1000+', label: 'Mualaf Dibimbing', sublabel: 'Students Guided' },
+            { number: '500+', label: 'Sukarelawan Aktif', sublabel: 'Active Volunteers' },
+            { number: '15+', label: 'Program & Kelas', sublabel: 'Programs & Classes' }
+        ],
+        about: {
+            title: "Mengenai HCF BTR",
+            subtitle: "Professional Supportive Community",
+            paragraph1: "Hidayah Centre Foundation (HCF) adalah sebuah organisasi yang berdedikasi untuk menyampaikan mesej Islam kepada masyarakat serta memberikan bimbingan kepada mereka yang baru memeluk Islam.",
+            paragraph2: "Di cawangan Bandar Tun Razak, kami memfokuskan kepada pemerkasaan mualaf melalui pendidikan, sokongan sosial, dan pembangunan komuniti yang inklusif."
+        },
+        features: [
+            { icon: "🎓", title: "Pendidikan Berterusan", subtitle: "Continuous Education", description: "Kelas bimbingan fardu ain dan pengajian Quran untuk mualaf." },
+            { icon: "🤝", title: "Sokongan Kebajikan", subtitle: "Welfare Support", description: "Bantuan keperluan asas dan bimbingan kerjaya untuk asnaf mualaf." },
+            { icon: "🌟", title: "Pembangunan Karakter", subtitle: "Character Development", description: "Program motivasi dan jati diri untuk membina mualaf yang berdaya tahan." },
+            { icon: "📱", title: "Khidmat Nasihat", subtitle: "Consultation Services", description: "Ruang soal jawab dan bimbingan agama secara santai dan profesional." }
+        ],
+        whyChooseUs: {
+            title: "Mengapa Memilih Kami?",
+            subtitle: "Dedicated to Your Growth",
+            description: "Kami komited untuk menjadi jambatan maklumat yang tepat dan pusat bimbingan yang prihatin bagi semua."
+        },
+        cta: {
+            title: "Jom! Sertai Kami Dalam Memperkasakan Mualaf",
+            subtitle: "Let's Join Us in Empowering Mualaf",
+            description: "Setiap langkah anda memberi seribu makna. Sertai komuniti kami sebagai sukarelawan atau penyumbang untuk terus menyebarkan keindahan Islam."
+        }
+    });
+
+    const [pageContent, setPageContent] = useState(getDefaultContent());
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
@@ -138,39 +175,8 @@ function About() {
         }
     };
 
-    const getDefaultContent = () => ({
-        hero: {
-            title: "",
-            subtitle: "",
-            description: ""
-        },
-        impactStats: [
-            { number: '20+', label: 'Tahun Perkhidmatan', sublabel: 'Years of Service' },
-            { number: '1000+', label: 'Mualaf Dibimbing', sublabel: 'Students Guided' },
-            { number: '500+', label: 'Sukarelawan Aktif', sublabel: 'Active Volunteers' },
-            { number: '15+', label: 'Program & Kelas', sublabel: 'Programs & Classes' }
-        ],
-        about: {
-            title: "",
-            subtitle: "",
-            paragraph1: "",
-            paragraph2: ""
-        },
-        features: [],
-        whyChooseUs: {
-            title: "",
-            subtitle: "",
-            description: ""
-        },
-        cta: {
-            title: "",
-            subtitle: "",
-            description: ""
-        }
-    });
-
-    // Loading check
-    if (loading) return <div className="loading-spinner">Loading...</div>;
+    // Loading check - removed full-page spinner to allow scroll restoration
+    // if (loading) return <div className="loading-spinner">Loading...</div>;
 
     if (error && !pageContent) {
         return (
@@ -196,10 +202,21 @@ function About() {
         <div className="about-page">
             {/* Hero Section */}
             <section className="hero-section">
+                <div className="hero-video-container">
+                    <video
+                        autoPlay
+                        muted
+                        loop
+                        playsInline
+                        className="hero-video"
+                    >
+                        <source src="/images/Seed_Growing_and_Book_Pages_Flipping.mp4" type="video/mp4" />
+                    </video>
+                </div>
                 <div className="hero-overlay"></div>
                 <div className="container hero-content">
                     <h1 className="hero-title">
-                        <span>{hero.title.split(' ').slice(0, -2).join(' ')}</span>
+                        <span>{hero.title.split(' ').slice(0, -2).join(' ')}</span>{' '}
                         <span className="text-gradient">{hero.title.split(' ').slice(-2).join(' ')}</span>
                     </h1>
                     <p className="hero-subtitle">{hero.subtitle}</p>
@@ -224,46 +241,46 @@ function About() {
             </section >
 
             {/* Official Registration Widgets */}
-            <section className="py-12 bg-stone-50 dark:bg-stone-900/50 border-b border-stone-100 dark:border-stone-800">
-                <div className="max-w-7xl mx-auto px-4 md:px-8">
-                    <div className="grid grid-cols-3 gap-4 md:gap-8">
+            <section className="py-8 md:py-12 bg-stone-50 dark:bg-stone-900/50 border-b border-stone-100 dark:border-stone-800">
+                <div className="max-w-7xl mx-auto px-3 md:px-8">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-8">
                         {/* Widget 1 */}
-                        <div className="group relative bg-[var(--bg-card)] p-4 md:p-8 rounded-2xl shadow-2xl hover:shadow-sm transition-all duration-500 transform -translate-y-2 hover:translate-y-0 border border-[var(--border-light)] overflow-hidden">
+                        <div className="group relative bg-[var(--bg-card)] p-5 md:p-8 rounded-2xl shadow-2xl hover:shadow-sm transition-all duration-500 transform -translate-y-2 hover:translate-y-0 border border-[var(--border-light)] overflow-hidden">
                             <div className="absolute top-0 right-0 -mt-4 -mr-4 w-24 h-24 bg-blue-100 dark:bg-blue-900/20 rounded-full opacity-50 blur-2xl group-hover:bg-blue-50 dark:group-hover:bg-blue-900/10 transition-colors"></div>
                             <div className="relative z-10">
-                                <div className="w-10 h-10 md:w-12 md:h-12 bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-xl flex items-center justify-center mb-4 md:mb-6 scale-110 group-hover:scale-100 transition-transform duration-500">
-                                    <span className="iconify text-xl md:text-2xl" data-icon="lucide:building-2"></span>
+                                <div className="w-9 h-9 md:w-12 md:h-12 bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-xl flex items-center justify-center mb-3 md:mb-6 scale-110 group-hover:scale-100 transition-transform duration-500">
+                                    <span className="iconify text-lg md:text-2xl" data-icon="lucide:building-2"></span>
                                 </div>
-                                <h3 className="text-sm md:text-lg font-semibold text-stone-900 dark:text-white mb-2 md:mb-3">Identiti Korporat</h3>
-                                <p className="text-stone-600 dark:text-stone-400 text-xs md:text-sm leading-relaxed">
+                                <h3 className="text-base md:text-lg font-semibold text-stone-900 dark:text-white mb-2 md:mb-3">Identiti Korporat</h3>
+                                <p className="text-stone-600 dark:text-stone-400 text-sm md:text-sm leading-relaxed">
                                     HCF BTR adalah cawangan institusi <strong>The Trustees of Hidayah Centre Foundation Registered</strong>.
                                 </p>
                             </div>
                         </div>
 
                         {/* Widget 2 */}
-                        <div className="group relative bg-[var(--bg-card)] p-4 md:p-8 rounded-2xl shadow-2xl hover:shadow-sm transition-all duration-500 transform -translate-y-2 hover:translate-y-0 border border-[var(--border-light)] overflow-hidden">
+                        <div className="group relative bg-[var(--bg-card)] p-5 md:p-8 rounded-2xl shadow-2xl hover:shadow-sm transition-all duration-500 transform -translate-y-2 hover:translate-y-0 border border-[var(--border-light)] overflow-hidden">
                             <div className="absolute top-0 right-0 -mt-4 -mr-4 w-24 h-24 bg-amber-100 dark:bg-amber-900/20 rounded-full opacity-50 blur-2xl group-hover:bg-amber-50 dark:group-hover:bg-amber-900/10 transition-colors"></div>
                             <div className="relative z-10">
-                                <div className="w-10 h-10 md:w-12 md:h-12 bg-amber-50 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400 rounded-xl flex items-center justify-center mb-4 md:mb-6 scale-110 group-hover:scale-100 transition-transform duration-500">
-                                    <span className="iconify text-xl md:text-2xl" data-icon="lucide:landmark"></span>
+                                <div className="w-9 h-9 md:w-12 md:h-12 bg-amber-50 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400 rounded-xl flex items-center justify-center mb-3 md:mb-6 scale-110 group-hover:scale-100 transition-transform duration-500">
+                                    <span className="iconify text-lg md:text-2xl" data-icon="lucide:landmark"></span>
                                 </div>
-                                <h3 className="text-sm md:text-lg font-semibold text-stone-900 dark:text-white mb-2 md:mb-3">Pendaftaran Sah</h3>
-                                <p className="text-stone-600 dark:text-stone-400 text-xs md:text-sm leading-relaxed">
+                                <h3 className="text-base md:text-lg font-semibold text-stone-900 dark:text-white mb-2 md:mb-3">Pendaftaran Sah</h3>
+                                <p className="text-stone-600 dark:text-stone-400 text-sm md:text-sm leading-relaxed">
                                     Diperbadankan di bawah Bahagian Hal Ehwal Undang-undang (BHEUU), <strong>Jabatan Perdana Menteri (JPM)</strong>.
                                 </p>
                             </div>
                         </div>
 
                         {/* Widget 3 */}
-                        <div className="group relative bg-[var(--bg-card)] p-4 md:p-8 rounded-2xl shadow-2xl hover:shadow-sm transition-all duration-500 transform -translate-y-2 hover:translate-y-0 border border-[var(--border-light)] overflow-hidden">
+                        <div className="group relative bg-[var(--bg-card)] p-5 md:p-8 rounded-2xl shadow-2xl hover:shadow-sm transition-all duration-500 transform -translate-y-2 hover:translate-y-0 border border-[var(--border-light)] overflow-hidden">
                             <div className="absolute top-0 right-0 -mt-4 -mr-4 w-24 h-24 bg-emerald-100 dark:bg-emerald-900/20 rounded-full opacity-50 blur-2xl group-hover:bg-emerald-50 dark:group-hover:bg-emerald-900/10 transition-colors"></div>
                             <div className="relative z-10">
-                                <div className="w-10 h-10 md:w-12 md:h-12 bg-emerald-50 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 rounded-xl flex items-center justify-center mb-4 md:mb-6 scale-110 group-hover:scale-100 transition-transform duration-500">
-                                    <span className="iconify text-xl md:text-2xl" data-icon="lucide:file-check"></span>
+                                <div className="w-9 h-9 md:w-12 md:h-12 bg-emerald-50 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 rounded-xl flex items-center justify-center mb-3 md:mb-6 scale-110 group-hover:scale-100 transition-transform duration-500">
+                                    <span className="iconify text-lg md:text-2xl" data-icon="lucide:file-check"></span>
                                 </div>
-                                <h3 className="text-sm md:text-lg font-semibold text-stone-900 dark:text-white mb-2 md:mb-3">No. Pendaftaran</h3>
-                                <p className="text-lg md:text-3xl font-bold text-stone-900 dark:text-white tracking-tight">
+                                <h3 className="text-base md:text-lg font-semibold text-stone-900 dark:text-white mb-2 md:mb-3">No. Pendaftaran</h3>
+                                <p className="text-xl md:text-3xl font-bold text-stone-900 dark:text-white tracking-tight">
                                     PPAB-14/2012
                                 </p>
                             </div>
@@ -414,35 +431,56 @@ function About() {
                 </div>
             </section >
 
-            {/* CTA Section */}
-            < section className="cta-section section" >
+            {/* Redesigned CTA Section - Premium Islamic Edition */}
+            <section className="about-cta-premium">
+                <div className="cta-premium-bg-glow"></div>
                 <div className="container">
-                    <div className="cta-card">
-                        <div className="cta-content">
-                            <h2 className="cta-title">{cta.title}</h2>
-                            <p className="cta-subtitle">{cta.subtitle}</p>
-                            <p className="cta-description" style={{ whiteSpace: 'pre-wrap' }} dangerouslySetInnerHTML={{ __html: cta.description }}></p>
-                            <div className="cta-buttons">
-                                <Link to="/volunteer" className="btn btn-secondary btn-lg">
-                                    Support & Volunteer
-                                </Link>
-                                <Link to="/news" className="btn btn-outline btn-lg" style={{ borderColor: 'white', color: 'white' }}>
-                                    News & Stories
-                                </Link>
-                                <Link to="/classes-for-non-muslims" className="btn btn-outline btn-lg" style={{ borderColor: 'white', color: 'white' }}>
-                                    Explore Classes
-                                </Link>
-                                <Link to="/" className="btn btn-outline btn-lg" style={{ borderColor: 'white', color: 'white' }}>
-                                    Islam for Non-Muslims
-                                </Link>
-                                <Link to="/donate" className="btn btn-primary btn-lg">
-                                    Donate Now
-                                </Link>
+                    <div className="cta-premium-grid">
+                        <div className="cta-premium-content">
+                            <h2 className="cta-premium-title animate-slide-in-left">{cta.title}</h2>
+                            <p className="cta-premium-subtitle animate-fade-in">{cta.subtitle}</p>
+                            <div
+                                className="cta-premium-description animate-fade-in-up"
+                                style={{ whiteSpace: 'pre-wrap' }}
+                                dangerouslySetInnerHTML={{ __html: cta.description }}
+                            ></div>
+
+                            <div className="cta-premium-actions animate-fade-in-up">
+                                <div className="cta-main-btns">
+                                    <Link to="/volunteer" className="btn-premium-gold">
+                                        Support & Volunteer
+                                    </Link>
+                                    <Link to="/donate" className="btn-premium-solid">
+                                        Donate Now
+                                    </Link>
+                                </div>
+                                <div className="cta-glass-grid">
+                                    <Link to="/news" className="btn-glass-item">
+                                        News & Stories
+                                    </Link>
+                                    <Link to="/classes-for-non-muslims" className="btn-glass-item">
+                                        Explore Classes
+                                    </Link>
+                                    <Link to="/" className="btn-glass-item">
+                                        Islam for Non-Muslims
+                                    </Link>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="cta-premium-visual animate-fade-in">
+                            <div className="visual-3d-container">
+                                <img
+                                    src="/images/about-cta-invite.jpg"
+                                    alt="Give Your Time - Be the helping hand that guides a seeker home"
+                                    className="img-3d-floating"
+                                />
+                                <div className="visual-reflection"></div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </section >
+            </section>
         </div >
     );
 }

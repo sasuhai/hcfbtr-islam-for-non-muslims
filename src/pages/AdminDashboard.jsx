@@ -320,15 +320,46 @@ function AdminDashboard() {
         }
     };
 
+    const handleToggleUserRole = async (userId, currentRole) => {
+        const userToUpdate = users.find(u => u.id === userId);
+        const adminCount = users.filter(u => u.role === 'admin' || !u.role).length;
+
+        if (currentRole === 'admin' && adminCount <= 1) {
+            showMessage('Security Alert: Cannot revoke the last remaining administrator.', 'error');
+            return;
+        }
+
+        const newRole = currentRole === 'admin' ? 'revoked' : 'admin';
+        const action = newRole === 'admin' ? 'grant access' : 'revoke access';
+
+        if (!window.confirm(`Are you sure you want to ${action} for ${userToUpdate?.email}?`)) return;
+
+        try {
+            await updateDocument('users', userId, { role: newRole });
+            showMessage(`Access ${newRole === 'admin' ? 'granted' : 'revoked'} successfully!`);
+            loadData();
+        } catch (error) {
+            showMessage('Error updating permissions: ' + error.message, 'error');
+        }
+    };
+
     const handleDeleteUser = async (userId) => {
-        if (!window.confirm('Are you sure you want to delete this user?')) return;
+        const userToDelete = users.find(u => u.id === userId);
+        const adminCount = users.filter(u => u.role === 'admin' || !u.role).length;
+
+        if (userToDelete?.role === 'admin' && adminCount <= 1) {
+            showMessage('Security Alert: Cannot delete the last remaining administrator.', 'error');
+            return;
+        }
+
+        if (!window.confirm(`HARD DELETE: Are you sure you want to PERMANENTLY delete ${userToDelete?.email}? \n\nWarning: This only deletes their record here. You MUST also delete them from the Firebase Auth Console, otherwise you won't be able to re-add them later.`)) return;
 
         try {
             await deleteDocument('users', userId);
-            showMessage('User deleted successfully!');
+            showMessage('Record deleted. Remember to clean up Firebase Auth Console.', 'success');
             loadData();
         } catch (error) {
-            showMessage('Error deleting user: ' + error.message, 'error');
+            showMessage('Error deleting record: ' + error.message, 'error');
         }
     };
 
@@ -336,6 +367,12 @@ function AdminDashboard() {
     const handleBlogImageUpload = (e) => {
         const file = e.target.files[0];
         if (!file) return;
+
+        console.log('📤 Uploading blog image:', {
+            name: file.name,
+            size: file.size,
+            type: file.type
+        });
 
         if (file.size > 800 * 1024) {
             showMessage('File too large. Please use an image under 800KB.', 'error');
@@ -345,7 +382,12 @@ function AdminDashboard() {
         setUploadingBlogImg(true);
         const reader = new FileReader();
         reader.onloadend = () => {
-            setBlogForm(prev => ({ ...prev, image: reader.result }));
+            console.log('✅ Image converted to data URL, length:', reader.result.length);
+            setBlogForm(prev => {
+                const updated = { ...prev, image: reader.result };
+                console.log('📝 Updated blogForm with image');
+                return updated;
+            });
             setUploadingBlogImg(false);
             showMessage('Image prepared! Submit the form to save.');
         };
@@ -389,6 +431,28 @@ function AdminDashboard() {
                 date: blogForm.date || new Date().toISOString().split('T')[0]
             };
 
+            // Debug logging
+            console.log('🖼️ Blog image before save:', {
+                hasImage: !!blogData.image,
+                imageType: blogData.image?.substring(0, 30) || 'none',
+                imageLength: blogData.image?.length || 0
+            });
+
+            // Calculate document size
+            const docSize = new Blob([JSON.stringify(blogData)]).size;
+            const docSizeMB = (docSize / 1024 / 1024).toFixed(2);
+            console.log(`📦 Document size: ${docSizeMB} MB`);
+
+            // Warn if approaching Firestore 1MB limit
+            if (docSize > 900000) { // 900KB warning threshold
+                const proceed = window.confirm(
+                    `⚠️ Warning: Document size is ${docSizeMB} MB.\n\n` +
+                    `Firestore has a 1MB limit per document. Large base64 images may cause save failures.\n\n` +
+                    `Consider using a smaller image or an external image URL.\n\nContinue anyway?`
+                );
+                if (!proceed) return;
+            }
+
             // Ensure only one featured post exists
             if (blogData.featured) {
                 const existingFeatured = blogPosts.find(p => p.featured && p.id !== editingBlog?.id);
@@ -407,10 +471,14 @@ function AdminDashboard() {
             }
 
             if (editingBlog) {
+                console.log('📝 Updating blog post:', editingBlog.id);
                 await updateDocument('blog-posts', editingBlog.id, blogData);
+                console.log('✅ Blog post updated successfully with image:', !!blogData.image);
                 showMessage('Blog post updated successfully!');
             } else {
-                await createDocument('blog-posts', blogData);
+                console.log('📝 Creating new blog post');
+                const newDoc = await createDocument('blog-posts', blogData);
+                console.log('✅ Blog post created successfully with image:', !!blogData.image, 'ID:', newDoc?.id);
                 showMessage('Blog post created successfully!');
             }
 
@@ -419,11 +487,34 @@ function AdminDashboard() {
             resetBlogForm();
             loadData();
         } catch (error) {
-            showMessage('Error saving blog post: ' + error.message, 'error');
+            console.error('❌ Error saving blog post:', error);
+            console.error('Error details:', {
+                message: error.message,
+                code: error.code,
+                stack: error.stack
+            });
+
+            let errorMsg = 'Error saving blog post: ' + error.message;
+
+            // Provide more helpful error messages
+            if (error.message?.includes('maximum size') || error.code === 'invalid-argument') {
+                errorMsg = '❌ Document too large! The image is probably too big. Try:\n' +
+                    '1. Using a smaller image (under 400KB)\n' +
+                    '2. Using an external image URL instead of uploading';
+            }
+
+            showMessage(errorMsg, 'error');
         }
     };
 
     const handleEditBlog = (post) => {
+        console.log('✏️ Editing blog post:', post.id);
+        console.log('📸 Post image data:', {
+            hasImage: !!post.image,
+            imageType: post.image?.substring(0, 30) || 'none',
+            imageLength: post.image?.length || 0
+        });
+
         setEditingBlog(post);
         setBlogForm({
             slug: post.slug,
@@ -1080,16 +1171,29 @@ function AdminDashboard() {
                                         <tr key={user.id}>
                                             <td>{user.email}</td>
                                             <td>{user.displayName || '-'}</td>
-                                            <td><span className="badge">{user.role}</span></td>
+                                            <td>
+                                                <span className={`badge ${user.role === 'admin' ? 'success' : 'danger'}`}>
+                                                    {user.role === 'admin' ? 'Active' : 'Revoked'}
+                                                </span>
+                                            </td>
                                             <td>{new Date(user.createdAt).toLocaleDateString()}</td>
                                             <td>
-                                                <button
-                                                    onClick={() => handleDeleteUser(user.id)}
-                                                    className="btn-icon btn-danger"
-                                                    title="Delete user"
-                                                >
-                                                    <Icons.Trash />
-                                                </button>
+                                                <div style={{ display: 'flex', gap: '0.5rem' }}>
+                                                    <button
+                                                        onClick={() => handleToggleUserRole(user.id, user.role)}
+                                                        className={`btn-icon ${user.role === 'admin' ? 'btn-danger-light' : 'btn-success-light'}`}
+                                                        title={user.role === 'admin' ? "Revoke Access" : "Grant Access"}
+                                                    >
+                                                        {user.role === 'admin' ? <Icons.Lock /> : <Icons.Check />}
+                                                    </button>
+                                                    <button
+                                                        onClick={() => handleDeleteUser(user.id)}
+                                                        className="btn-icon btn-danger"
+                                                        title="Hard Delete"
+                                                    >
+                                                        <Icons.Trash />
+                                                    </button>
+                                                </div>
                                             </td>
                                         </tr>
                                     ))}
@@ -1274,13 +1378,131 @@ function AdminDashboard() {
 
                                     <div className="form-group" style={{ margin: 0 }}>
                                         <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-secondary)', marginBottom: '0.4rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Tags (comma separated)</label>
+
+                                        {/* Display current tags as pills */}
+                                        {blogForm.tags && blogForm.tags.length > 0 && (
+                                            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', marginBottom: '0.5rem', padding: '0.5rem', background: 'var(--bg-card)', borderRadius: '6px', border: '1px solid var(--border-light)' }}>
+                                                {(typeof blogForm.tags === 'string' ? blogForm.tags.split(',').map(t => t.trim()).filter(t => t) : blogForm.tags.filter(t => t)).map((tag, idx) => (
+                                                    <span key={idx} style={{
+                                                        background: 'var(--color-primary)',
+                                                        color: 'white',
+                                                        padding: '0.25rem 0.75rem',
+                                                        borderRadius: '20px',
+                                                        fontSize: '0.75rem',
+                                                        fontWeight: 600,
+                                                        display: 'flex',
+                                                        alignItems: 'center',
+                                                        gap: '0.5rem'
+                                                    }}>
+                                                        {tag}
+                                                        <button
+                                                            type="button"
+                                                            onClick={() => {
+                                                                const currentTags = typeof blogForm.tags === 'string' ? blogForm.tags.split(',').map(t => t.trim()) : blogForm.tags;
+                                                                const newTags = currentTags.filter((_, i) => i !== idx);
+                                                                setBlogForm({ ...blogForm, tags: newTags.join(', ') });
+                                                            }}
+                                                            style={{
+                                                                background: 'rgba(255,255,255,0.3)',
+                                                                border: 'none',
+                                                                borderRadius: '50%',
+                                                                width: '16px',
+                                                                height: '16px',
+                                                                cursor: 'pointer',
+                                                                display: 'flex',
+                                                                alignItems: 'center',
+                                                                justifyContent: 'center',
+                                                                padding: 0,
+                                                                fontSize: '0.7rem',
+                                                                color: 'white'
+                                                            }}
+                                                            title="Remove tag"
+                                                        >×</button>
+                                                    </span>
+                                                ))}
+                                            </div>
+                                        )}
+
+                                        {/* Input with datalist for existing tags */}
                                         <input
                                             type="text"
                                             value={blogForm.tags}
                                             onChange={(e) => setBlogForm({ ...blogForm, tags: e.target.value })}
-                                            placeholder="faith, community, education"
+                                            placeholder="Type or select from existing tags..."
+                                            list="existing-tags"
                                             style={{ width: '100%', padding: '0.5rem 0.75rem', border: '1px solid var(--border-light)', borderRadius: '6px', fontSize: '0.95rem', background: 'var(--bg-tertiary)', color: 'var(--text-primary)' }}
                                         />
+
+                                        {/* Datalist for existing tags */}
+                                        <datalist id="existing-tags">
+                                            {(() => {
+                                                const allTags = new Set();
+                                                blogPosts.forEach(post => {
+                                                    if (post.tags && Array.isArray(post.tags)) {
+                                                        post.tags.forEach(tag => allTags.add(tag));
+                                                    }
+                                                });
+                                                return Array.from(allTags).sort().map((tag, idx) => (
+                                                    <option key={idx} value={tag} />
+                                                ));
+                                            })()}
+                                        </datalist>
+
+                                        {/* Quick add buttons for existing tags */}
+                                        {(() => {
+                                            const allTags = new Set();
+                                            blogPosts.forEach(post => {
+                                                if (post.tags && Array.isArray(post.tags)) {
+                                                    post.tags.forEach(tag => allTags.add(tag));
+                                                }
+                                            });
+                                            const existingTags = Array.from(allTags).sort();
+
+                                            if (existingTags.length > 0) {
+                                                return (
+                                                    <div style={{ marginTop: '0.5rem' }}>
+                                                        <p style={{ fontSize: '0.7rem', color: 'var(--text-secondary)', marginBottom: '0.4rem', fontWeight: 600 }}>Quick Add (click to add):</p>
+                                                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.4rem' }}>
+                                                            {existingTags.map((tag, idx) => {
+                                                                const currentTags = typeof blogForm.tags === 'string' ? blogForm.tags.split(',').map(t => t.trim()).filter(t => t) : (blogForm.tags || []);
+                                                                const isAlreadyAdded = currentTags.includes(tag);
+
+                                                                return (
+                                                                    <button
+                                                                        key={idx}
+                                                                        type="button"
+                                                                        onClick={() => {
+                                                                            if (!isAlreadyAdded) {
+                                                                                const newTags = currentTags.length > 0 ? [...currentTags, tag] : [tag];
+                                                                                setBlogForm({ ...blogForm, tags: newTags.join(', ') });
+                                                                            }
+                                                                        }}
+                                                                        disabled={isAlreadyAdded}
+                                                                        style={{
+                                                                            background: isAlreadyAdded ? 'var(--bg-tertiary)' : 'var(--bg-card)',
+                                                                            border: `1px solid ${isAlreadyAdded ? 'var(--border-light)' : 'var(--color-primary)'}`,
+                                                                            padding: '0.25rem 0.6rem',
+                                                                            borderRadius: '16px',
+                                                                            fontSize: '0.7rem',
+                                                                            cursor: isAlreadyAdded ? 'not-allowed' : 'pointer',
+                                                                            opacity: isAlreadyAdded ? 0.5 : 1,
+                                                                            color: isAlreadyAdded ? 'var(--text-secondary)' : 'var(--color-primary)',
+                                                                            fontWeight: 500,
+                                                                            transition: 'all 0.2s'
+                                                                        }}
+                                                                        title={isAlreadyAdded ? 'Already added' : 'Click to add'}
+                                                                    >
+                                                                        {isAlreadyAdded && '✓ '}{tag}
+                                                                    </button>
+                                                                );
+                                                            })}
+                                                        </div>
+                                                    </div>
+                                                );
+                                            }
+                                        })()}
+
+                                        <p style={{ fontSize: '0.7rem', color: 'var(--text-secondary)', marginTop: '0.4rem' }}>💡 Separate multiple tags with commas (e.g., "faith, community, education")</p>
                                     </div>
 
                                     <div style={{ display: 'flex', gap: '1.5rem', background: 'var(--bg-tertiary)', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border-light)' }}>

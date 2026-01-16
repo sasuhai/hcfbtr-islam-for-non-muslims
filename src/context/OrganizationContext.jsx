@@ -41,19 +41,36 @@ export function OrganizationProvider({ children }) {
     const loadOrgData = async () => {
         try {
             setLoading(true);
+
+            // 1. Load main organization data (branding, etc)
             const data = await getDocument('settings', 'organization');
-            if (data) {
-                setOrgData({ ...defaultOrgData, ...data });
+
+            // 2. Potentially load dedicated operating hours document if user requested it
+            // the phrase "db org operating hours" might refer to a specific document
+            const hoursData = await getDocument('settings', 'org_operating_hours');
+
+            if (data || hoursData) {
+                // Determine operating hours from either document, checking for both camelCase and snake_case
+                let operatingHours = data?.operatingHours || data?.operating_hours;
+
+                if (hoursData) {
+                    operatingHours = hoursData.operatingHours || hoursData.operating_hours || hoursData.hours || operatingHours;
+                }
+
+                setOrgData({
+                    ...defaultOrgData,
+                    ...data,
+                    // If we found specific hours, override
+                    ...(operatingHours ? { operatingHours: Array.isArray(operatingHours) ? operatingHours : defaultOrgData.operatingHours } : {})
+                });
             } else {
-                // If no data exists, use defaults
                 setOrgData(defaultOrgData);
             }
             setError(null);
         } catch (err) {
             console.warn('Could not load organization data, using defaults:', err.message);
-            // Use default data if Firebase is not configured
             setOrgData(defaultOrgData);
-            setError(null); // Don't show error to user, just use defaults
+            setError(null);
         } finally {
             setLoading(false);
         }

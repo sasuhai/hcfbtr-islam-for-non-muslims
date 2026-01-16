@@ -7,7 +7,12 @@ import "./News.css";
 import { useState, useEffect, useRef } from "react";
 
 const getPostImage = (post) => {
-    if (post.image && (post.image.startsWith('http') || post.image.startsWith('/'))) return post.image;
+    // Return uploaded image if it's a URL, path, or base64 data URL
+    if (post.image && (post.image.startsWith('http') || post.image.startsWith('/') || post.image.startsWith('data:'))) {
+        return post.image;
+    }
+
+    // Fallback to default images based on title hash
     const images = [
         '/images/blog-student-reading.png',
         '/images/blog-community-volunteers.png',
@@ -63,6 +68,7 @@ export default function News() {
     const hqUrl = orgData?.hqUrl || "";
     const [weather, setWeather] = useState({ temp: '31', cond: 'Cloudy' });
     const [aboutHero, setAboutHero] = useState({ title: "Convey Islam, Empower Mualaf", description: "Hidayah Centre Foundation is a trusted Islamic organisation in Malaysia that provides guidance, education, and support for non-Muslims." });
+    const [aboutCTA, setAboutCTA] = useState(null);
     const [prayerTimes, setPrayerTimes] = useState(null);
     const [locationName, setLocationName] = useState('Kuala Lumpur');
     const [showContact, setShowContact] = useState(false);
@@ -132,10 +138,11 @@ export default function News() {
 
     const loadNewsContent = async () => {
         try {
-            // 1. Load About Hero
+            // 1. Load About Hero & CTA
             const aboutData = await getDocument('pages', 'about');
-            if (aboutData && aboutData.hero) {
-                setAboutHero(aboutData.hero);
+            if (aboutData) {
+                if (aboutData.hero) setAboutHero(aboutData.hero);
+                if (aboutData.cta) setAboutCTA(aboutData.cta);
             }
 
             // 2. Load Blog Articles (Featured first, then others)
@@ -389,18 +396,72 @@ export default function News() {
                                     </figcaption>
                                 </figure>
 
-                                {/* Article Body (2 Columns) */}
-                                <div className="md:columns-2 gap-8 text-sm leading-relaxed text-stone-800 text-justify-newspaper">
+                                {/* Article Body (Reduced Teaser) */}
+                                <div className="text-sm leading-relaxed text-stone-800 text-justify-newspaper">
                                     <div
                                         className="blog-teaser-content"
                                         dangerouslySetInnerHTML={{
-                                            __html: featuredBlogs[currentBlogIdx].content.substring(0, 1000) + '...'
+                                            __html: featuredBlogs[currentBlogIdx].content.substring(0, 500) + '...'
                                         }}
                                     />
-                                    <div className="mt-4 text-center md:text-left">
-                                        <Link to={`/blog/${featuredBlogs[currentBlogIdx].slug}`} className="font-bold underline italic text-stone-900 hover:text-stone-600 transition-colors">
-                                            Read full chronicle..
+                                    <div className="mt-4 text-center md:text-left border-b border-stone-200 pb-6">
+                                        <Link to={`/blog/${featuredBlogs[currentBlogIdx].slug}`} className="font-bold underline italic text-stone-900 hover:text-stone-600 transition-colors uppercase tracking-widest text-[10px]">
+                                            Continue reading on page 2..
                                         </Link>
+                                    </div>
+                                </div>
+
+                                {/* Vintage Chronicle Advertisement Section */}
+                                <div className="mt-10 chronicle-ad-border border-stone-900 p-6 relative bg-stone-100/50 shadow-inner overflow-hidden newspaper-ad-gradient">
+                                    <div className="absolute top-0 right-0 -mr-8 -mt-8 w-32 h-32 border border-stone-300 rounded-full opacity-20 pointer-events-none"></div>
+                                    <div className="absolute bottom-0 left-0 -ml-8 -mb-8 w-24 h-24 border border-stone-300 rounded-full opacity-20 pointer-events-none"></div>
+
+                                    <div className="relative z-10 text-center">
+                                        <div className="font-typewriter text-[9px] uppercase tracking-[0.3em] text-stone-500 mb-2 font-bold italic underline decoration-stone-300">Official Bureau Announcement</div>
+
+                                        <h3 className="font-headline text-2xl md:text-3xl font-bold text-stone-900 mb-1 leading-tight tracking-tight px-4">
+                                            {aboutCTA?.title || "Jom! Sertai Kami Dalam Memperkasakan Mualaf"}
+                                        </h3>
+                                        <p className="font-headline italic text-lg text-stone-600 mb-4 border-b border-stone-300 pb-4 inline-block px-8">
+                                            {aboutCTA?.subtitle || "Let's Join Us in Empowering Mualaf"}
+                                        </p>
+
+                                        <p className="font-body text-sm leading-relaxed text-stone-800 mb-8 max-w-xl mx-auto italic">
+                                            {aboutCTA?.description || "Setiap langkah anda memberi seribu makna. Sertai komuniti kami sebagai sukarelawan atau penyumbang untuk terus menyebarkan keindahan Islam."}
+                                        </p>
+
+                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-2xl mx-auto font-typewriter">
+                                            <Link to="/volunteer" className="p-3 border-2 border-stone-900 bg-stone-900 text-white hover:bg-white hover:text-stone-900 transition-all font-bold uppercase tracking-widest flex items-center justify-center gap-2 group">
+                                                <span className="iconify" data-icon="lucide:arrow-right" data-width="14"></span>
+                                                Support & Volunteer
+                                            </Link>
+                                            <Link to="/donate" className="p-3 border-2 border-stone-900 hover:bg-stone-900 hover:text-white transition-all font-bold uppercase tracking-widest flex items-center justify-center gap-2 group">
+                                                <span className="iconify" data-icon="lucide:heart" data-width="14"></span>
+                                                Donate Now
+                                            </Link>
+
+                                            <div className="md:col-span-2 mt-4 flex flex-wrap justify-center gap-3">
+                                                <Link to="/news" className="text-[10px] uppercase tracking-tighter font-bold border-b border-stone-800 pb-0.5 hover:text-blue-600 hover:border-blue-600 transition-colors">
+                                                    News & Stories
+                                                </Link>
+                                                <span className="text-stone-300">•</span>
+                                                <Link to="/classes-for-non-muslims" className="text-[10px] uppercase tracking-tighter font-bold border-b border-stone-800 pb-0.5 hover:text-blue-600 hover:border-blue-600 transition-colors">
+                                                    Explore Classes
+                                                </Link>
+                                                <span className="text-stone-300">•</span>
+                                                <Link to="/" className="text-[10px] uppercase tracking-tighter font-bold border-b border-stone-800 pb-0.5 hover:text-blue-600 hover:border-blue-600 transition-colors">
+                                                    Islam for Non-Muslims
+                                                </Link>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    {/* Decorative vintage stamp/mark */}
+                                    <div className="absolute top-2 left-2 opacity-5 pointer-events-none">
+                                        <svg width="40" height="40" viewBox="0 0 100 100" fill="currentColor">
+                                            <circle cx="50" cy="50" r="45" stroke="currentColor" strokeWidth="2" fill="none" />
+                                            <path d="M50 10 L50 90 M10 50 L90 50" stroke="currentColor" strokeWidth="2" />
+                                        </svg>
                                     </div>
                                 </div>
                             </>
@@ -597,6 +658,7 @@ export default function News() {
 
             {/* Contact Overlay */}
             {showContact && <Contact isModal={true} onClose={() => setShowContact(false)} />}
+
             {/* Background texture note (visual flair outside the paper) */}
             <div className="fixed bottom-4 right-4 text-stone-500 text-xs font-typewriter opacity-50 hidden lg:block">
                 Viewing: Archive #4922A

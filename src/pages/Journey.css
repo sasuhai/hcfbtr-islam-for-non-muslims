@@ -799,6 +799,35 @@
     border-radius: 4px;
 }
 
+/* Posts Scroll Wrapper for Horizontal Scrolling */
+.posts-scroll-wrapper {
+    position: relative;
+    margin: 0 auto;
+    max-width: 100%;
+}
+
+.posts-grid-scroll {
+    display: flex;
+    gap: 24px;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    padding: 20px 0;
+    scrollbar-width: none;
+    /* Firefox */
+    -ms-overflow-style: none;
+    /* IE and Edge */
+}
+
+.posts-grid-scroll::-webkit-scrollbar {
+    display: none;
+    /* Chrome, Safari, Opera */
+}
+
+.posts-grid-scroll .post-card {
+    min-width: 320px;
+    flex-shrink: 0;
+}
+
 /* Custom Scrollbar for Video Sidebar */
 .custom-scrollbar::-webkit-scrollbar {
     width: 6px;
