@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { translations } from '../translations';
 import { getDocument } from '../firebase/firestoreService';
+import { useOrganization } from '../context/OrganizationContext';
 import VolunteerGrid from '../components/VolunteerGrid';
 import './Volunteer.css';
 
@@ -19,6 +20,7 @@ function Volunteer() {
     const location = useLocation();
     const isBM = location.pathname.startsWith('/bm');
     const t = translations[isBM ? 'bm' : 'en'];
+    const { orgData } = useOrganization();
     const [content, setContent] = useState(null);
     const [loading, setLoading] = useState(true);
 
@@ -153,47 +155,23 @@ function Volunteer() {
 
     return (
         <div className="volunteer-page">
-            {/* Redesigned Hero Section */}
-            <section className="volunteer-hero">
-                <div className="hero-background-glow"></div>
-                <div className="hero-particles"></div>
+            {/* Header */}
+            <section className="volunteer-header">
                 <div className="container">
-                    <div className="hero-grid">
-                        <div className="hero-text-content">
-                            <div className="hero-badge animate-fade-in">
-                                <span className="pulse-dot"></span>
-                                {c.hero?.badge}
-                            </div>
-                            <h1 className="hero-main-title animate-slide-in-left">
-                                {c.header?.title} <br />
-                                <span className="gradient-text">{c.header?.subtitle}</span>
-                            </h1>
-                            <p className="hero-description animate-fade-in-up" dangerouslySetInnerHTML={{ __html: c.header?.intro }}>
-                            </p>
-                            <div className="hero-actions animate-fade-in-up">
-                                <a href="#registration" className="btn-hero-primary">
-                                    {isBM ? 'Daftar Sekarang' : 'Register Now'}
-                                    <Icons.Check />
-                                </a>
-                                <p className="hero-meta">{isBM ? 'Sertai misi kami hari ini' : 'Join our mission today'}</p>
-                            </div>
-                        </div>
-                        <div className="hero-graphic-content animate-fade-in">
-                            <div className="graphic-container">
-                                <img
-                                    src="/images/volunteer-hero.png"
-                                    alt="Impactful Volunteer Graphic"
-                                    className="hero-main-img"
-                                />
-                            </div>
-                        </div>
+                    <div className="volunteer-header-content text-center">
+                        <h1 className="page-title">{c.header.title}</h1>
+                        <p className="page-subtitle">{c.header.subtitle}</p>
+                        <p className="volunteer-intro" style={{ whiteSpace: 'pre-wrap', marginBottom: '40px' }} dangerouslySetInnerHTML={{ __html: c.header.intro }}></p>
+                        <a href="#registration" className="btn btn-primary btn-lg animate-fade-in-up" style={{ borderRadius: '980px', textDecoration: 'none' }}>
+                            {isBM ? 'Daftar Sebagai Sukarelawan' : 'Register to Volunteer Now!'}
+                        </a>
                     </div>
                 </div>
             </section>
 
 
-            {/* Volunteer Grid */}
-            <VolunteerGrid />
+            {/* Volunteer Grid - Conditionally shown based on admin setting */}
+            {orgData?.showVolunteersSection !== false && <VolunteerGrid />}
 
             {/* Opportunities */}
             <section className="opportunities-section section">

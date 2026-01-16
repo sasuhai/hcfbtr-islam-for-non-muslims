@@ -1,3 +1,36 @@
+/* Volunteer Header (Simple Version - Jan 15) */
+.volunteer-header {
+    background-color: var(--bg-primary);
+    background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('/images/hero-volunteer.png');
+    background-size: cover;
+    background-position: center;
+    padding: 160px 0 120px;
+    color: white;
+    text-align: center;
+}
+
+.volunteer-header-content {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 24px;
+}
+
+.volunteer-header-content h1 {
+    font-size: 80px;
+    font-weight: 600;
+    margin-bottom: 20px;
+    letter-spacing: -0.02em;
+    color: white;
+}
+
+.volunteer-intro {
+    font-size: 24px;
+    color: white;
+    max-width: 910px;
+    margin: 0 auto;
+    font-weight: 400;
+}
+
 /* Redesigned Volunteer Hero */
 .volunteer-hero {
     background-color: #000;

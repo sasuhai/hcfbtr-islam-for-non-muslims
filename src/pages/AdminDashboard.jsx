@@ -1297,13 +1297,19 @@ function AdminDashboard() {
                                             <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.05em', margin: 0 }}>Content (HTML) *</label>
                                             <details style={{ fontSize: '0.7rem', color: 'var(--color-primary)', cursor: 'pointer' }}>
                                                 <summary style={{ fontWeight: 600 }}>HTML Guide</summary>
-                                                <div style={{ position: 'absolute', right: '1.5rem', background: 'var(--bg-card)', border: '1px solid var(--border-light)', padding: '1rem', borderRadius: '8px', boxShadow: 'var(--shadow-lg)', zIndex: 100, maxWidth: '300px', marginTop: '0.5rem' }}>
+                                                <div style={{ position: 'absolute', right: '1.5rem', background: 'var(--bg-card)', border: '1px solid var(--border-light)', padding: '1rem', borderRadius: '8px', boxShadow: 'var(--shadow-lg)', zIndex: 100, maxWidth: '340px', marginTop: '0.5rem' }}>
                                                     <p style={{ fontWeight: 700, marginBottom: '0.5rem', color: 'var(--text-primary)' }}>Quick Tags:</p>
                                                     <code style={{ fontSize: '0.65rem', display: 'block', marginBottom: '0.3rem', background: '#f5f5f7', padding: '2px 4px', color: '#d12' }}>&lt;h2&gt;Section Heading&lt;/h2&gt;</code>
                                                     <code style={{ fontSize: '0.65rem', display: 'block', marginBottom: '0.3rem', background: '#f5f5f7', padding: '2px 4px', color: '#d12' }}>&lt;p&gt;Regular paragraph text&lt;/p&gt;</code>
                                                     <code style={{ fontSize: '0.65rem', display: 'block', marginBottom: '0.3rem', background: '#f5f5f7', padding: '2px 4px', color: '#d12' }}>&lt;blockquote&gt;Vibrant quote&lt;/blockquote&gt;</code>
                                                     <code style={{ fontSize: '0.65rem', display: 'block', marginBottom: '0.3rem', background: '#f5f5f7', padding: '2px 4px', color: '#d12' }}>&lt;strong&gt;Bold&lt;/strong&gt; or &lt;em&gt;Italic&lt;/em&gt;</code>
-                                                    <code style={{ fontSize: '0.65rem', display: 'block', background: '#f5f5f7', padding: '2px 4px', color: '#d12' }}>&lt;ul&gt;&lt;li&gt;List item&lt;/li&gt;&lt;/ul&gt;</code>
+                                                    <code style={{ fontSize: '0.65rem', display: 'block', marginBottom: '0.3rem', background: '#f5f5f7', padding: '2px 4px', color: '#d12' }}>&lt;ul&gt;&lt;li&gt;List item&lt;/li&gt;&lt;/ul&gt;</code>
+
+                                                    <p style={{ fontWeight: 700, marginTop: '0.75rem', marginBottom: '0.4rem', color: 'var(--text-primary)', fontSize: '0.7rem' }}>🔗 Links:</p>
+                                                    <code style={{ fontSize: '0.6rem', display: 'block', marginBottom: '0.3rem', background: '#f0f9ff', padding: '3px 5px', color: '#0066cc', whiteSpace: 'pre-wrap', lineHeight: '1.3' }}>&lt;a href="https://example.com"&gt;Click here&lt;/a&gt;</code>
+                                                    <p style={{ fontSize: '0.6rem', color: 'var(--text-secondary)', marginBottom: '0.4rem', marginLeft: '0.25rem' }}>↳ Display text instead of URL</p>
+                                                    <code style={{ fontSize: '0.6rem', display: 'block', background: '#f0f9ff', padding: '3px 5px', color: '#0066cc', whiteSpace: 'pre-wrap', lineHeight: '1.3' }}>&lt;a href="URL" target="_blank"&gt;Text&lt;/a&gt;</code>
+                                                    <p style={{ fontSize: '0.6rem', color: 'var(--text-secondary)', marginLeft: '0.25rem' }}>↳ Opens in new tab</p>
                                                 </div>
                                             </details>
                                         </div>
@@ -2194,6 +2200,61 @@ function AdminDashboard() {
                             <div className="section-header">
                                 <h2>Manage Volunteers</h2>
                                 <p>Add and edit team members shown on the Volunteer page.</p>
+
+                                {/* Toggle for showing/hiding Meet Our Volunteers section */}
+                                <div style={{
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: '1rem',
+                                    padding: '1rem',
+                                    background: 'var(--bg-tertiary)',
+                                    borderRadius: '8px',
+                                    border: '1px solid var(--border-light)',
+                                    marginBottom: '1rem'
+                                }}>
+                                    <label style={{
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        gap: '0.75rem',
+                                        cursor: 'pointer',
+                                        fontSize: '0.95rem',
+                                        fontWeight: 600,
+                                        color: 'var(--text-primary)',
+                                        flex: 1
+                                    }}>
+                                        <input
+                                            type="checkbox"
+                                            checked={orgData?.showVolunteersSection !== false}
+                                            onChange={async (e) => {
+                                                const newValue = e.target.checked;
+                                                const result = await updateOrgData({
+                                                    ...orgData,
+                                                    showVolunteersSection: newValue
+                                                });
+                                                if (result.success) {
+                                                    showMessage(`Volunteers section ${newValue ? 'enabled' : 'disabled'} successfully!`);
+                                                }
+                                            }}
+                                            style={{
+                                                width: '1.2rem',
+                                                height: '1.2rem',
+                                                cursor: 'pointer'
+                                            }}
+                                        />
+                                        <span>Display "Meet Our Volunteers" section on Volunteer page</span>
+                                    </label>
+                                    <span style={{
+                                        padding: '0.25rem 0.75rem',
+                                        borderRadius: '980px',
+                                        fontSize: '0.75rem',
+                                        fontWeight: 600,
+                                        background: orgData?.showVolunteersSection !== false ? 'var(--apple-blue)' : '#86868b',
+                                        color: 'white'
+                                    }}>
+                                        {orgData?.showVolunteersSection !== false ? 'ON' : 'OFF'}
+                                    </span>
+                                </div>
+
                                 <button className="btn btn-primary" onClick={() => {
                                     setEditingVolunteer(null);
                                     setVolunteerForm({ name: '', title: '', department: '', imageUrl: '' });

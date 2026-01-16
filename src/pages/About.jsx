@@ -252,9 +252,18 @@ function About() {
                                     <span className="iconify text-lg md:text-2xl" data-icon="lucide:building-2"></span>
                                 </div>
                                 <h3 className="text-base md:text-lg font-semibold text-stone-900 dark:text-white mb-2 md:mb-3">Identiti Korporat</h3>
-                                <p className="text-stone-600 dark:text-stone-400 text-sm md:text-sm leading-relaxed">
+                                <p className="text-stone-600 dark:text-stone-400 text-sm md:text-sm leading-relaxed mb-3">
                                     HCF BTR adalah cawangan institusi <strong>The Trustees of Hidayah Centre Foundation Registered</strong>.
                                 </p>
+                                <a
+                                    href="https://hidayahcentre.org.my/"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="inline-flex items-center gap-2 text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 font-semibold text-sm transition-colors"
+                                >
+                                    <span className="iconify" data-icon="lucide:external-link"></span>
+                                    HCF Head Quarter
+                                </a>
                             </div>
                         </div>
 
