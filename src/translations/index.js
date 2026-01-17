@@ -65,6 +65,28 @@ export const translations = {
             meaningP1: "Reverting to Islam means believing in the Oneness of Allah and accepting Prophet Muhammad (peace be upon him) as the final messenger of God. This belief is declared through the syahadah.",
             meaningP2: "Islam encourages understanding and sincerity. Individuals are encouraged to learn and ask questions before making this important decision.",
             stepsTitle: "How to Revert to Islam in Malaysia",
+            steps: [
+                {
+                    title: "Learn About Islam",
+                    desc: "Attend classes or one-to-one sessions to understand the basic beliefs and practices of Islam."
+                },
+                {
+                    title: "Seek Guidance",
+                    desc: "Meet with qualified educators or counsellors from Hidayah Centre Foundation."
+                },
+                {
+                    title: "Recite the Syahadah",
+                    desc: "Declare the syahadah in front of authorised witnesses when you are ready."
+                },
+                {
+                    title: "Official Registration",
+                    desc: "Assistance is provided according to Malaysian procedures."
+                },
+                {
+                    title: "Ongoing Support",
+                    desc: "Continue learning and receive community support after conversion."
+                }
+            ],
             syahadahTitle: "What Is Syahadah?",
             syahadahDesc: "Syahadah is the declaration of faith in Islam. By sincerely reciting the syahadah, a person becomes a Muslim. Hidayah Centre Foundation ensures that individuals understand its meaning before proceeding.",
             syahadahTranslation: "(I bear witness that there is no god but Allah, and I bear witness that Muhammad is the Messenger of Allah.)",
@@ -149,6 +171,28 @@ export const translations = {
             meaningP1: "Memeluk Islam bermaksud mempercayai keesaan Allah dan menerima Nabi Muhammad (selawat dan salam ke atasnya) as utusan terakhir Tuhan. Kepercayaan ini diisytiharkan melalui syahadah.",
             meaningP2: "Islam menggalakkan pemahaman dan keikhlasan. Individu digalakkan untuk belajar dan bertanya soalan sebelum membuat keputusan penting ini.",
             stepsTitle: "Cara Memeluk Islam di Malaysia",
+            steps: [
+                {
+                    title: "Pelajari Tentang Islam",
+                    desc: "Sertai kelas atau sesi satu-ke-satu untuk memahami kepercayaan dan amalan asas Islam."
+                },
+                {
+                    title: "Dapatkan Bimbingan",
+                    desc: "Berjumpa dengan pendidik atau kaunselor bertauliah dari Hidayah Centre Foundation."
+                },
+                {
+                    title: "Ucapkan Syahadah",
+                    desc: "Isytiharkan syahadah di hadapan saksi yang sah apabila anda bersedia."
+                },
+                {
+                    title: "Pendaftaran Rasmi",
+                    desc: "Bantuan disediakan mengikut prosedur Malaysia."
+                },
+                {
+                    title: "Sokongan Berterusan",
+                    desc: "Teruskan belajar dan terima sokongan komuniti selepas pemelukan."
+                }
+            ],
             syahadahTitle: "Apakah Itu Syahadah?",
             syahadahDesc: "Syahadah adalah pengisytiharan iman dalam Islam. Dengan membaca syahadah secara ikhlas, seseorang itu menjadi seorang Muslim. Hidayah Centre Foundation memastikan individu memahami maknanya sebelum meneruskan.",
             syahadahTranslation: "(Saya bersaksi bahawa tiada tuhan melainkan Allah, dan saya bersaksi bahawa Muhammad itu Pesuruh Allah.)",

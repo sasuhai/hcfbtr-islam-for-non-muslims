@@ -87,6 +87,7 @@ function Journey() {
     const [selectedTag, setSelectedTag] = useState('semua');
     const [activeVideo, setActiveVideo] = useState(null);
     const [videoPlaying, setVideoPlaying] = useState(false);
+    const [videoOrientation, setVideoOrientation] = useState('landscape');
     const [blogError, setBlogError] = useState(null);
 
     const scroll = (direction) => {
@@ -154,6 +155,52 @@ function Journey() {
             console.error('Error loading blog videos:', err);
         }
     };
+
+    // Video orientation detection
+    useEffect(() => {
+        if (activeVideo) {
+            // 1. First priority: Check if orientation is explicitly set in video object
+            if (activeVideo.orientation) {
+                console.log('[Journey] Using explicit orientation:', activeVideo.orientation);
+                setVideoOrientation(activeVideo.orientation);
+                return;
+            }
+
+            const link = activeVideo.link?.toLowerCase() || "";
+
+            // 2. Check URL patterns for known portrait formats
+            if (link.includes('youtube.com/shorts') ||
+                link.includes('facebook.com/reels') ||
+                link.includes('instagram.com/reels') ||
+                link.includes('tiktok.com')) {
+                console.log('[Journey] Detected portrait from URL pattern');
+                setVideoOrientation('portrait');
+                return;
+            }
+
+            // 3. Check direct video files by loading metadata
+            if (link.match(/\.(mp4|webm|mov|ogg)$/) || activeVideo.link?.startsWith('data:video')) {
+                console.log('[Journey] Detecting orientation from video file...');
+                const v = document.createElement('video');
+                v.preload = 'metadata';
+                v.src = activeVideo.link;
+                v.onloadedmetadata = () => {
+                    const orientation = v.videoHeight > v.videoWidth ? 'portrait' : 'landscape';
+                    console.log(`[Journey] Video dimensions: ${v.videoWidth}x${v.videoHeight}, Orientation: ${orientation}`);
+                    setVideoOrientation(orientation);
+                };
+                v.onerror = (e) => {
+                    console.error('[Journey] Failed to load video metadata:', e);
+                    setVideoOrientation('landscape'); // fallback
+                };
+                return;
+            }
+
+            // 4. Default to landscape for embedded videos
+            console.log('[Journey] Defaulting to landscape orientation');
+            setVideoOrientation('landscape');
+        }
+    }, [activeVideo]);
 
     const getDefaultContent = () => ({
         header: {
@@ -400,7 +447,7 @@ function Journey() {
                             {/* Main Player */}
                             <div className="video-player-main card overflow-hidden">
                                 {activeVideo && (
-                                    <div className="aspect-video relative bg-black">
+                                    <div className={`relative bg-black ${videoOrientation === 'portrait' ? 'aspect-[9/16] min-h-[600px] w-auto mx-auto' : 'aspect-video w-full'}`}>
                                         {!videoPlaying ? (
                                             <div
                                                 className="absolute inset-0 z-10 cursor-pointer group"
@@ -410,7 +457,7 @@ function Journey() {
                                                     const ytId = extractYoutubeId(activeVideo.link);
                                                     const thumbSrc = activeVideo.thumbnail || (ytId ? `https://img.youtube.com/vi/${ytId}/maxresdefault.jpg` : '');
                                                     return thumbSrc ? (
-                                                        <img src={thumbSrc} alt="" className="w-full h-full object-cover" />
+                                                        <img src={thumbSrc} alt="" className={`w-full h-full ${videoOrientation === 'portrait' ? 'object-contain' : 'object-cover'}`} />
                                                     ) : (
                                                         <div className="thumb-fallback text-4xl">
                                                             <span className="iconify" data-icon="lucide:video"></span>
@@ -424,15 +471,37 @@ function Journey() {
                                                     </div>
                                                 </div>
                                             </div>
-                                        ) : (
-                                            <iframe
-                                                src={getVideoEmbedUrl(activeVideo.link)}
-                                                title={activeVideo.title}
-                                                className="w-full h-full border-0"
-                                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                                allowFullScreen
-                                            ></iframe>
-                                        )}
+                                        ) : (() => {
+                                            const ytId = extractYoutubeId(activeVideo.link);
+                                            const isExternal = !!ytId || activeVideo.link.includes('facebook.com');
+                                            const embedUrl = getVideoEmbedUrl(activeVideo.link);
+
+                                            if (isExternal) {
+                                                return (
+                                                    <iframe
+                                                        key={activeVideo.id}
+                                                        src={embedUrl}
+                                                        title={activeVideo.title}
+                                                        className="absolute inset-0 w-full h-full"
+                                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                                        allowFullScreen
+                                                    ></iframe>
+                                                );
+                                            }
+
+                                            return (
+                                                <video
+                                                    key={activeVideo.id}
+                                                    src={activeVideo.link}
+                                                    controls
+                                                    autoPlay
+                                                    className={`absolute inset-0 w-full h-full z-0 ${videoOrientation === 'portrait' ? 'object-contain' : 'object-cover'}`}
+                                                    poster={activeVideo.thumbnail}
+                                                >
+                                                    Your browser does not support the video tag.
+                                                </video>
+                                            );
+                                        })()}
                                     </div>
                                 )}
                                 <div className="p-6">

@@ -98,28 +98,7 @@ export default function ConvertToIslam() {
                         {/* Connecting Line (Desktop) */}
                         <div className="hidden md:block absolute top-8 left-0 w-full h-0.5 bg-stone-100 dark:bg-stone-800 -z-10"></div>
 
-                        {[
-                            {
-                                title: isBM ? "Pelajari Tentang Islam" : "Learn About Islam",
-                                desc: isBM ? "Sertai kelas atau sesi satu-ke-satu untuk memahami kepercayaan dan amalan asas Islam." : "Attend classes or one-to-one sessions to understand the basic beliefs and practices of Islam."
-                            },
-                            {
-                                title: isBM ? "Dapatkan Bimbingan" : "Seek Guidance",
-                                desc: isBM ? "Berjumpa dengan pendidik atau kaunselor bertauliah dari Hidayah Centre Foundation." : "Meet with qualified educators or counsellors from Hidayah Centre Foundation."
-                            },
-                            {
-                                title: isBM ? "Ucapkan Syahadah" : "Recite the Syahadah",
-                                desc: isBM ? "Isytiharkan syahadah di hadapan saksi yang sah apabila anda bersedia." : "Declare the syahadah in front of authorised witnesses when you are ready."
-                            },
-                            {
-                                title: isBM ? "Pendaftaran Rasmi" : "Official Registration",
-                                desc: isBM ? "Bantuan disediakan mengikut prosedur Malaysia." : "Assistance is provided according to Malaysian procedures."
-                            },
-                            {
-                                title: isBM ? "Sokongan Berterusan" : "Ongoing Support",
-                                desc: isBM ? "Teruskan belajar dan terima sokongan komuniti selepas pemelukan." : "Continue learning and receive community support after conversion."
-                            }
-                        ].map((step, idx) => (
+                        {(c.steps || []).map((step, idx) => (
                             <div key={idx} className="bg-white dark:bg-black group">
                                 <div className="w-16 h-16 mx-auto bg-stone-50 dark:bg-stone-900 rounded-full border border-stone-200 dark:border-stone-800 flex items-center justify-center text-xl font-serif text-stone-400 dark:text-stone-600 group-hover:bg-emerald-50 dark:group-hover:bg-emerald-950 group-hover:text-emerald-600 dark:group-hover:text-emerald-400 group-hover:border-emerald-200 dark:group-hover:border-emerald-800 transition-colors z-10 relative">
                                     {idx + 1}

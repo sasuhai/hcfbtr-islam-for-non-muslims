@@ -78,6 +78,7 @@ export default function News() {
     const [videos, setVideos] = useState([]);
     const [activeVideo, setActiveVideo] = useState(null);
     const [videoPlaying, setVideoPlaying] = useState(false);
+    const [videoOrientation, setVideoOrientation] = useState('landscape');
     const [testimonials, setTestimonials] = useState([]);
     const hoverTimerRef = useRef(null);
 
@@ -135,6 +136,51 @@ export default function News() {
 
         loadNewsContent();
     }, []);
+
+    useEffect(() => {
+        if (activeVideo) {
+            // 1. First priority: Check if orientation is explicitly set in video object
+            if (activeVideo.orientation) {
+                console.log('Using explicit orientation:', activeVideo.orientation);
+                setVideoOrientation(activeVideo.orientation);
+                return;
+            }
+
+            const link = activeVideo.link?.toLowerCase() || "";
+
+            // 2. Check URL patterns for known portrait formats
+            if (link.includes('youtube.com/shorts') ||
+                link.includes('facebook.com/reels') ||
+                link.includes('instagram.com/reels') ||
+                link.includes('tiktok.com')) {
+                console.log('Detected portrait from URL pattern');
+                setVideoOrientation('portrait');
+                return;
+            }
+
+            // 3. Check direct video files by loading metadata
+            if (link.match(/\.(mp4|webm|mov|ogg)$/) || activeVideo.link?.startsWith('data:video')) {
+                console.log('Detecting orientation from video file...');
+                const v = document.createElement('video');
+                v.preload = 'metadata';
+                v.src = activeVideo.link;
+                v.onloadedmetadata = () => {
+                    const orientation = v.videoHeight > v.videoWidth ? 'portrait' : 'landscape';
+                    console.log(`Video dimensions: ${v.videoWidth}x${v.videoHeight}, Orientation: ${orientation}`);
+                    setVideoOrientation(orientation);
+                };
+                v.onerror = (e) => {
+                    console.error('Failed to load video metadata:', e);
+                    setVideoOrientation('landscape'); // fallback
+                };
+                return;
+            }
+
+            // 4. Default to landscape for embedded videos
+            console.log('Defaulting to landscape orientation');
+            setVideoOrientation('landscape');
+        }
+    }, [activeVideo]);
 
     const loadNewsContent = async () => {
         try {
@@ -520,7 +566,7 @@ export default function News() {
                             {activeVideo ? (
                                 <div className="space-y-4">
                                     {/* Featured Video Container */}
-                                    <div className="border border-stone-800 bg-stone-900 aspect-video relative group overflow-hidden">
+                                    <div className={`border border-stone-800 bg-stone-900 ${videoOrientation === 'portrait' ? 'aspect-[9/16] w-full' : 'aspect-video w-full'} relative group overflow-hidden`}>
                                         {(() => {
                                             const ytId = extractYoutubeId(activeVideo.link);
                                             const isYoutube = !!ytId;
@@ -548,7 +594,7 @@ export default function News() {
                                                         src={activeVideo.link}
                                                         controls
                                                         autoPlay
-                                                        className="absolute inset-0 w-full h-full z-0"
+                                                        className={`absolute inset-0 w-full h-full z-0 ${videoOrientation === 'portrait' ? 'object-contain' : 'object-cover'}`}
                                                         poster={thumbSrc}
                                                     >
                                                         Your browser does not support the video tag.
@@ -565,7 +611,7 @@ export default function News() {
                                                         <img
                                                             src={thumbSrc}
                                                             alt=""
-                                                            className="w-full h-full object-cover img-vintage"
+                                                            className={`w-full h-full img-vintage ${videoOrientation === 'portrait' ? 'object-contain' : 'object-cover'}`}
                                                         />
                                                     ) : (
                                                         <div className="w-full h-full flex items-center justify-center bg-stone-300 text-stone-600">

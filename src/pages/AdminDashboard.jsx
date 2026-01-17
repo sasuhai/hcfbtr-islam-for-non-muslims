@@ -74,6 +74,7 @@ function AdminDashboard() {
     const [uploadingVideoThumb, setUploadingVideoThumb] = useState(false);
     const [videoForm, setVideoForm] = useState({
         title: '', description: '', date: '', link: '', thumbnail: '',
+        orientation: 'landscape', // 'portrait' or 'landscape'
         featured: false, published: true
     });
 
@@ -556,6 +557,7 @@ function AdminDashboard() {
     const resetVideoForm = () => {
         setVideoForm({
             title: '', description: '', date: '', link: '', thumbnail: '',
+            orientation: 'landscape',
             featured: false, published: true
         });
         setEditingVideo(null);
@@ -648,6 +650,7 @@ function AdminDashboard() {
             date: video.date || '',
             link: video.link || '',
             thumbnail: video.thumbnail || '',
+            orientation: video.orientation || 'landscape',
             featured: video.featured || false,
             published: video.published !== false
         });
@@ -1689,6 +1692,39 @@ function AdminDashboard() {
                                             </div>
                                         </div>
 
+
+                                        <div style={{ marginBottom: '1.5rem' }}>
+                                            <label style={{ display: 'block', marginBottom: '0.4rem', color: 'var(--text-secondary)', fontSize: '0.85rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                                                Video Orientation
+                                            </label>
+                                            <div style={{ display: 'flex', gap: '1rem', background: 'var(--bg-tertiary)', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border-light)' }}>
+                                                <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer', fontSize: '0.9rem', fontWeight: 500, color: 'var(--text-primary)' }}>
+                                                    <input
+                                                        type="radio"
+                                                        name="orientation"
+                                                        value="landscape"
+                                                        checked={videoForm.orientation === 'landscape'}
+                                                        onChange={(e) => setVideoForm({ ...videoForm, orientation: e.target.value })}
+                                                        style={{ width: '1.1rem', height: '1.1rem' }}
+                                                    />
+                                                    📺 Landscape (16:9)
+                                                </label>
+                                                <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer', fontSize: '0.9rem', fontWeight: 500, color: 'var(--text-primary)' }}>
+                                                    <input
+                                                        type="radio"
+                                                        name="orientation"
+                                                        value="portrait"
+                                                        checked={videoForm.orientation === 'portrait'}
+                                                        onChange={(e) => setVideoForm({ ...videoForm, orientation: e.target.value })}
+                                                        style={{ width: '1.1rem', height: '1.1rem' }}
+                                                    />
+                                                    📱 Portrait (9:16)
+                                                </label>
+                                            </div>
+                                            <p style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', marginTop: '0.5rem', fontStyle: 'italic' }}>
+                                                Select the orientation of your video. Portrait is for vertical videos (like Instagram Reels, TikTok), Landscape is for horizontal videos.
+                                            </p>
+                                        </div>
 
                                         <div style={{ display: 'flex', gap: '1.5rem', background: 'var(--bg-tertiary)', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border-light)' }}>
                                             <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer', fontSize: '0.9rem', fontWeight: 600, color: 'var(--text-primary)' }}>
